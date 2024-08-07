@@ -1,19 +1,50 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserFetch, useUserAuth } from '../../utils/useUserFetch.js'
 
 const router = useRouter()
 const email = ref('')
 const password = ref('')
+const showPassword = ref(false)
+
+let loginData = null,
+loginError = null,
+loginLoading = false;
 
 const goBack = () => {
   router.back()
 }
 
-const handleSubmit = () => {
-  // console.log('Email:', email.value)
-  // console.log('Password:', password.value)
+const handleSubmit = async () => {
+  const username = email.value.trim(' '),
+  userpassword = password.value;
+
+  const { data, error, loading } = await useUserAuth(username, userpassword)
+
+  loginData = data;
+  loginError = error;
+  loginLoading = loading;
+
+  if(loading.value) console.log('isLoading:', loading)
+  
+  if (data.value) {
+    console.log('Login Successful:', data.value)
+  } else if (error.value) {
+    console.log('Login Error:', error.value)
+  }
 }
+
+const handleShowPassword = () => {
+  showPassword.value = !showPassword.value
+}
+
+onMounted(() => {
+  // Pre-fill with example credentials
+  email.value = "mor_2314"
+  password.value = "83r5^_"
+  handleSubmit()
+})
 </script>
 
 <template>
@@ -41,7 +72,7 @@ const handleSubmit = () => {
   >
     <div class="flex min-h-full w-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 m-auto">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-10 w-auto" src="../../assets/images/swiftcart_logo.png" alt="SwiftCart Logo" />
+        <img class="mx-auto h-10 w-auto" src="../../assets/online-shop.png" alt="SwiftCart Logo" />
         <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign in to your account
         </h2>
@@ -56,33 +87,70 @@ const handleSubmit = () => {
             <div class="mt-2">
               <input
                 v-model="email"
-                id="email"
-                name="email"
-                type="email"
-                autocomplete="email"
+                id="username"
+                name="username"
+                type="text"
+                autocomplete="username"
                 required
                 class="block w-full rounded-md p-2.5 text-sm text-gray-900 bg-gray-50 rounded-e-lg border border-1 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
+              <span class="text-xs text-red-700" id="passwordHelp">Your password is too short.</span>
             </div>
           </div>
 
           <div>
             <div class="flex items-center justify-between">
-              <label for="password" class="block text-sm font-medium leading-6 text-gray-900"
-                >Password</label
+              <label 
+                for="password" class="block text-sm font-medium leading-6 text-gray-900"
               >
+                Password
+              </label>
             </div>
-            <div class="mt-2">
+            <div class="mt-2 relative">
               <input
                 v-model="password"
                 id="password"
                 name="password"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 autocomplete="current-password"
                 required
                 class="block w-full rounded-md p-2.5 text-sm text-gray-900 bg-gray-50 rounded-e-lg border border-1 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
+
+              <button 
+                @click="handleShowPassword"
+                class="absolute inset-y-[0.3125rem] end-0 grid place-content-center items-center px-4 h-8 w-8"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="size-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </button>
+              <span class="text-xs text-red-700" id="passwordHelp">Your password is too short.</span>
             </div>
+          </div>
+
+          <div class="flex items-start mb-5">
+            <div class="flex items-center h-5">
+              <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
+            </div>
+            <label for="remember" class="ms-2 block text-sm font-medium  text-gray-900">Remember me</label>
           </div>
 
           <div>
@@ -116,8 +184,9 @@ const handleSubmit = () => {
       </div>
     </div>
   </div>
-</template>
 
-<style scoped>
-/* Add any additional styles if needed */
-</style>
+  <!-- <button @click="goBack">Go Back</button>
+  <div v-if="loginLoading">Loading...</div>
+  <div v-if="loginError">Error: {{ error.message }}</div>
+  <div v-if="loginData">Token: {{ data.token }}</div> -->
+</template>
