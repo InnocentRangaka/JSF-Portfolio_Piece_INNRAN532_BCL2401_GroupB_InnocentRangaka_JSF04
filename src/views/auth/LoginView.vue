@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserFetch, useUserAuth } from '../../utils/useUserFetch.js'
+import EyeOn from '../../components/icons/EyeOn.vue'
+import EyeOff from '../../components/icons/EyeOff.vue'
 
 const router = useRouter()
 const email = ref('')
@@ -72,7 +74,7 @@ onMounted(() => {
   >
     <div class="flex min-h-full w-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 m-auto">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-10 w-auto" src="../../assets/online-shop.png" alt="SwiftCart Logo" />
+        <img class="mx-auto h-10 w-auto" src="../../assets/icons/cart.svg" alt="SwiftCart Logo" />
         <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign in to your account
         </h2>
@@ -114,33 +116,15 @@ onMounted(() => {
                 :type="showPassword ? 'text' : 'password'"
                 autocomplete="current-password"
                 required
-                class="block w-full rounded-md p-2.5 text-sm text-gray-900 bg-gray-50 rounded-e-lg border border-1 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                class="block w-full rounded-md p-2.5 pr-8 text-sm text-gray-900 bg-gray-50 rounded-e-lg border border-1 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
 
               <button 
                 @click="handleShowPassword"
-                class="absolute inset-y-[0.3125rem] end-0 grid place-content-center items-center px-4 h-8 w-8"
+                class="absolute text-gray-900 inset-y-2 end-0 grid place-content-center items-center px-4 h-6 w-6"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="size-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
+                <EyeOn v-if="!showPassword" />
+                <EyeOff v-else />
               </button>
               <span class="text-xs text-red-700" id="passwordHelp">Your password is too short.</span>
             </div>
