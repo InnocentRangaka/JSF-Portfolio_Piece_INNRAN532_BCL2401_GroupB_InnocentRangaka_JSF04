@@ -45,7 +45,7 @@ onMounted(() => {
   // Pre-fill with example credentials
   email.value = "mor_2314"
   password.value = "83r5^_"
-  handleSubmit()
+  // handleSubmit()
 })
 </script>
 

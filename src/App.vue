@@ -15,6 +15,8 @@ import Layout from './components/includes/MainLayout.vue'
 // Import the app store to manage application state
 const appStore = useAppStore()
 
+appStore.error = null
+
 /**
  * Fetch categories data when the component is initialized.
  * This function fetches categories and updates the store with the data.
