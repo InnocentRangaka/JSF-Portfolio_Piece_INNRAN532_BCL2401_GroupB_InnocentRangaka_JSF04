@@ -50,3 +50,26 @@ export const useUserAuth = async (userEmail, userPassword) => {
     
     return { data, error, loading }
 }
+
+export const useCreateUser = async (userDataObject) => {
+    const body = JSON.stringify(userDataObject)
+    const { data, error, loading, fetchData } = useUserFetch('users', 'POST', body)
+    await fetchData()
+    
+    return { data, error, loading }
+}
+
+export const useUpdateUser = async (userId, userDataObject) => {
+    const body = JSON.stringify(userDataObject)
+    const { data, error, loading, fetchData } = useUserFetch(`users/${userId}`, 'PUT', body)
+    await fetchData()
+    
+    return { data, error, loading }
+}
+
+export const useDeleteUser = async (userId) => {
+    const { data, error, loading, fetchData } = useUserFetch(`users/${userId}`, 'DELETE', null)
+    await fetchData()
+    
+    return { data, error, loading }
+}

@@ -1,17 +1,30 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAppStore } from '../../stores/appStore'
 import { useUserFetch, useUserAuth } from '../../utils/useUserFetch.js'
 import EyeOn from '../../components/icons/EyeOn.vue'
 import EyeOff from '../../components/icons/EyeOff.vue'
+import displayError from '../../components/alerts/displayError.vue'
 
-const router = useRouter()
-const email = ref('')
-const password = ref('')
-const showPassword = ref(false)
+
+/**
+ * Application store for managing global state.
+ * @type {ReturnType<typeof useAppStore>}
+ */
+ const appStore = useAppStore()
+
+const router = useRouter(),
+email = ref(''),
+password = ref(''),
+showPassword = ref(false),
+credentialsError = ref({
+  username: {},
+  password: {}
+}),
+loginError = computed(() => appStore.error);
 
 let loginData = null,
-loginError = null,
 loginLoading = false;
 
 const goBack = () => {
@@ -19,13 +32,15 @@ const goBack = () => {
 }
 
 const handleSubmit = async () => {
+  credentialsError.value = {}
+  loginError.value && appStore.setError(null)
+  
   const username = email.value.trim(' '),
   userpassword = password.value;
 
   const { data, error, loading } = await useUserAuth(username, userpassword)
 
   loginData = data;
-  loginError = error;
   loginLoading = loading;
 
   if(loading.value) console.log('isLoading:', loading)
@@ -33,7 +48,44 @@ const handleSubmit = async () => {
   if (data.value) {
     console.log('Login Successful:', data.value)
   } else if (error.value) {
-    console.log('Login Error:', error.value)
+    if(error.value.code === 'ERR_BAD_REQUEST'){
+      appStore.setError(null)
+
+      appStore.setError({
+        status: error.value.response.status,
+        message: error.value.response.data,
+        type: error.value.code,
+        input: 'all'
+      })
+    }
+
+    if(error.value.code === 'ERR_NETWORK'){
+      credentialsError.value = {}
+
+      appStore.setError({
+        status: error.value.request.status,
+        message: error.value.message,
+        type: error.value.code
+      })
+    }
+
+    loginError;
+
+    console.log('Login Error:', error.value.code, loginError.value, appStore.getError)
+  }
+}
+
+const handlePasswordInput = (typedValue) => {
+  if(typedValue.length < 6 || typedValue.length > 12){
+    credentialsError.value.password = {
+        status: 'PSSWD',
+        message: 'Password should be 6 to 12 characters.',
+        type: 'AUTH',
+        input: 'password'
+      }
+  }
+  else {
+    credentialsError.value.password = {}
   }
 }
 
@@ -70,7 +122,7 @@ onMounted(() => {
   </div>
 
   <div
-    class="container mx-auto p-8 min-h-[600px] h-full max-h-screen w-full items-center justify-center m-auto flex flex-col"
+    class="container mx-auto p-8 mb-20 min-h-[600px] h-full max-h-screen w-full items-center justify-center m-auto flex flex-col"
   >
     <div class="flex min-h-full w-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 m-auto">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -80,11 +132,13 @@ onMounted(() => {
         </h2>
       </div>
 
+      <displayError :message="loginError?.message"/>
+
       <div class="bg-white rounded-lg shadow-md mt-10 p-6 sm:mx-auto sm:w-full sm:max-w-sm">
         <form @submit.prevent="handleSubmit" class="space-y-6" action="#" method="POST">
           <div>
             <label for="email" class="block text-sm font-medium leading-6 text-gray-900"
-              >Email address</label
+              >Username / Email address</label
             >
             <div class="mt-2">
               <input
@@ -96,7 +150,7 @@ onMounted(() => {
                 required
                 class="block w-full rounded-md p-2.5 text-sm text-gray-900 bg-gray-50 rounded-e-lg border border-1 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
               />
-              <span class="text-xs text-red-700" id="passwordHelp">Your password is too short.</span>
+              <span class="text-xs text-red-700" id="userNameError" v-if="credentialsError.value?.input == 'username'">{{ credentialsError.value.message }}</span>
             </div>
           </div>
 
@@ -111,6 +165,7 @@ onMounted(() => {
             <div class="mt-2 relative">
               <input
                 v-model="password"
+                @input="handlePasswordInput(password)"
                 id="password"
                 name="password"
                 :type="showPassword ? 'text' : 'password'"
@@ -121,12 +176,12 @@ onMounted(() => {
 
               <button 
                 @click="handleShowPassword"
-                class="absolute text-gray-900 inset-y-2 end-0 grid place-content-center items-center px-4 h-6 w-6"
+                class="absolute text-gray-900 inset-y-[0.5625rem] end-0 grid place-content-center items-center px-4 h-6 w-6"
               >
                 <EyeOn v-if="!showPassword" />
                 <EyeOff v-else />
               </button>
-              <span class="text-xs text-red-700" id="passwordHelp">Your password is too short.</span>
+              <span class="text-xs text-red-700" id="userPasswordError" v-if="credentialsError.password">{{ credentialsError.password.message }}</span>
             </div>
           </div>
 
