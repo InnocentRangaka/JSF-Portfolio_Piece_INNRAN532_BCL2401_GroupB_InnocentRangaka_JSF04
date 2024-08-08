@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '../../stores/appStore'
-import { useUserFetch, useUserAuth } from '../../utils/useUserFetch.js'
+import { useUserAuth } from '../../utils/useUserFetch.js'
 import EyeOn from '../../components/icons/EyeOn.vue'
 import EyeOff from '../../components/icons/EyeOff.vue'
 import displayError from '../../components/alerts/displayError.vue'
@@ -24,8 +24,8 @@ credentialsError = ref({
 }),
 loginError = computed(() => appStore.error);
 
-let loginData = null,
-loginLoading = false;
+// let loginData = null,
+// loginLoading = false;
 
 const goBack = () => {
   router.back()
