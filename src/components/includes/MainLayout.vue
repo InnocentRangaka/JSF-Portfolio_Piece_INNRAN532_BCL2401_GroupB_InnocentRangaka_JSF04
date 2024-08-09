@@ -33,10 +33,10 @@ const isTopPartShown = () => {
  * @param {string} pathName - The current path name.
  * @returns {void}
  */
-const handleShowSearchFilterSort = (pathName) => {
-  const isNotProductShow = pathName.startsWith('/auth') || pathName.startsWith('/cart')
-  showStaticPart.value = !isNotProductShow
-}
+// const handleShowSearchFilterSort = (pathName) => {
+//   const isNotProductShow = pathName.startsWith('/auth') || pathName.startsWith('/cart')
+//   showStaticPart.value = !isNotProductShow
+// }
 
 /**
  * Lifecycle hook to fetch categories and set initial component visibility.
@@ -54,14 +54,14 @@ onMounted(() => {
  */
 watch(currentLocation, () => {
   appStore.pageName
-  handleShowSearchFilterSort(currentLocation.value.path)
+  // handleShowSearchFilterSort(currentLocation.value.path)
 })
 </script>
 
 <template>
   <div>
     <!-- Header -->
-    <Header v-if="showStaticPart" />
+    <Header />
 
     <main>
       <div class="page-content">
@@ -84,6 +84,6 @@ watch(currentLocation, () => {
     <SuccessToast />
 
     <!-- Footer -->
-    <Footer v-if="showStaticPart" />
+    <Footer />
   </div>
 </template>

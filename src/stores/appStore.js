@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { defineAsyncComponent, markRaw, shallowRef } from 'vue'
 import { fetchCategories, fetchSingleProduct, fetchProducts, fetchFavourites } from '../api/api';
 import { calculateSubTotalAmount, calculateTaxAmount, calculateCartTotal, parseObjectToArray } from '../utils/utils'
 
@@ -351,6 +352,11 @@ export const useAppStore = defineStore('appStore', {
       }
     },
 
+    currentLayout: {
+      name: 'MainLayout',
+      component: shallowRef(markRaw(defineAsyncComponent(() => import('../components/includes/MainLayout.vue')))),
+    },
+
     /**
      * Toast object for notifications.
      * @type {Object}
@@ -395,6 +401,26 @@ export const useAppStore = defineStore('appStore', {
   }),
 
   actions: {
+    updateLayout(path) {
+      let layout = { name: '', component: null };
+
+      switch (true) {
+        case path.startsWith('/auth/'):
+        case path.startsWith('/cart/'):  
+        case path.startsWith('/checkout/'):
+          layout.name = 'PlainLayout';
+          layout.component = shallowRef(markRaw(defineAsyncComponent(() => import('../components/includes/PlainLayout.vue'))));
+          break;
+        default:
+          layout.name = 'MainLayout';
+          layout.component = shallowRef(markRaw(defineAsyncComponent(() => import('../components/includes/MainLayout.vue'))));
+      }
+
+      if (layout.name !== this.currentLayout.name) {
+        this.currentLayout = layout;
+      }
+    },
+
     /**
      * Formats a given price to two decimal places.
      * @param {number} price - The price to format.

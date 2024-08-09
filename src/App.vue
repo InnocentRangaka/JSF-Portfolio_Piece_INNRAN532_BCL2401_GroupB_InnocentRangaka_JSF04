@@ -1,9 +1,9 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, computed, watch } from 'vue'
 import router from './router'
 import { RouterView } from 'vue-router'
 import { useAppStore } from './stores/appStore'
-import Layout from './components/includes/MainLayout.vue'
+// import Layout from './components/includes/MainLayout.vue'
 
 /**
  * Setup script for the main component of the Vue application.
@@ -14,6 +14,7 @@ import Layout from './components/includes/MainLayout.vue'
 
 // Import the app store to manage application state
 const appStore = useAppStore()
+const currentLocation = computed(() => appStore.currentLocation)
 
 appStore.error = null
 
@@ -21,7 +22,7 @@ appStore.error = null
  * Fetch categories data when the component is initialized.
  * This function fetches categories and updates the store with the data.
  */
-appStore.fetchCategories()
+// appStore.fetchCategories()
 
 /**
  * Router afterEach hook to update the current location in the store.
@@ -49,6 +50,9 @@ router.afterEach((to, from) => {
   }
 })
 
+// Define a computed property to dynamically import the correct layout component
+// const layout = computed(() => appStore.currentLayout)
+
 /**
  * onMounted lifecycle hook to set page loading state.
  * This hook runs when the component is mounted and sets a timeout to change the loading state in the app store.
@@ -58,9 +62,20 @@ onMounted(async () => {
     appStore.setPageLoading(false)
   }, 2000)
 })
+
+// Update layout based on the current path
+watch(
+  currentLocation,
+  (newLocation) => {
+    appStore.updateLayout(newLocation.path)
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
-  <!-- Main layout with router view for nested routes -->
-  <Layout> <RouterView /> </Layout>
+  <!-- Computed layout -->
+  <component :is="appStore.currentLayout.component" :key="appStore.currentLayout.name">
+    <RouterView />
+  </component>
 </template>

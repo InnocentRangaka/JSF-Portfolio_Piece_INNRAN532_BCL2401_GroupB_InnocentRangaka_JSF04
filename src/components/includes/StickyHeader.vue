@@ -30,7 +30,7 @@ const { fetchCategories } = appStore
  * Reactive reference for storing categories.
  * @type {Ref<Array<string>>}
  */
-const categories = ref([])
+const categories = computed(() => appStore.categories)
 
 /**
  * Reactive reference to toggle mobile menu visibility.
@@ -109,8 +109,9 @@ const navigateTo = (path) => {
  * @function
  */
 onMounted(async () => {
-  await fetchCategories(appStore)
-  categories.value = appStore?.categories
+  if(!appStore.categories){
+    await fetchCategories(appStore)
+  }
   // wishListItems.value = appStore?.wishList && Object.values(appStore?.wishList)?.length
   // cartTotalItems.value = appStore?.cart?.totalItems
 })
@@ -130,15 +131,15 @@ onMounted(async () => {
           </span>
         </router-link>
 
-        <div class="hidden sm:flex justify-center items-center gap-4">
+        <div class="hidden md:flex justify-center items-center gap-4">
           <router-link
             v-if="categories.length > 0"
             to="/"
             :class="{
-              'text-cyan-700': isActivePage('home'),
+              'font-medium text-cyan-700': isActivePage('home'),
               'text-gray-700': !isActivePage('home')
             }"
-            class="font-medium md:hover:text-blue-700"
+            class="md:hover:text-blue-700"
           >
             All
           </router-link>
@@ -147,10 +148,10 @@ onMounted(async () => {
             :key="category"
             :to="`/products/category/${menuName(category)}`"
             :class="{
-              'text-cyan-700': isActivePage(menuName(category)),
+              'font-medium text-cyan-700': isActivePage(menuName(category)),
               'text-gray-700': !isActivePage(menuName(category))
             }"
-            class="font-medium md:hover:text-blue-700"
+            class="md:hover:text-blue-700"
           >
             {{ capitalizeMenuName(menuName(category)) }}
           </router-link>
@@ -238,13 +239,25 @@ onMounted(async () => {
       <div class="w-full md:block md:w-auto">
         <ul
           v-if="mobileMenuOpen"
-          class="flex flex-col top-10 font-medium p-4 md:p-0 border border-gray-100 rounded-lg bg-white md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:hidden"
+          class="flex flex-col top-10 p-4 md:p-0 border border-gray-100 rounded-lg bg-white md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:hidden"
         >
+        <li v-if="categories.length > 0">
+          <router-link
+            to="/"
+            :class="{
+              'text-cyan-700 font-medium': isActivePage('home'),
+              'text-gray-700': !isActivePage('home')
+            }"
+            class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
+          >
+            All
+          </router-link>
+        </li>
           <li v-for="category in categories" :key="category">
             <router-link
               :to="`/products/category/${menuName(category)}`"
               :class="{
-                'text-cyan-700': isActivePage(menuName(category)),
+                'text-cyan-700 font-medium': isActivePage(menuName(category)),
                 'text-gray-700': !isActivePage(menuName(category))
               }"
               class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
