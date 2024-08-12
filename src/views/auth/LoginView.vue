@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '../../stores/appStore'
+import { useUserStore } from '../../stores/userStore'
 import { useUserAuth } from '../../utils/useUserFetch.js'
 import EyeOn from '../../components/icons/EyeOn.vue'
 import EyeOff from '../../components/icons/EyeOff.vue'
@@ -13,6 +14,9 @@ import displayError from '../../components/alerts/displayError.vue'
  * @type {ReturnType<typeof useAppStore>}
  */
  const appStore = useAppStore()
+ const userStore = useUserStore()
+
+ const { loginUser } = userStore;
 
 const router = useRouter(),
 email = ref(''),
@@ -38,10 +42,10 @@ const handleSubmit = async () => {
   const username = email.value.trim(' '),
   userpassword = password.value;
 
-  const { data, error, loading } = await useUserAuth(username, userpassword)
+  const { data, error, loading } = await loginUser(username, userpassword)
 
-  loginData = data;
-  loginLoading = loading;
+  // loginData = data;
+  // loginLoading = loading;
 
   if(loading.value) console.log('isLoading:', loading)
   

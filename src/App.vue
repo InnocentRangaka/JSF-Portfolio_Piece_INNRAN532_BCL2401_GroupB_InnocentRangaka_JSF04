@@ -25,15 +25,6 @@ appStore.error = null
  */
 // appStore.fetchCategories()
 
-
-// GOOD
-router.beforeEach((to, from, next) => {
-  console.log(to.name, from.name)
-  // if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
-  // else next()
-  next()
-})
-
 /**
  * Router afterEach hook to update the current location in the store.
  * This hook runs after each route change and updates the app store with the current and previous route details.
@@ -42,6 +33,9 @@ router.beforeEach((to, from, next) => {
  * @param {Object} from - The current Route Object being navigated away from.
  */
 router.afterEach((to, from) => {
+  
+  appStore.updateLayout(to.path)
+
   appStore.currentLocation = {
     path: to.path,
     params: to.params,
@@ -59,7 +53,6 @@ router.afterEach((to, from) => {
     }
   }
 
-  appStore.updateLayout(to.path)
 })
 
 // Define a computed property to dynamically import the correct layout component
@@ -70,6 +63,7 @@ router.afterEach((to, from) => {
  * This hook runs when the component is mounted and sets a timeout to change the loading state in the app store.
  */
 onMounted(async () => {
+  appStore.updateLayout(appStore.currentLocation.path)
   setTimeout(() => {
     appStore.setPageLoading(false)
   }, 2000)
@@ -80,7 +74,7 @@ watch(
   currentLocation,
   (newLocation) => {
     appStore.updateLayout(newLocation.path)
-    // console.log('newLocation:', Layout.value.name, '|', Layout.value.component, '|', newLocation.path)
+    console.log('newLocation:', Layout.value.name, '|', Layout.value.component, '|', newLocation.path)
   },
   { immediate: true }
 )

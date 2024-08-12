@@ -1,10 +1,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import * as jose from 'jose';
 
-// Load .env file
-dotenv.config();
 
 axios.defaults.baseURL = 'https://fakestoreapi.com/'
 
@@ -79,83 +76,72 @@ export const useDeleteUser = async (userId) => {
 }
 
 
-export const fetchUserData =async (username, password) => {
+export const fetchUserData = async (username, password) => {
   
     const { data, error, loading} = await useUserAuth(username, password)
-
+  
+    // **Assuming the response contains a JWT token property:**
     if (data.value.token) {
-      const decodedToken = await decodeJWT(data.value.token);
-      console.log('Decoded JWT:', decodedToken);
+      const decodedToken = decodeJWTUserData(data.value.token);
+    //   console.log('Decoded JWT:', decodedToken);
+      data.value.user = decodedToken
     } else {
       console.log('Login response did not contain a JWT token');
     }
   
     // Return the entire response data for further usage
-    return data;
+    return { data, error, loading};
+  }
+
+ export function decodeJWToken(token) {
+    // Split the token into its parts (header, payload, signature)
+    const [header, payload, signature] = token.split('.');
+  
+    // Decode the header and payload from base64Url to JSON
+    const decodedHeader = JSON.parse(atob(header));
+    const decodedPayload = JSON.parse(atob(payload));
+
+    console.log( jose.decodeJwt(token))
+  
+    return {
+      header: decodedHeader,
+      payload: decodedPayload,
+      signature: signature // Signature is left encoded for security reasons
+    };
 }
-  
-/**
- * Creates and encodes a JWT token.
- *
- * @param {object} payload - The data you want to encode in the JWT.
- * @param {object} [options] - Optional settings such as expiresIn.
- * @returns {string} The encoded JWT token.
- */
-function createJWT(payload, options = {}) {
-    const secretKey = process.env.SECRET_KEY;
 
-    // Sign the JWT with the given payload, secret key, and options
-    const token = jwt.sign(payload, secretKey, options);
+export function decodeJWTUserData(token) {
+  const decoded = jose.decodeJwt(token)
 
-    return token;
+  console.log(decoded?.user )
+
+  return decoded?.user;
 }
 
-  /**
- * Decodes and verifies a JWT token.
- *
- * @param {string} token - The JWT token to decode and verify.
- * @returns {object} The decoded header, payload, and signature.
- */
-function decodeJWT(token) {
-    const secretKey = process.env.SECRET_KEY;
-  
-    try {
-      // Verify the JWT with the secret key
-      const verified = jwt.verify(token, secretKey);
-  
-      // Split the token into its parts (header, payload, signature)
-      const [header, payload, signature] = token.split('.');
-  
-      // Decode the header and payload from base64Url to JSON
-      const decodedHeader = JSON.parse(atob(header));
-      const decodedPayload = JSON.parse(atob(payload));
-  
-      return {
-        data: {
-        header: decodedHeader,
-        payload: decodedPayload,
-        signature: signature, // Signature is left encoded for security reasons
-        verified: verified // The verified payload
-        },
-        error: null
-     };
-    } catch (err) {
-      return {
-        data: null,
-        error: null
-     };
+
+export function inputValueType(input) {
+    // Regular expression for basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Check if input matches email pattern
+    if (emailRegex.test(input)) {
+        return {
+            type: 'email',
+            value: input
+        };
     }
-}
-  
-  // Example usage
-  (async () => {
-    try {
-      const username = 'mor_2314';
-      const password = '83r5^_';
-      const loginData = await fetchUserData(username, password);
-      console.log('Login data:', loginData); // Contains response data, including JWT (if available)
-    } catch (error) {
-      console.error('Login error:', error);
+
+    // Regular expression for username validation
+    // Allows optional '@' at the start and supports alphanumeric characters, underscores, and hyphens
+    const usernameRegex = /^@?[a-zA-Z0-9_-]+$/;
+
+    if (usernameRegex.test(input)) {
+        return {
+            type: 'username',
+            value: input
+        };
     }
-  })();
-  
+
+    // If neither, return 'invalid'
+    return 'invalid';
+}

@@ -206,7 +206,7 @@ watch(currentLocation, async () => {
     class="container grid grid-rows-2 lg:grid-rows-1 lg:grid-cols-2 gap-y-4 gap-x-48 lg:items-start mt-3 mx-auto px-2 md:px-0 justify-center"
   >
     <!-- Filter -->
-    <form @submit.prevent="searchProducts(searchTerm, true)">
+    <form @submit.prevent="searchProducts(searchTerm, true)" name="searchFilterSortForm" id="searchFilterSortForm">
       <div class="flex lg:w-[31.25rem] sm:w-[95%] md:w-full relative">
         <button
           @click="toggleFilterDropdown"

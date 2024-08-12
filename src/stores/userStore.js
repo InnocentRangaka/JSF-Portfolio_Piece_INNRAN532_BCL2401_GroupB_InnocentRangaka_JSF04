@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia';
-import { onStoreReady } from 'pinia-plugin-onstoreready';
-import { useUserAuth, useCreateUser, useUpdateUser, useDeleteUser } from '../utils/useUserFetch';
+// import { onStoreReady } from 'pinia-plugin-onstoreready';
+import { useUserAuth, useCreateUser, useUpdateUser, useDeleteUser, decodeJWTUserData, inputValueType } from '../utils/useUserFetch';
 
-export const useUserStore = defineStore('user', {
+export const useUserStore = defineStore('userStore', {
   state: () => ({
     user: null,
+    userIsAuthenticated: false,
     users: [],
     loading: false,
     error: null,
@@ -16,10 +17,30 @@ export const useUserStore = defineStore('user', {
   actions: {
     async loginUser(email, password) {
       this.loading = true;
-      const { data, error, loading } = await useUserAuth(email, password);
-      this.user = data;
-      this.error = error;
-      this.loading = loading;
+
+      let thisData, thisError, thisLoading;
+
+      if(inputValueType(email).type === 'email'){
+        console.log(inputValueType(email).type)
+      }
+      else {
+        const { data, error, loading } = await useUserAuth(email, password);
+        thisData = data;
+        thisError = error;
+        thisLoading = loading;
+      }
+
+      if(thisData?.value?.token){
+        thisData.value.user = decodeJWTUserData(thisData.value.token);
+        this.userIsAuthenticated = true;
+      }
+
+      this.user = thisData;
+      this.error = thisError;
+      this.loading = thisLoading;
+
+      // console.log(thisData)
+      return { data: thisData, error: thisError, loading: thisLoading }
     },
     
     async createUser(userData) {
@@ -75,15 +96,22 @@ export const useUserStore = defineStore('user', {
     //       this.refreshAccessToken()
     //     }, refreshTime)
     // },
-    
+
   },
 
   getters: {
-    isAuthenticated: (state) => !!state.user,
+    isAuthenticated: (state) => !!state.isAuthenticated,
   },
 
   onStoreReady() {
     // Perform any additional setup or fetch data when the store is ready
     console.log('Store is ready!');
-  }
+  },
+
+  persist: {
+    enabled: true,
+    strategies: [
+      { key: 'userStore', storage: localStorage },
+    ],
+  },
 });

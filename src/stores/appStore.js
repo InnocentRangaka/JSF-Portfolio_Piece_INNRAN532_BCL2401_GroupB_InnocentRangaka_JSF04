@@ -359,6 +359,8 @@ export const useAppStore = defineStore('appStore', {
       component: shallowRef(markRaw(MainLayout)),
     },
 
+    layoutCache: [],
+
     /**
      * Toast object for notifications.
      * @type {Object}
@@ -403,29 +405,40 @@ export const useAppStore = defineStore('appStore', {
   }),
 
   actions: {
+
+    AsyncPlainLayout: defineAsyncComponent({
+        loader: () => import('../components/includes/PlainLayout.vue'),
+        // loadingComponent: LoadingComponent, // Optional: a component to show while loading
+        // errorComponent: ErrorComponent, // Optional: a component to show on error
+        delay: 200, // Optional: delay before showing the loading component
+        timeout: 3000, // Optional: timeout for loading the component
+    }),
+
     updateLayout(path) {
       let layout = { name: '', component: null };
+      const PlainLayoutPaths = ['/auth', '/cart', '/checkout'];
 
       switch (true) {
         case path.startsWith('/auth'):
-        case path.startsWith('/cart'):  
+          layout.name = 'PlainLayout';
+          layout.component = getCachedLayout('PlainLayout', () => AsyncPlainLayout);
+          break;
+        case path.startsWith('/cart'):
         case path.startsWith('/checkout'):
           layout.name = 'PlainLayout';
-          layout.component = shallowRef(markRaw(PlainLayout));
-          // component=  shallowRef(markRaw(defineAsyncComponent(() => import('../components/includes/PlainLayout.vue')))),
-          // layout.console.log('---> ', layout, this.currentLayout, path)
-          // console.log(path, path.startsWith('/auth/'))
+          layout.component = getCachedLayout('PlainLayout', () => AsyncPlainLayout);
           break;
         default:
           layout.name = 'MainLayout';
-          layout.component = shallowRef(markRaw(MainLayout));
-          // console.log('Default:',layout.name, layout, this.currentLayout)
+          layout.component = getCachedLayout('MainLayout', () => MainLayout);
       }
 
       if (layout.name !== this.currentLayout.name) {
         this.currentLayout = layout;
-        // console.log('NEW LAYOUT:', layout.name, layout.component, this.currentLayout)
+        console.log('NEW LAYOUT:', layout.name, layout.component, this.currentLayout)
       }
+
+      // console.log(path, path.startsWith('/auth/'), this.currentLayout.component['__name'])
     },
 
     /**
@@ -1003,6 +1016,13 @@ export const useAppStore = defineStore('appStore', {
     getSorting: (state) => {
       return state.sorting;
     },
+
+    getCachedLayout(name, loader) {
+      if (!layoutCache[name]) {
+        layoutCache[name] = shallowRef(markRaw(loader()));
+      }
+      return layoutCache[name];
+    }
   },
 
   /**

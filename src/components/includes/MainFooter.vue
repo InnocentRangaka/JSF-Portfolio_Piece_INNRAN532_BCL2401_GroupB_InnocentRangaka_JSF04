@@ -118,6 +118,8 @@ const menuName = (category) => {
           </p>
           <div class="flex flex-col md:flex-row relative sm:mb-4">
             <input
+              name="emailSubscriptionInput"
+              id="emailSubscriptionInput"
               type="email"
               placeholder="Enter your email"
               class="p-2 border border-gray-300 rounded-l-md sm:w-full"
