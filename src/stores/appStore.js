@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import { defineAsyncComponent, markRaw, shallowRef } from 'vue'
 import { fetchCategories, fetchSingleProduct, fetchProducts, fetchFavourites } from '../api/api';
 import { calculateSubTotalAmount, calculateTaxAmount, calculateCartTotal, parseObjectToArray } from '../utils/utils'
+import MainLayout from '../components/includes/MainLayout.vue'
+import PlainLayout from '../components/includes/PlainLayout.vue'
 
 /**
  * App store definition using Pinia.
@@ -354,7 +356,7 @@ export const useAppStore = defineStore('appStore', {
 
     currentLayout: {
       name: 'MainLayout',
-      component: shallowRef(markRaw(defineAsyncComponent(() => import('../components/includes/MainLayout.vue')))),
+      component: shallowRef(markRaw(MainLayout)),
     },
 
     /**
@@ -405,19 +407,24 @@ export const useAppStore = defineStore('appStore', {
       let layout = { name: '', component: null };
 
       switch (true) {
-        case path.startsWith('/auth/'):
-        case path.startsWith('/cart/'):  
-        case path.startsWith('/checkout/'):
+        case path.startsWith('/auth'):
+        case path.startsWith('/cart'):  
+        case path.startsWith('/checkout'):
           layout.name = 'PlainLayout';
-          layout.component = shallowRef(markRaw(defineAsyncComponent(() => import('../components/includes/PlainLayout.vue'))));
+          layout.component = shallowRef(markRaw(PlainLayout));
+          // component=  shallowRef(markRaw(defineAsyncComponent(() => import('../components/includes/PlainLayout.vue')))),
+          // layout.console.log('---> ', layout, this.currentLayout, path)
+          // console.log(path, path.startsWith('/auth/'))
           break;
         default:
           layout.name = 'MainLayout';
-          layout.component = shallowRef(markRaw(defineAsyncComponent(() => import('../components/includes/MainLayout.vue'))));
+          layout.component = shallowRef(markRaw(MainLayout));
+          // console.log('Default:',layout.name, layout, this.currentLayout)
       }
 
       if (layout.name !== this.currentLayout.name) {
         this.currentLayout = layout;
+        // console.log('NEW LAYOUT:', layout.name, layout.component, this.currentLayout)
       }
     },
 

@@ -15,6 +15,7 @@ import { useAppStore } from './stores/appStore'
 // Import the app store to manage application state
 const appStore = useAppStore()
 const currentLocation = computed(() => appStore.currentLocation)
+const Layout = computed(() => appStore.currentLayout)
 
 appStore.error = null
 
@@ -23,6 +24,15 @@ appStore.error = null
  * This function fetches categories and updates the store with the data.
  */
 // appStore.fetchCategories()
+
+
+// GOOD
+router.beforeEach((to, from, next) => {
+  console.log(to.name, from.name)
+  // if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+  // else next()
+  next()
+})
 
 /**
  * Router afterEach hook to update the current location in the store.
@@ -48,6 +58,8 @@ router.afterEach((to, from) => {
       componentName: from.componentName
     }
   }
+
+  appStore.updateLayout(to.path)
 })
 
 // Define a computed property to dynamically import the correct layout component
@@ -68,6 +80,7 @@ watch(
   currentLocation,
   (newLocation) => {
     appStore.updateLayout(newLocation.path)
+    // console.log('newLocation:', Layout.value.name, '|', Layout.value.component, '|', newLocation.path)
   },
   { immediate: true }
 )
@@ -75,7 +88,7 @@ watch(
 
 <template>
   <!-- Computed layout -->
-  <component :is="appStore.currentLayout.component" :key="appStore.currentLayout.name">
+  <component :is="Layout.component" :key="Layout.name">
     <RouterView />
   </component>
 </template>

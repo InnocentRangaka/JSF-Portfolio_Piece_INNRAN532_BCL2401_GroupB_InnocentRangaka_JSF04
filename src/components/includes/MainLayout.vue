@@ -14,7 +14,7 @@ const appStore = useAppStore()
 const { fetchCategories, error } = appStore
 
 const currentLocation = computed(() => appStore.currentLocation),
-  showStaticPart = ref(true),
+  // showStaticPart = ref(false),
   showSearchFilterSort = ref(true)
 
 /**
@@ -25,7 +25,7 @@ const isTopPartShown = () => {
   const isAuthPage = appStore.pages.authPages.includes(appStore.pageName)
   const cartPages = appStore.pages.cartPages.includes(appStore.pageName)
 
-  showStaticPart.value = !(isAuthPage || cartPages)
+  showSearchFilterSort.value = !(isAuthPage || cartPages)
 }
 
 /**
@@ -55,6 +55,7 @@ onMounted(() => {
 watch(currentLocation, () => {
   appStore.pageName
   // handleShowSearchFilterSort(currentLocation.value.path)
+  isTopPartShown()
 })
 </script>
 
@@ -66,7 +67,7 @@ watch(currentLocation, () => {
     <main>
       <div class="page-content">
         <!-- Search Filter Sort -->
-        <SearchFilterSort v-show="showSearchFilterSort" />
+        <SearchFilterSort v-if="showSearchFilterSort" />
 
         <!-- Error -->
         <div v-if="error" class="w-full flex justify-center">

@@ -8,6 +8,9 @@ export const useUserStore = defineStore('user', {
     users: [],
     loading: false,
     error: null,
+    accessToken: null,
+    refreshToken: null,
+    tokenExpiration: null,
   }),
   
   actions: {
@@ -45,7 +48,34 @@ export const useUserStore = defineStore('user', {
       this.user = null;
       this.error = error;
       this.loading = loading;
-    }
+    },
+
+    // setToken(token) {
+    //     this.accessToken = token
+    //     const decoded = jwt.decode(token)
+    //     this.tokenExpiration = decoded.exp * 1000
+    //     this.scheduleTokenRefresh()
+    // },
+
+    // async refreshAccessToken() {
+    //   try {
+    //     const response = await axios.post('https://fakestoreapi.com/auth/refresh', { token: this.refreshToken })
+    //     const { token } = response.data
+    //     this.setToken(token)
+    //   } catch (error) {
+    //     console.error('Token refresh failed:', error)
+    //   }
+    // },
+
+    // scheduleTokenRefresh() {
+    //     const expirationTime = this.tokenExpiration - Date.now()
+    //     const refreshTime = expirationTime - parseInt(import.meta.env.VITE_REFRESH_TOKEN_INTERVAL) * 60 * 1000
+  
+    //     setTimeout(() => {
+    //       this.refreshAccessToken()
+    //     }, refreshTime)
+    // },
+    
   },
 
   getters: {
