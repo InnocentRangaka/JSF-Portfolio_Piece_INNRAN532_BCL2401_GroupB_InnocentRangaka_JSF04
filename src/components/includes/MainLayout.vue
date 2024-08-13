@@ -26,6 +26,9 @@ const isTopPartShown = () => {
   const cartPages = appStore.pages.cartPages.includes(appStore.pageName)
 
   showSearchFilterSort.value = !(isAuthPage || cartPages)
+  if(!isAuthPage && cartPages){ 
+    fetchCategories()
+  }
 }
 
 /**
@@ -44,7 +47,6 @@ const isTopPartShown = () => {
  */
 onMounted(() => {
   isTopPartShown()
-  fetchCategories()
 })
 
 /**

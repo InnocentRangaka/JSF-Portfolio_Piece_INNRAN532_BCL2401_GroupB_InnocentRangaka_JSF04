@@ -1,5 +1,19 @@
 import Home from '../views/HomeView.vue'
 import NotFound from '../views/NotFoundView.vue';
+import { useUserStore } from '../stores/userStore';
+
+const isUserAuthenticated = (to, from, callBack) => {
+
+  const userStore = useUserStore();
+
+  userStore.setCurrentProtectedLocation(to, from)
+
+  if (userStore.userIsAuthenticated && userStore.user) { // Check if user is authenticated
+    callBack();
+  } else {
+    callBack({ name: 'Login' }); // Redirect to Login if not authenticated
+  }
+}
 
 /**
  * The routes for the application.
@@ -55,6 +69,11 @@ const routes = [
       path: '/cart',
       name: 'Cart',
       component: () => import('../views/CartView.vue'),
+      meta: { requiresAuth: true }, // meta field to identify protected routes
+      beforeEnter: (to, from, next) => {
+        console.log('to:',to.path, 'from:',from.name)
+        isUserAuthenticated(to, from, next)
+      },
     },
     /**
      * Wishlist page route.

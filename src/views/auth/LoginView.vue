@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '../../stores/appStore'
 import { useUserStore } from '../../stores/userStore'
-import { useUserAuth } from '../../utils/useUserFetch.js'
+// import { useUserAuth } from '../../utils/useUserFetch.js'
 import EyeOn from '../../components/icons/EyeOn.vue'
 import EyeOff from '../../components/icons/EyeOff.vue'
 import displayError from '../../components/alerts/displayError.vue'
@@ -16,7 +16,7 @@ import displayError from '../../components/alerts/displayError.vue'
  const appStore = useAppStore()
  const userStore = useUserStore()
 
- const { loginUser } = userStore;
+ const { loginUser, setLoggedInUser } = userStore;
 
 const router = useRouter(),
 email = ref(''),
@@ -26,7 +26,8 @@ credentialsError = ref({
   username: {},
   password: {}
 }),
-loginError = computed(() => appStore.error);
+loginError = computed(() => appStore.error),
+currentLocation = computed(() => userStore.currentProtectedLocation);
 
 // let loginData = null,
 // loginLoading = false;
@@ -50,8 +51,17 @@ const handleSubmit = async () => {
   if(loading.value) console.log('isLoading:', loading)
   
   if (data.value) {
-    console.log('Login Successful:', data.value)
+    console.log('Login Successful:', data.value.user)
+    setLoggedInUser(data.value.user, data.value.token)
+    console.log(currentLocation.value.path)
+    if(currentLocation.value.path.startsWith('/auth')){
+      router.push('/')
+    } else {
+      router.push(currentLocation.value.path)
+    }
+    
   } else if (error.value) {
+    appStore.userIsAuthenticated = false;
     if(error.value.code === 'ERR_BAD_REQUEST'){
       appStore.setError(null)
 

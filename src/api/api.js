@@ -6,7 +6,7 @@ import { useFetch } from '../utils/useFetch';
  * @returns {Promise<{response: string[], error: null} | {error: any, response: null}>} An object containing the response data or an error.
  */
 export const fetchCategories = async (app) => {
-  const { data, error, fetching } = await useFetch(`/categories`);
+  const { data, error, fetching } = await useFetch(`/products/categories`);
   while (fetching.value) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
@@ -42,7 +42,7 @@ export const fetchSingleProduct = async (id, app) => {
   app.setViewProduct([]);
   app.setProductsLoading(true);
 
-  const { data, error, fetching } = await useFetch(`/${id}`);
+  const { data, error, fetching } = await useFetch(`/products/${id}`);
   while (fetching.value) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
@@ -85,7 +85,7 @@ export const fetchProducts = async (app) => {
     ? `/category/${app.filterItem}`
     : `/`;
 
-  const { data, error, fetching } = await useFetch(url);
+  const { data, error, fetching } = await useFetch(`/products/${url}`);
 
   // Watch fetching to detect when the request is completed
   watch(fetching, async (isFetching) => {
@@ -122,7 +122,7 @@ export const fetchFavourites = async (objectArray, app) => {
   app.setProductsLoading(true);
 
   const ids = [...new Set(Object.values(objectArray))];
-  const promises = ids.map(id => useFetch(`/${id}`));
+  const promises = ids.map(id => useFetch(`/products/${id}`));
 
   const results = await Promise.all(promises);
 

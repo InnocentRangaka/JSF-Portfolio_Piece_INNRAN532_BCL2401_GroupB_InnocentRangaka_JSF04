@@ -1,5 +1,5 @@
 <script setup>
-import { watchEffect, ref, onMounted } from 'vue'
+import { watch, ref, onMounted } from 'vue'
 import { useAppStore } from '../../stores/appStore'
 import RatingStars from '../icons/RatingStars.vue'
 
@@ -23,11 +23,15 @@ onMounted(async () => {
 })
 
 // Watch for changes in products and update the reference
-watchEffect(() => {
-  currentProducts.value = appStore.products
-  appStore.getProducts
-  appStore.products
-})
+watch(
+  appStore.products, 
+  (newProducts) => {
+    currentProducts.value = newProducts
+    appStore.getProducts
+    // appStore.products
+  },
+  { immediate: true }
+)
 </script>
 
 <template>

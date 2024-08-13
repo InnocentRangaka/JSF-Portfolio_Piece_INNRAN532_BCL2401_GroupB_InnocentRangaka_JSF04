@@ -1,9 +1,12 @@
 <script setup>
 import { onMounted, computed, watch } from 'vue'
+import axios from 'axios'
 import router from './router'
 import { RouterView } from 'vue-router'
 import { useAppStore } from './stores/appStore'
-// import Layout from './components/includes/MainLayout.vue'
+import Layout from './components/includes/MainLayout.vue'
+
+axios.defaults.baseURL = 'https://fakestoreapi.com/'
 
 /**
  * Setup script for the main component of the Vue application.
@@ -14,8 +17,9 @@ import { useAppStore } from './stores/appStore'
 
 // Import the app store to manage application state
 const appStore = useAppStore()
+
 const currentLocation = computed(() => appStore.currentLocation)
-const Layout = computed(() => appStore.currentLayout)
+// const Layout = computed(() => appStore.currentLayout)
 
 appStore.error = null
 
@@ -33,8 +37,6 @@ appStore.error = null
  * @param {Object} from - The current Route Object being navigated away from.
  */
 router.afterEach((to, from) => {
-  
-  appStore.updateLayout(to.path)
 
   appStore.currentLocation = {
     path: to.path,
@@ -42,16 +44,19 @@ router.afterEach((to, from) => {
     query: to.query,
     route: to.route,
     userData: to.userData,
-    componentName: to.componentName,
+    componentName: to.componentName || to.name,
     previous: {
       path: from.path,
       params: from.params,
       query: from.query,
       route: from.route,
       userData: from.userData,
-      componentName: from.componentName
+      componentName: from.componentName || from.name
     }
   }
+
+  // console.log(to)
+  // console.log(from)
 
 })
 
@@ -63,7 +68,6 @@ router.afterEach((to, from) => {
  * This hook runs when the component is mounted and sets a timeout to change the loading state in the app store.
  */
 onMounted(async () => {
-  appStore.updateLayout(appStore.currentLocation.path)
   setTimeout(() => {
     appStore.setPageLoading(false)
   }, 2000)
@@ -73,8 +77,8 @@ onMounted(async () => {
 watch(
   currentLocation,
   (newLocation) => {
-    appStore.updateLayout(newLocation.path)
-    console.log('newLocation:', Layout.value.name, '|', Layout.value.component, '|', newLocation.path)
+    // appStore.updateLayout(newLocation.path)
+    // console.log(newLocation)
   },
   { immediate: true }
 )
@@ -82,7 +86,8 @@ watch(
 
 <template>
   <!-- Computed layout -->
-  <component :is="Layout.component" :key="Layout.name">
+  <!-- <component :is="appStore.currentLayout.component" :key="appStore.currentLayout.name">
     <RouterView />
-  </component>
+  </component> -->
+  <Layout><RouterView /></Layout>
 </template>

@@ -12,6 +12,85 @@ export const useUserStore = defineStore('userStore', {
     accessToken: null,
     refreshToken: null,
     tokenExpiration: null,
+    currentProtectedLocation: {
+      /**
+       * Current path.
+       * @type {string}
+       */
+      path: '',
+
+      /**
+       * Current URL parameters.
+       * @type {string}
+       */
+      params: '',
+
+      /**
+       * Current URL query string.
+       * @type {string}
+       */
+      query: '',
+
+      /**
+       * Current route name.
+       * @type {string}
+       */
+      route: '',
+
+      /**
+       * User data related to the current location.
+       * @type {string}
+       */
+      userData: '',
+
+      /**
+       * Current component name.
+       * @type {string}
+       */
+      componentName: '',
+
+      /**
+       * Object containing previous location details.
+       * @type {Object}
+       */
+      previous: {
+        /**
+         * Previous path.
+         * @type {string}
+         */
+        path: '',
+
+        /**
+         * Previous URL parameters.
+         * @type {string}
+         */
+        params: '',
+
+        /**
+         * Previous URL query string.
+         * @type {string}
+         */
+        query: '',
+
+        /**
+         * Previous route name.
+         * @type {string}
+         */
+        route: '',
+
+        /**
+         * User data related to the previous location.
+         * @type {string}
+         */
+        userData: '',
+
+        /**
+         * Previous component name.
+         * @type {string}
+         */
+        componentName: '',
+      }
+    },
   }),
   
   actions: {
@@ -32,7 +111,7 @@ export const useUserStore = defineStore('userStore', {
 
       if(thisData?.value?.token){
         thisData.value.user = decodeJWTUserData(thisData.value.token);
-        this.userIsAuthenticated = true;
+        // this.userIsAuthenticated = true;
       }
 
       this.user = thisData;
@@ -71,6 +150,12 @@ export const useUserStore = defineStore('userStore', {
       this.loading = loading;
     },
 
+    setLoggedInUser(userData, token) {
+      this.user = userData;
+      this.accessToken = token;
+      this.userIsAuthenticated = true;
+    },
+
     // setToken(token) {
     //     this.accessToken = token
     //     const decoded = jwt.decode(token)
@@ -96,6 +181,25 @@ export const useUserStore = defineStore('userStore', {
     //       this.refreshAccessToken()
     //     }, refreshTime)
     // },
+
+    setCurrentProtectedLocation(to, from) {
+      this.currentProtectedLocation = {
+        path: to.path,
+        params: to.params,
+        query: to.query,
+        route: to.route,
+        userData: to.userData,
+        componentName: to.componentName || to.name,
+        previous: {
+          path: from.path,
+          params: from.params,
+          query: from.query,
+          route: from.route,
+          userData: from.userData,
+          componentName: from.componentName || from.name
+        }
+      };
+    },
 
   },
 

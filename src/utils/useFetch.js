@@ -1,8 +1,6 @@
 import { ref, reactive, watchEffect, toValue } from 'vue'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'https://fakestoreapi.com/products/'
-
 /**
  * Custom hook for fetching data from a given URL using Axios.
  * This hook returns reactive objects for the fetched data, error state, and fetching state.
@@ -28,12 +26,15 @@ export function useFetch(url) {
     data.value = null
     error.value = null
 
+    // console.log(url)
+
     try {
       const response = await axios.get(toValue(url))
       if (response.status !== 200) {
         throw response
       }
       data.value = response.data
+      // console.log(response.data)
     } catch (err) {
       error.value = err
     } finally {

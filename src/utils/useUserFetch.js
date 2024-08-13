@@ -1,9 +1,6 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import * as jose from 'jose';
-
-
-axios.defaults.baseURL = 'https://fakestoreapi.com/'
+import { jwtDecode } from "jwt-decode";
 
 /**
  * A custom hook to fetch user data.
@@ -93,27 +90,32 @@ export const fetchUserData = async (username, password) => {
     return { data, error, loading};
   }
 
- export function decodeJWToken(token) {
-    // Split the token into its parts (header, payload, signature)
-    const [header, payload, signature] = token.split('.');
+  export function decodeJWToken(token) {
+    // Decode the JWT token into its components using jwt-decode
+    const decoded = jwtDecode(token);
+    
+    // Since jwt-decode returns the header and payload in one step, you don't need to manually split the token
+    const decodedHeader = decoded.header;
+    const decodedPayload = decoded;
   
-    // Decode the header and payload from base64Url to JSON
-    const decodedHeader = JSON.parse(atob(header));
-    const decodedPayload = JSON.parse(atob(payload));
-
-    console.log( jose.decodeJwt(token))
+    // The signature part can't be retrieved using jwt-decode, as it's primarily used for decoding the payload.
+    const signature = token.split('.')[2]; // Manually extract the signature
+    
+    console.log(decoded);
   
     return {
       header: decodedHeader,
       payload: decodedPayload,
       signature: signature // Signature is left encoded for security reasons
     };
-}
-
+  }
+  
 export function decodeJWTUserData(token) {
-  const decoded = jose.decodeJwt(token)
+  // Decode the JWT token and retrieve the payload
+  const decoded = jwtDecode(token);
 
-  console.log(decoded?.user )
+  // Extract user data from the decoded payload
+  // console.log(decoded?.user);
 
   return decoded?.user;
 }
