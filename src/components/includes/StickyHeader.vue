@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 import CartIcon from '../icons/CartIcon.vue'
 import HeartIcon from '../icons/HeartIcon.vue'
 import HamburgerIcon from '../icons/HamburgerIcon.vue'
-import UserIcon from '../icons/UserIcon.vue'
+import UserIconButton from './UserIconButton.vue'
 
 /**
  * Vue Router instance used for navigation.
@@ -215,7 +215,7 @@ onMounted(async () => {
                     }"
                     class="group inline-flex w-[32px] h-[32px] rounded-full hover:bg-transparent md:hover:text-blue-700 justify-center items-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
                   >
-                    <UserIcon />
+                    <UserIconButton />
                   </button>
                 </li>
                 <li class="md:hidden">

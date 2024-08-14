@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
 // import { onStoreReady } from 'pinia-plugin-onstoreready';
-import { useUserAuth, useCreateUser, useUpdateUser, useDeleteUser, decodeJWTUserData, inputValueType } from '../utils/useUserFetch';
+import { useUserAuth, useCreateUser, useUpdateUser, useDeleteUser, decodeJWTUserData, fetchUserDataByToken, inputValueType } from '../utils/useUserFetch';
 
 export const useUserStore = defineStore('userStore', {
   state: () => ({
-    user: null,
+    user: {},
     userIsAuthenticated: false,
     users: [],
     loading: false,
@@ -110,11 +110,15 @@ export const useUserStore = defineStore('userStore', {
       }
 
       if(thisData?.value?.token){
-        thisData.value.user = decodeJWTUserData(thisData.value.token);
+        const decodedJWT = decodeJWTUserData(thisData.value.token)
+        thisData.value.user = decodedJWT.user;
+        console.log('decodedJWT.token:', decodedJWT)
+        const userData = fetchUserDataByToken(thisData.value.token)
         // this.userIsAuthenticated = true;
+        console.log(thisData.value,  userData)
       }
 
-      this.user = thisData;
+      this.user = thisData.value;
       this.error = thisError;
       this.loading = thisLoading;
 

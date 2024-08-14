@@ -47,19 +47,22 @@ const handleSubmit = async () => {
 
   // loginData = data;
   // loginLoading = loading;
-
+  
   if(loading.value) console.log('isLoading:', loading)
   
   if (data.value) {
     console.log('Login Successful:', data.value.user)
     setLoggedInUser(data.value.user, data.value.token)
     console.log(currentLocation.value.path)
+    fetch('https://fakestoreapi.com/users/2')
+            .then(res=>res.json())
+            .then(json=>console.log(json))
     if(currentLocation.value.path.startsWith('/auth')){
       router.push('/')
     } else {
       router.push(currentLocation.value.path)
     }
-    
+
   } else if (error.value) {
     appStore.userIsAuthenticated = false;
     if(error.value.code === 'ERR_BAD_REQUEST'){

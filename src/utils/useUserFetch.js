@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { jwtDecode } from "jwt-decode";
+import { useFetch } from './useFetch';
 
 /**
  * A custom hook to fetch user data.
@@ -72,6 +73,12 @@ export const useDeleteUser = async (userId) => {
     return { data, error, loading }
 }
 
+export const useGetUserData = async (userId) => {
+  const { data, error, loading } = useUserFetch(`users/${userId}`)
+  
+  return { data, error, loading }
+}
+
 
 export const fetchUserData = async (username, password) => {
   
@@ -81,34 +88,58 @@ export const fetchUserData = async (username, password) => {
     if (data.value.token) {
       const decodedToken = decodeJWTUserData(data.value.token);
     //   console.log('Decoded JWT:', decodedToken);
-      data.value.user = decodedToken
+      data.value.user = decodedToken.user
     } else {
       console.log('Login response did not contain a JWT token');
     }
   
     // Return the entire response data for further usage
     return { data, error, loading};
+}
+
+export const fetchUserDataByToken = async (token) => {
+  console.log('fetchUserDataByToken', token)
+  let fetchData = null,
+  fetchError = null,
+  fetchLoading = false;
+
+  if (token) {
+    const decodedToken = decodeJWTUserData(token);
+    const { data, error, loading } = useFetch(`users/${decodedToken.sub}`)
+
+    fetchData = data;
+    fetchError = error;
+    fetchLoading = loading;
+
+    console.log('Decoded JWT:', decodedToken, fetchData, fetchError, fetchLoading);
+    // data.value.user = decodedToken.user
+  } else {
+    console.log('Login response did not contain a JWT token');
   }
 
-  export function decodeJWToken(token) {
-    // Decode the JWT token into its components using jwt-decode
-    const decoded = jwtDecode(token);
-    
-    // Since jwt-decode returns the header and payload in one step, you don't need to manually split the token
-    const decodedHeader = decoded.header;
-    const decodedPayload = decoded;
+  // Return the entire response data for further usage
+  return { data: fetchData, error: fetchError, loading: fetchLoading};
+}
+
+export function decodeJWToken(token) {
+  // Decode the JWT token into its components using jwt-decode
+  const decoded = jwtDecode(token);
   
-    // The signature part can't be retrieved using jwt-decode, as it's primarily used for decoding the payload.
-    const signature = token.split('.')[2]; // Manually extract the signature
-    
-    console.log(decoded);
+  // Since jwt-decode returns the header and payload in one step, you don't need to manually split the token
+  const decodedHeader = decoded.header;
+  const decodedPayload = decoded;
+
+  // The signature part can't be retrieved using jwt-decode, as it's primarily used for decoding the payload.
+  const signature = token.split('.')[2]; // Manually extract the signature
   
-    return {
-      header: decodedHeader,
-      payload: decodedPayload,
-      signature: signature // Signature is left encoded for security reasons
-    };
-  }
+  // console.log(decoded);
+
+  return {
+    header: decodedHeader,
+    payload: decodedPayload,
+    signature: signature // Signature is left encoded for security reasons
+  };
+}
   
 export function decodeJWTUserData(token) {
   // Decode the JWT token and retrieve the payload
@@ -117,7 +148,7 @@ export function decodeJWTUserData(token) {
   // Extract user data from the decoded payload
   // console.log(decoded?.user);
 
-  return decoded?.user;
+  return decoded;
 }
 
 
