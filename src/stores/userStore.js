@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 // import { onStoreReady } from 'pinia-plugin-onstoreready';
-import { useUserAuth, useCreateUser, useUpdateUser, useDeleteUser, decodeJWTUserData, fetchUserDataByToken, inputValueType } from '../utils/useUserFetch';
+import { useUserAuth, useCreateUser, useUpdateUser, useDeleteUser } from '../utils/useUserFetch';
+import { decodeJWTUserData, inputValueType } from '../utils/useSecurity';
+import { fetchUserDataByToken } from '../api/api'
 
 export const useUserStore = defineStore('userStore', {
   state: () => ({
@@ -104,6 +106,7 @@ export const useUserStore = defineStore('userStore', {
       }
       else {
         const { data, error, loading } = await useUserAuth(email, password);
+        
         thisData = data;
         thisError = error;
         thisLoading = loading;
@@ -111,18 +114,32 @@ export const useUserStore = defineStore('userStore', {
 
       if(thisData?.value?.token){
         const decodedJWT = decodeJWTUserData(thisData.value.token)
-        thisData.value.user = decodedJWT.user;
+        thisData.value.user = {
+          id: decodedJWT.sub,
+          username: decodedJWT.user,
+        };
         console.log('decodedJWT.token:', decodedJWT)
-        const userData = fetchUserDataByToken(thisData.value.token)
+        const { data, error, loading } = await fetchUserDataByToken(thisData.value.token)
         // this.userIsAuthenticated = true;
-        console.log(thisData.value,  userData)
+        if(thisData.value.user.id == data.user.id){
+          thisData = {
+            ...data.user,
+            token: thisData.value.token,
+          };
+          thisError = error;
+          thisLoading = loading;
+        }
+        else {
+          console.log('thisData.value:', thisData.value,  data)
+        }
+        
       }
 
       this.user = thisData.value;
       this.error = thisError;
       this.loading = thisLoading;
 
-      // console.log(thisData)
+      console.log(thisData.value, this.user)
       return { data: thisData, error: thisError, loading: thisLoading }
     },
     

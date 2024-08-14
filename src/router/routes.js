@@ -71,7 +71,7 @@ const routes = [
       component: () => import('../views/CartView.vue'),
       meta: { requiresAuth: true }, // meta field to identify protected routes
       beforeEnter: (to, from, next) => {
-        console.log('to:',to.path, 'from:',from.name)
+        // console.log('to:',to.path, 'from:',from.name)
         isUserAuthenticated(to, from, next)
       },
     },
@@ -98,6 +98,10 @@ const routes = [
       path: '/auth/login',
       name: 'Login',
       component: () => import('../views/auth/LoginView.vue'),
+      // meta: { requiresAuth: true }, // meta field to identify protected routes
+      // beforeEnter: (to, from, next) => {
+      //   isUserAuthenticated(to, from, next)
+      // },
     },
     /**
      * Catch-all route for undefined paths (404 Not Found).

@@ -54,9 +54,7 @@ const handleSubmit = async () => {
     console.log('Login Successful:', data.value.user)
     setLoggedInUser(data.value.user, data.value.token)
     console.log(currentLocation.value.path)
-    fetch('https://fakestoreapi.com/users/2')
-            .then(res=>res.json())
-            .then(json=>console.log(json))
+    
     if(currentLocation.value.path.startsWith('/auth')){
       router.push('/')
     } else {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { computed } from 'vue'
 import { useAppStore } from '../../stores/appStore'
 import { useUserStore } from '../../stores/userStore'
 import { useRouter } from 'vue-router'
@@ -44,7 +44,7 @@ const isActivePage = (name) => {
 
     <button 
         v-if="isUserAuthenticated"
-        @click="navigateTo('/auth/login')"
+        @click="navigateTo('/auth/logout')"
         :class="{
             'text-cyan-700': isActivePage('login'),
             'text-gray-700': !isActivePage('login')

@@ -1,5 +1,6 @@
 import { watch, watchEffect } from 'vue';
 import { useFetch } from '../utils/useFetch';
+import { decodeJWTUserData } from '../utils/useSecurity'
 
 /**
  * Fetches categories from the Fake Store API.
@@ -167,3 +168,32 @@ export const fetchFavourites = async (objectArray, app) => {
   return { list, error: errorOccurred };
 };
 
+export const fetchUserDataByToken = async (token) => {
+  
+  let fetchData = null,
+  fetchError = null,
+  fetchLoading = false;
+
+  if (token) {
+    const decodedToken = decodeJWTUserData(token);
+    const { data, error, fetching } = await useFetch(`users/${decodedToken.sub}`)
+
+    while (fetching.value) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    fetchData = data;
+    fetchError = error;
+    fetchLoading = fetching;
+
+  } else {
+    fetchError = {
+      status: 'No Token',
+      message: 'We could not authenticate your credentials',
+      type: 'Auth/Credentials',
+    }
+  }
+
+  // Return the entire response data for further usage
+  return { data: fetchData, error: fetchError, loading: fetchLoading};
+}
