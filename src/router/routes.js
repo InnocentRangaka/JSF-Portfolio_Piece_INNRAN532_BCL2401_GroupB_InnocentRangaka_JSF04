@@ -76,6 +76,16 @@ const routes = [
         isUserAuthenticated(to, from, next)
       },
     },
+    {
+      path: '/checkout',
+      name: 'Checkout',
+      component: () => import('../views/CheckoutView.vue'),
+      meta: { requiresAuth: true }, // meta field to identify protected routes
+      beforeEnter: (to, from, next) => {
+        // console.log('to:',to.path, 'from:',from.name)
+        isUserAuthenticated(to, from, next)
+      },
+    },
     /**
      * Wishlist page route.
      * @type {Object}

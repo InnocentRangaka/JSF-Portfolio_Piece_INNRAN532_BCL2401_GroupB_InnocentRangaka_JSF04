@@ -49,7 +49,7 @@ function calculateAmount(item) {
 function calculateTotalCartAmount(cart, stateTaxRate) {
     const subTotal = calculateSubTotalAmount(cart.cartItems);
     const shipping = parseFloat(cart.shippingRate);
-    const tax = parseFloat(calculateTaxAmount(cart, stateTaxRate));
+    const tax = parseFloat(calculateTaxAmount(cart, stateTaxRate, shipping));
     return (subTotal + shipping + tax).toFixed(2);
 }
 
@@ -58,9 +58,10 @@ function calculateTotalCartAmount(cart, stateTaxRate) {
  * @param {Object} items - The items in the cart.
  * @returns {string} The tax amount formatted to two decimal places.
  */
-export function calculateTaxAmount(items, stateTaxRate) {
+export function calculateTaxAmount(items, stateTaxRate, stateShippingRate = 0) {
     const subTotal = calculateSubTotalAmount(items);
-    const tax = (subTotal * stateTaxRate) / 100;
+    const amount = parseFloat(subTotal) + stateShippingRate;
+    const tax = (amount * stateTaxRate) / 100;
     return tax.toFixed(2);
 }
 

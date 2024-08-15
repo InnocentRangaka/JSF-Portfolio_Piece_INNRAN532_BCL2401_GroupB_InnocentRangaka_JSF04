@@ -10,7 +10,6 @@ const { logoutUser } = userStore;
 
 function useCountdownRedirect() {
   const countdown = ref(5); // Start countdown from 5 seconds
-  const router = useRouter(); // Use Vue Router for redirection
 
   const startCountdown = () => {
     const interval = setInterval(() => {

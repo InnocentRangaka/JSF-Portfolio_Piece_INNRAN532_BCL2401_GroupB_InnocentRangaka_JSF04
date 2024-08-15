@@ -37,7 +37,7 @@ watch(
 <template>
   <div
     v-show="!appStore.loading.products"
-    class="container lg:max-h-[130rem] mx-auto grid gap-4 grid-cols-1 lg:grid-cols-4 md:grid-cols-2 items-center lg:max-w-none my-4 px-2 md:px-0"
+    class="container mx-auto grid gap-4 grid-cols-1 lg:grid-cols-4 md:grid-cols-2 items-center lg:max-w-none my-4 px-2 md:px-0"
   >
     <div
       v-for="product in appStore.getProducts"

@@ -6,7 +6,7 @@ import { parseObjectToArray } from '../utils/utils'
 import NoItemFound from '../components/includes/NoItemFound.vue'
 
 const appStore = useAppStore()
-const { cart, isInCartItems, updateCart, removeCartItem } = appStore
+const { cart, isInCartItems, updateCart, removeCartItem, removeAllCartItems } = appStore
 
 const subTotalAmount = computed(() => appStore.cart.subTotalAmount),
   totalAmount = computed(() => appStore.cart.totalAmount),
@@ -98,7 +98,7 @@ watch(
                 <img
                   :src="cartItem.image"
                   :alt="cartItem.title"
-                  class="w-20 h-20 object-cover mt-[0.35rem] self-start"
+                  class="w-20 h-20 max-h-full object-cover mt-[0.35rem] self-start"
                 />
                 <div class="flex flex-col">
                   <div class="grid w-full grid-cols-1 relative">
@@ -220,6 +220,18 @@ watch(
           >
             <span>Checkout</span>
           </a>
+
+          <div
+            class="flex justify-center mt-10"
+          >
+            <button
+              @click="() => removeAllCartItems()"
+              class="text-xs text-gray-900 hover:text-cyan-900 hover:underline"
+            >
+              Remove All
+            </button>
+          </div>
+
         </div>
       </div>
     </div>

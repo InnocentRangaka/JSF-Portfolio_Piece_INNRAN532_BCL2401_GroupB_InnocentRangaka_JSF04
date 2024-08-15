@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { defineAsyncComponent, markRaw, shallowRef } from 'vue'
+import { defineAsyncComponent, markRaw, reactive, shallowRef } from 'vue'
 import { fetchCategories, fetchSingleProduct, fetchProducts, fetchFavourites } from '../api/api';
 import { calculateSubTotalAmount, calculateTaxAmount, calculateCartTotal, parseObjectToArray } from '../utils/utils'
 import MainLayout from '../components/includes/MainLayout.vue'
@@ -164,7 +164,7 @@ export const useAppStore = defineStore('appStore', {
      * Cart management object.
      * @type {Object}
      */
-    cart: {
+    cart: reactive({
       /**
        * Flag indicating if an item is being added to the cart.
        * @type {boolean}
@@ -218,7 +218,7 @@ export const useAppStore = defineStore('appStore', {
        * @type {number}
        */
       totalAmount: 0,
-    },
+    }),
 
     // Wishlist management
     /**
@@ -724,8 +724,9 @@ export const useAppStore = defineStore('appStore', {
     updateCart(newCartItems, toastMessage='') {
       const cartTotalItems = Object.keys(newCartItems).length;
       const cartSubTotalAmount = calculateSubTotalAmount(newCartItems);
-      const cartTaxAmount = calculateTaxAmount(newCartItems, this.taxRate);
-      const cartTotalAmount = calculateCartTotal(newCartItems, this.taxRate, this.shippingRate);
+      const cartShippingRate = this.shippingRate;
+      const cartTaxAmount = calculateTaxAmount(newCartItems, this.taxRate, cartShippingRate);
+      const cartTotalAmount = calculateCartTotal(newCartItems, this.taxRate, cartShippingRate);
 
       if(toastMessage){this.showToast(toastMessage);}
 
@@ -735,6 +736,7 @@ export const useAppStore = defineStore('appStore', {
         totalItems: cartTotalItems,
         subTotalAmount: cartSubTotalAmount,
         taxAmount: cartTaxAmount,
+        shippingRate: cartShippingRate,
         totalAmount: cartTotalAmount,
       };
     },
@@ -770,6 +772,13 @@ export const useAppStore = defineStore('appStore', {
       }
     },
 
+    removeAllCartItems() {
+      if (confirm("Are you sure you want to remove all products from the cart?")) {
+        const newCartItems = [];
+        this.updateCart(newCartItems, 'All items removed successfully!');
+      }
+    },
+
     /**
      * Checks if an item is in the cart.
      * @param {number|string} id - The ID of the item to check.
@@ -779,6 +788,13 @@ export const useAppStore = defineStore('appStore', {
     isInCartItems: (id, object) => {
       const parsedObject = parseObjectToArray(object);
       return Object.values(parsedObject).find(item => item.id === id) || false;
+    },
+
+    updateShipping(method, app){
+      // console.log(shippingCost)
+      const cost = method == 'express' ? this.shippingCost.express : this.shippingCost.standard;
+      app.shippingMethod = method
+      app.shippingRate = cost;
     },
 
     /**
