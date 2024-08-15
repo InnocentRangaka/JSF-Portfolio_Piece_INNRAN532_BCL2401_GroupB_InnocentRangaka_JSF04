@@ -98,49 +98,95 @@ export const useUserStore = defineStore('userStore', {
   actions: {
     async loginUser(email, password) {
       this.loading = true;
-
+    
       let thisData, thisError, thisLoading;
-
-      if(inputValueType(email).type === 'email'){
-        console.log(inputValueType(email).type)
-      }
-      else {
+    
+      if (inputValueType(email).type === 'email') {
+        console.log(inputValueType(email).type);
+      } else {
         const { data, error, loading } = await useUserAuth(email, password);
-        
+    
         thisData = data;
         thisError = error;
         thisLoading = loading;
       }
-
-      if(thisData?.value?.token){
-        const decodedJWT = decodeJWTUserData(thisData.value.token)
+    
+      if (thisData?.value?.token) {
+        // Check if there is already a user with the same token
+        const existingUserWithToken = this.users.find(user => user?.token === thisData.value.token);
+    
+        if (existingUserWithToken) {
+          // If a user with this token already exists, return them
+          this.user = existingUserWithToken;
+          this.user.active = true;
+          this.error = thisError;
+          this.loading = thisLoading;
+    
+          // console.log('User with token found:', this.user);
+          return { data: this.user, error: thisError, loading: thisLoading };
+        }
+    
+        // If no user with this token is found, proceed with decoding and fetching user data
+        const decodedJWT = decodeJWTUserData(thisData.value.token);
+        
         thisData.value.user = {
           id: decodedJWT.sub,
           username: decodedJWT.user,
         };
-        console.log('decodedJWT.token:', decodedJWT)
-        const { data, error, loading } = await fetchUserDataByToken(thisData.value.token)
-        // this.userIsAuthenticated = true;
-        if(thisData.value.user.id == data.user.id){
+    
+        // console.log('Decoded JWT:', decodedJWT);
+    
+        const { data, error, loading } = await fetchUserDataByToken(thisData.value.token);
+    
+        if (thisData.value.user.id === data.value.id) {
           thisData = {
-            ...data.user,
-            token: thisData.value.token,
+            ...data.value,
+            // token: thisData.value.token,
+            active: false,
           };
           thisError = error;
           thisLoading = loading;
+        } else {
+          console.log('Mismatch in user data:', thisData.value, data);
         }
-        else {
-          console.log('thisData.value:', thisData.value,  data)
-        }
-        
       }
 
-      this.user = thisData.value;
+      // console.log(thisData?.id)
+    
+      // Check if the logged-in user exists in the list of users
+      const existingUser = this.users.find(user => user.id === thisData?.id);
+
+      if (existingUser) {
+        // If user exists, update their state
+        this.user = { ...existingUser, ...thisData };
+        this.user.token = thisData?.value?.token
+        this.user.active = true;
+      } else {
+        const newData = {
+          ...thisData,
+          token: thisData?.value?.token,
+        }
+        // If user doesn't exist, add them to the users list
+        this.users.push(thisData);
+        this.user = thisData;
+        if(this.user?.active){
+          this.user.active = true;
+        }
+        else {
+          this.user = {
+            ...this.user,
+            active: true,
+          }
+        }
+    
+        // console.log('New user added:', this.user);
+      }
+      
+      // Set error and loading states
       this.error = thisError;
       this.loading = thisLoading;
 
-      console.log(thisData.value, this.user)
-      return { data: thisData, error: thisError, loading: thisLoading }
+      return { data: this.user, error: thisError, loading: thisLoading };
     },
     
     async createUser(userData) {
@@ -171,10 +217,21 @@ export const useUserStore = defineStore('userStore', {
       this.loading = loading;
     },
 
-    setLoggedInUser(userData, token) {
+    setLoggedInUser(userData) {
       this.user = userData;
-      this.accessToken = token;
-      this.userIsAuthenticated = true;
+    },
+
+    setAuthentication(userId, token) {
+      if(userId){
+        this.accessToken = token;
+        this.userIsAuthenticated = true;
+      }
+      else {
+        this.user = {}
+        this.accessToken = null;
+        this.userIsAuthenticated = false;
+      }
+      
     },
 
     // setToken(token) {

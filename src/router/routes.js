@@ -13,6 +13,7 @@ const isUserAuthenticated = (to, from, callBack) => {
   } else {
     callBack({ name: 'Login' }); // Redirect to Login if not authenticated
   }
+  
 }
 
 /**
@@ -102,6 +103,11 @@ const routes = [
       // beforeEnter: (to, from, next) => {
       //   isUserAuthenticated(to, from, next)
       // },
+    },
+    {
+      path: '/auth/logout',
+      name: 'Login',
+      component: () => import('../views/auth/LogoutView.vue'),
     },
     /**
      * Catch-all route for undefined paths (404 Not Found).

@@ -16,7 +16,7 @@ import displayError from '../../components/alerts/displayError.vue'
  const appStore = useAppStore()
  const userStore = useUserStore()
 
- const { loginUser, setLoggedInUser } = userStore;
+ const { loginUser, setAuthentication, setLoggedInUser } = userStore;
 
 const router = useRouter(),
 email = ref(''),
@@ -27,7 +27,8 @@ credentialsError = ref({
   password: {}
 }),
 loginError = computed(() => appStore.error),
-currentLocation = computed(() => userStore.currentProtectedLocation);
+currentLocation = computed(() => userStore.currentProtectedLocation),
+currentUser = computed(() => appStore.user);
 
 // let loginData = null,
 // loginLoading = false;
@@ -47,19 +48,26 @@ const handleSubmit = async () => {
 
   // loginData = data;
   // loginLoading = loading;
+
+  console.log(data)
   
   if(loading.value) console.log('isLoading:', loading)
   
-  if (data.value) {
-    console.log('Login Successful:', data.value.user)
-    setLoggedInUser(data.value.user, data.value.token)
-    console.log(currentLocation.value.path)
+  if (data) {
+    if(!currentUser.value){
+      setLoggedInUser(data)
+    }
+    setAuthentication(data.id, data.token)
+    // console.log(currentLocation.value.path, currentLocation.value)
+    const path = currentLocation.value.path;
     
-    if(currentLocation.value.path.startsWith('/auth')){
+    if(path.startsWith('/auth') || !path){
       router.push('/')
     } else {
-      router.push(currentLocation.value.path)
+      router.push(path)
     }
+
+    console.log('Login Successful:', currentUser.value)
 
   } else if (error.value) {
     appStore.userIsAuthenticated = false;
