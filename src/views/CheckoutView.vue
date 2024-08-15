@@ -7,13 +7,14 @@ import { parseObjectToArray } from '../utils/utils'
 const appStore = useAppStore()
 const userStore = useUserStore()
 
-const { cart, shippingCost, updateCart, updateShipping } = appStore;
+const { cart, shippingCost, updateCart, updateShipping, updatePaymentMethod } = appStore;
 
 const subTotalAmount = computed(() => appStore.cart.subTotalAmount),
   totalAmount = computed(() => appStore.cart.totalAmount),
   totalItems = computed(() => appStore.cart.totalItems),
   currentCartItems = computed(() => appStore.cart.cartItems),
   shippingMethod = computed(() => appStore.shippingMethod),
+  paymentMethod = computed(() => appStore.paymentMethod),
   shippingRate = computed(() => appStore.shippingRate),
   taxAmount = computed(() => appStore.cart.taxAmount),
   user = computed(() => userStore.user);
@@ -30,6 +31,7 @@ const initiateCart = () => {
   cart.subTotalAmount = subTotalAmount
   cart.taxAmount = taxAmount
   cart.totalAmount = totalAmount
+  cart.paymentMethod = paymentMethod
 
   updateShippingMethod(shippingCost.standard)
 }
@@ -49,6 +51,16 @@ watch(
   shippingMethod,
   (newMethod) => {
     console.log('newMethod:', newMethod)
+    const { cartItems } = cart
+    updateCart(cartItems)
+  },
+  { deep: true }
+)
+
+watch(
+  paymentMethod,
+  (newMethod) => {
+    console.log('newPaymentMethod:', newMethod)
     const { cartItems } = cart
     updateCart(cartItems)
   },
@@ -78,7 +90,7 @@ const placeOrder = () => {
     </div>
   </div>
 
-  <div class="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md mb-4">
+  <div class="max-w-6xl mx-auto text-gray-800 bg-white p-8 rounded-lg shadow-md mb-4">
     <h1 class="text-3xl font-bold mb-6">Checkout</h1>
 
     <div class="flex flex-col lg:flex-row gap-6 sm:gap-x-10 sm:gap-y-6 ">

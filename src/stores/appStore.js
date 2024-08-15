@@ -160,6 +160,8 @@ export const useAppStore = defineStore('appStore', {
       express: Number(16.00)
     },
 
+    paymentMethod: 'paypal',
+
     /**
      * Cart management object.
      * @type {Object}
@@ -218,6 +220,8 @@ export const useAppStore = defineStore('appStore', {
        * @type {number}
        */
       totalAmount: 0,
+
+      paymentMethod: '',
     }),
 
     // Wishlist management
@@ -738,6 +742,7 @@ export const useAppStore = defineStore('appStore', {
         taxAmount: cartTaxAmount,
         shippingRate: cartShippingRate,
         totalAmount: cartTotalAmount,
+        paymentMethod: this.paymentMethod
       };
     },
 
@@ -795,6 +800,10 @@ export const useAppStore = defineStore('appStore', {
       const cost = method == 'express' ? this.shippingCost.express : this.shippingCost.standard;
       app.shippingMethod = method
       app.shippingRate = cost;
+    },
+
+    updatePaymentMethod(method, app){
+      app.paymentMethodMethod = method
     },
 
     /**
