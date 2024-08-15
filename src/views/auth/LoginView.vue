@@ -13,10 +13,10 @@ import displayError from '../../components/alerts/displayError.vue'
  * Application store for managing global state.
  * @type {ReturnType<typeof useAppStore>}
  */
- const appStore = useAppStore()
- const userStore = useUserStore()
+const appStore = useAppStore()
+const userStore = useUserStore()
 
- const { loginUser, setAuthentication, setLoggedInUser } = userStore;
+const { loginUser, setAuthentication, setLoggedInUser } = userStore;
 
 const router = useRouter(),
 email = ref(''),
@@ -64,6 +64,7 @@ const handleSubmit = async () => {
     if(path.startsWith('/auth') || !path){
       router.push('/')
     } else {
+      console.log(path)
       router.push(path)
     }
 

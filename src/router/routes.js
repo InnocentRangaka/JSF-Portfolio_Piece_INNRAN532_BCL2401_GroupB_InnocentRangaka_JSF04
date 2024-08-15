@@ -13,7 +13,7 @@ const isUserAuthenticated = (to, from, callBack) => {
   } else {
     callBack({ name: 'Login' }); // Redirect to Login if not authenticated
   }
-  
+
 }
 
 /**
@@ -106,7 +106,7 @@ const routes = [
     },
     {
       path: '/auth/logout',
-      name: 'Login',
+      name: 'Logout',
       component: () => import('../views/auth/LogoutView.vue'),
     },
     /**

@@ -162,10 +162,10 @@ export const useUserStore = defineStore('userStore', {
         this.user.token = thisData?.value?.token
         this.user.active = true;
       } else {
-        const newData = {
-          ...thisData,
-          token: thisData?.value?.token,
-        }
+        // const newData = {
+        //   ...thisData,
+        //   token: thisData?.value?.token,
+        // }
         // If user doesn't exist, add them to the users list
         this.users.push(thisData);
         this.user = thisData;
@@ -234,6 +234,18 @@ export const useUserStore = defineStore('userStore', {
       
     },
 
+    logoutUser() {
+      if (this.userIsAuthenticated) {
+        // Clear authentication-related data
+        this.accessToken = null;
+        this.userIsAuthenticated = false;
+        this.user.active = false;
+      }
+
+      // Clear user object
+      this.user = null;
+    },
+
     // setToken(token) {
     //     this.accessToken = token
     //     const decoded = jwt.decode(token)
@@ -282,7 +294,7 @@ export const useUserStore = defineStore('userStore', {
   },
 
   getters: {
-    isAuthenticated: (state) => !!state.isAuthenticated,
+    isAuthenticated: (state) => state.isAuthenticated,
   },
 
   onStoreReady() {

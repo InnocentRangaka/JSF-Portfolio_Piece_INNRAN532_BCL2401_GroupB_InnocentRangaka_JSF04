@@ -207,16 +207,7 @@ onMounted(async () => {
                   </button>
                 </li>
                 <li>
-                  <button
-                    @click="navigateTo('/auth/login')"
-                    :class="{
-                      'text-cyan-700': isActivePage('login'),
-                      'text-gray-700': !isActivePage('login')
-                    }"
-                    class="group inline-flex w-[32px] h-[32px] rounded-full hover:bg-transparent md:hover:text-blue-700 justify-center items-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-                  >
-                    <UserIconButton />
-                  </button>
+                  <UserIconButton />
                 </li>
                 <li class="md:hidden">
                   <button
