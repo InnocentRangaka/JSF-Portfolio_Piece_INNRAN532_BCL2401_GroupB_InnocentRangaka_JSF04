@@ -39,7 +39,8 @@ const isActivePage = (name) => {
         }"
         class="group inline-flex w-[32px] h-[32px] rounded-full hover:bg-transparent md:hover:text-blue-700 justify-center items-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
         >
-        <UserIcon />
+        Login
+        <!-- <UserIcon /> -->
     </button>
 
     <button 
@@ -51,6 +52,7 @@ const isActivePage = (name) => {
         }"
         class="group inline-flex w-[32px] h-[32px] rounded-full hover:bg-transparent md:hover:text-blue-700 justify-center items-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
         >
-        <UserLoggedInIcon />
+        Logout
+        <!-- <UserLoggedInIcon /> -->
     </button>
 </template>

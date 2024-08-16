@@ -231,6 +231,8 @@ export const useAppStore = defineStore('appStore', {
       totalAmount: 0,
 
       paymentMethod: '',
+
+      status: '',
     }),
 
     carts: {},
@@ -253,6 +255,8 @@ export const useAppStore = defineStore('appStore', {
        */
       totalItems: 0
     },
+
+    wishList: {},
 
     // Page navigation
     /**
@@ -577,6 +581,13 @@ export const useAppStore = defineStore('appStore', {
       };
     },
 
+    saveFavourites(userId, wishlist){
+      this.wishlist = {
+        ...this.wishlist,
+        [userId]: wishlist
+      }
+    },
+
     /**
      * Sets the search term for product filtering.
      * @param {string} term - The search term to set.
@@ -729,6 +740,13 @@ export const useAppStore = defineStore('appStore', {
       }
 
       this.updateCart(newCartItems, 'Product added to cart!');
+    },
+
+    saveCart(userId, cart){
+      this.carts = {
+        ...this.carts,
+        [userId]: cart
+      }
     },
 
     /**

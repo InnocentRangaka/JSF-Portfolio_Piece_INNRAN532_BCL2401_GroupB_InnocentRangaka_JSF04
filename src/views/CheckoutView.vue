@@ -8,7 +8,7 @@ import { loadScript } from "@paypal/paypal-js";
 const appStore = useAppStore()
 const userStore = useUserStore()
 
-const { cart, shippingCost, updateCart, updateShipping, updatePaymentMethod } = appStore;
+const { cart, shippingCost, updateCart, updateShipping, saveCart } = appStore;
 
 const subTotalAmount = computed(() => appStore.cart.subTotalAmount),
   totalAmount = computed(() => appStore.cart.totalAmount),
@@ -24,6 +24,7 @@ const subTotalAmount = computed(() => appStore.cart.subTotalAmount),
 
 
   console.log(user.value)
+  saveCart(user.value.id, currentCartItems)
 
 const initiateCart = () => {
   const { cartItems, totalItems, subTotalAmount, taxAmount, totalAmount } = cart
@@ -71,12 +72,13 @@ const renderPayPalButtons = (paypal) => {
             amount: {
               value: totalAmount.value,
             },
-            cart: JSON.stringify(currentCartItems.value),
           },
         ],
       });
     },
     onApprove: (data, actions) => {
+      console.log(data)
+      console.log(actions)
       return actions.order.capture().then((details) => {
         alert('Transaction completed by ' + details.payer.name.given_name);
         placeOrder(details);
