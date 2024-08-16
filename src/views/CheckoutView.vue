@@ -3,6 +3,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useAppStore } from '../stores/appStore'
 import { useUserStore } from '../stores/userStore'
 import { parseObjectToArray } from '../utils/utils'
+import { loadScript } from "@paypal/paypal-js";
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -18,6 +19,9 @@ const subTotalAmount = computed(() => appStore.cart.subTotalAmount),
   shippingRate = computed(() => appStore.shippingRate),
   taxAmount = computed(() => appStore.cart.taxAmount),
   user = computed(() => userStore.user);
+
+  const address1 = user.value ? `${user.value.address.number} ${user.value.address.street}` : '';
+
 
   console.log(user.value)
 
@@ -41,16 +45,68 @@ const updateShippingMethod = (method) => {
   updateShipping(method, appStore)
 };
 
+const paypalContainer = ref(null); // Reference to the PayPal button container
+
+const loadPayPalScript = async () => {
+  try {
+    const paypal = await loadScript({
+      'client-id': 'AW9BIhl6UaPp_pZ3QQA2plOVUUm54Q7q6DAjNySk8lkxe4euv4EoH2oEMBg5y29LqbmkBCrTBUHdu81c',  // Replace with your actual client ID
+      currency: 'USD',
+    });
+
+    if (paypal) {
+      renderPayPalButtons(paypal);
+    }
+  } catch (error) {
+    console.error('Failed to load PayPal SDK:', error);
+  }
+};
+
+const renderPayPalButtons = (paypal) => {
+  paypal.Buttons({
+    createOrder: (data, actions) => {
+      return actions.order.create({
+        purchase_units: [
+          {
+            amount: {
+              value: totalAmount.value,
+            },
+            cart: JSON.stringify(currentCartItems.value),
+          },
+        ],
+      });
+    },
+    onApprove: (data, actions) => {
+      return actions.order.capture().then((details) => {
+        alert('Transaction completed by ' + details.payer.name.given_name);
+        placeOrder(details);
+      });
+    },
+    onCancel: (data) => {
+        // Show a cancel page, or return to cart
+        // window.location.assign("/your-cancel-page");
+        console.log('Cancelled Order:', data)
+    },
+    onError: (err) => {
+      console.error('PayPal Checkout onError:', err);
+    },
+  }).render(paypalContainer.value);  // Render the PayPal button in the container
+};
 
 onMounted(() => {
   initiateCart()
   updateShippingMethod(shippingCost.standard)
+
+  // Load PayPal script and render PayPal buttons if PayPal is selected
+  if (appStore.paymentMethod === 'paypal') {
+    loadPayPalScript();
+  }
 })
 
 watch(
   shippingMethod,
   (newMethod) => {
-    console.log('newMethod:', newMethod)
+    // console.log('newMethod:', newMethod)
     const { cartItems } = cart
     updateCart(cartItems)
   },
@@ -60,16 +116,20 @@ watch(
 watch(
   paymentMethod,
   (newMethod) => {
-    console.log('newPaymentMethod:', newMethod)
+    // console.log('newPaymentMethod:', newMethod)
     const { cartItems } = cart
     updateCart(cartItems)
+    if (newMethod === 'paypal') {
+      loadPayPalScript();
+    }
   },
   { deep: true }
 )
 
-const placeOrder = () => {
+const placeOrder = (details) => {
   // Logic for placing the order
   alert('Order placed successfully!');
+  console.log(details)
 };
 </script>
 
@@ -99,17 +159,17 @@ const placeOrder = () => {
         <h2 class="text-xl font-bold mb-4">Contact Information</h2>
         <div class="mb-4">
           <label for="email" class="block text-gray-700 font-bold mb-2">Email address</label>
-          <input type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your email">
+          <input v-model="user.email" type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your email">
         </div>
         <h2 class="text-xl font-bold mb-4">Shipping Information</h2>
         <div class="flex gap-4 mb-4">
           <div class="w-1/2">
             <label for="first-name" class="block text-gray-700 font-bold mb-2">First name</label>
-            <input type="text" id="first-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your first name">
+            <input v-model="user.name.firstname" type="text" id="first-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your first name">
           </div>
           <div class="w-1/2">
             <label for="last-name" class="block text-gray-700 font-bold mb-2">Last name</label>
-            <input type="text" id="last-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your last name">
+            <input v-model="user.name.lastname" type="text" id="last-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your last name">
           </div>
         </div>
         <div class="mb-4">
@@ -118,7 +178,7 @@ const placeOrder = () => {
         </div>
         <div class="mb-4">
           <label for="address" class="block text-gray-700 font-bold mb-2">Address</label>
-          <input type="text" id="address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your address">
+          <input  v-model="address1" type="text" id="address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your address">
         </div>
         <div class="mb-4">
           <label for="apartment" class="block text-gray-700 font-bold mb-2">Apartment, suite, etc.</label>
@@ -127,11 +187,12 @@ const placeOrder = () => {
         <div class="flex gap-4 mb-4">
           <div class="w-1/2">
             <label for="city" class="block text-gray-700 font-bold mb-2">City</label>
-            <input type="text" id="city" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your city">
+            <input v-model="user.address.city" type="text" id="city" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your city">
           </div>
           <div class="w-1/2">
             <label for="country" class="block text-gray-700 font-bold mb-2">Country</label>
             <select id="country" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+              <option value="south-africa">South Africa</option>
               <option value="united-states">United States</option>
               <option value="canada">Canada</option>
             </select>
@@ -144,7 +205,7 @@ const placeOrder = () => {
           </div>
           <div class="w-1/2">
             <label for="postal-code" class="block text-gray-700 font-bold mb-2">Postal code</label>
-            <input type="text" id="postal-code" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your postal code">
+            <input v-model="user.address.zipcode" type="text" id="postal-code" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your postal code">
           </div>
         </div>
         <div class="mb-4">
@@ -177,43 +238,8 @@ const placeOrder = () => {
             <p class="font-bold">$16.00</p>
           </div>
         </div>
-
-        <h2 class="text-xl font-bold mb-4">Payment</h2>
-        <div class="flex gap-4 mb-4">
-          <div class="flex items-center">
-            <input type="radio" id="credit-card" name="payment" class="mr-2" value="credit-card" checked>
-            <label for="credit-card" class="font-bold">Credit card</label>
-          </div>
-          <div class="flex items-center">
-            <input type="radio" id="paypal" name="payment" class="mr-2" value="paypal">
-            <label for="paypal" class="font-bold">PayPal</label>
-          </div>
-          <div class="flex items-center">
-            <input type="radio" id="etransfer" name="payment" class="mr-2" value="etransfer">
-            <label for="etransfer" class="font-bold">eTransfer</label>
-          </div>
-        </div>
-        <div class="mb-4">
-          <label for="card-number" class="block text-gray-700 font-bold mb-2">Card number</label>
-          <input type="text" id="card-number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your card number">
-        </div>
-        <div class="flex gap-4 mb-4">
-          <div class="w-1/2">
-            <label for="expiration-date" class="block text-gray-700 font-bold mb-2">Expiration date</label>
-            <input type="text" id="expiration-date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="MM/YY">
-          </div>
-          <div class="w-1/2">
-            <label for="cvv" class="block text-gray-700 font-bold mb-2">CVV</label>
-            <input type="text" id="cvv" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="CVV">
-          </div>
-        </div>
-        <div class="flex gap-4 items-center">
-          <input type="checkbox" id="save-info" class="h-4 w-4 text-cyan-900">
-          <label for="save-info" class="text-gray-700">Save my information for next time</label>
-        </div>
       </div>
 
-      <!-- Order Summary -->
       <!-- Order Summary -->
       <div class="w-full lg:w-1/2 text-gray-700">
         <h2 class="text-xl font-bold mb-4">Order Summary</h2>
@@ -267,8 +293,8 @@ const placeOrder = () => {
             </div>
           </div>
         </div>
-        <button @click="placeOrder" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Place Order</button>
+        <div v-if="appStore.paymentMethod === 'paypal'"  ref="paypalContainer" id="paypal-button-container" class="mt-6"></div>
       </div>
     </div>
   </div>
-</template>y
+</template>

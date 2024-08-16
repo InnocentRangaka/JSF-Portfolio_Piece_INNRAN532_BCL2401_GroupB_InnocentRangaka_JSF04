@@ -162,6 +162,13 @@ export const useAppStore = defineStore('appStore', {
 
     paymentMethod: 'paypal',
 
+    paymentMethods: [
+      { id: 'paypal', label: 'PayPal' },
+      { id: 'credit-card', label: 'Credit Card' },
+    ],
+
+    payment: {},
+
     /**
      * Cart management object.
      * @type {Object}
@@ -190,6 +197,8 @@ export const useAppStore = defineStore('appStore', {
        * @type {string}
        */
       shippingMethod: 'standard',
+
+      payment: {},
 
       /**
        * Items in the cart.
@@ -223,6 +232,8 @@ export const useAppStore = defineStore('appStore', {
 
       paymentMethod: '',
     }),
+
+    carts: {},
 
     // Wishlist management
     /**
@@ -803,7 +814,7 @@ export const useAppStore = defineStore('appStore', {
     },
 
     updatePaymentMethod(method, app){
-      app.paymentMethodMethod = method
+      app.paymentMethod = method
     },
 
     /**
