@@ -8,7 +8,7 @@ import { loadScript } from "@paypal/paypal-js";
 const appStore = useAppStore()
 const userStore = useUserStore()
 
-const { cart, shippingCost, updateCart, updateShipping, saveCart } = appStore;
+const { cart, shippingCost, updateCart, updateShipping, saveCart, placeOrder } = appStore;
 
 const subTotalAmount = computed(() => appStore.cart.subTotalAmount),
   totalAmount = computed(() => appStore.cart.totalAmount),
@@ -20,11 +20,27 @@ const subTotalAmount = computed(() => appStore.cart.subTotalAmount),
   taxAmount = computed(() => appStore.cart.taxAmount),
   user = computed(() => userStore.user);
 
-  const address1 = user.value ? `${user.value.address.number} ${user.value.address.street}` : '';
+  const address1 = user.value ? `${user.value.address.number} ${user.value.address.street}` : '',
+  state1 = `${user.value.address.geolocation.lat},${user.value.address.geolocation.long}`,
+  street = ref(address1),
+  apartment = ref(''),
+  city = ref(user.value.address.city),
+  countryCode = ref('ZA'),
+  state = ref(state1),
+  zipCode = ref(user.value.address.zipcode);
+
+  const ShippingAddress = {
+    street: street.value,
+    apartment: apartment.value,
+    city: city.value,
+    countryCode: countryCode.value,
+    state: state.value,
+    zipCode: zipCode.value,
+  }
 
 
-  console.log(user.value)
-  saveCart(user.value.id, currentCartItems)
+  console.log(user.value, currentCartItems)
+  // saveCart(user.value.id, currentCartItems)
 
 const initiateCart = () => {
   const { cartItems, totalItems, subTotalAmount, taxAmount, totalAmount } = cart
@@ -70,18 +86,26 @@ const renderPayPalButtons = (paypal) => {
         purchase_units: [
           {
             amount: {
+              currency_code: "USD",
               value: totalAmount.value,
-            },
+            }
           },
         ],
       });
     },
     onApprove: (data, actions) => {
-      console.log(data)
-      console.log(actions)
       return actions.order.capture().then((details) => {
+        const paymentInfo = {
+          ...details,
+          billingToken: details.id,
+          paymentMethod: data.paymentSource,
+          facilitatorAccessToken: data.facilitatorAccessToken,
+        }
+        placeOrder(user.value.id, appStore.cart, paymentInfo, ShippingAddress);
+
         alert('Transaction completed by ' + details.payer.name.given_name);
-        placeOrder(details);
+
+        console.log(appStore.orders)
       });
     },
     onCancel: (data) => {
@@ -128,11 +152,6 @@ watch(
   { deep: true }
 )
 
-const placeOrder = (details) => {
-  // Logic for placing the order
-  alert('Order placed successfully!');
-  console.log(details)
-};
 </script>
 
 <template>
@@ -180,34 +199,34 @@ const placeOrder = (details) => {
         </div>
         <div class="mb-4">
           <label for="address" class="block text-gray-700 font-bold mb-2">Address</label>
-          <input  v-model="address1" type="text" id="address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your address">
+          <input  v-model="street" type="text" id="address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your address">
         </div>
         <div class="mb-4">
           <label for="apartment" class="block text-gray-700 font-bold mb-2">Apartment, suite, etc.</label>
-          <input type="text" id="apartment" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter apartment, suite, etc.">
+          <input v-model="apartment" type="text" id="apartment" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter apartment, suite, etc.">
         </div>
         <div class="flex gap-4 mb-4">
           <div class="w-1/2">
             <label for="city" class="block text-gray-700 font-bold mb-2">City</label>
-            <input v-model="user.address.city" type="text" id="city" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your city">
+            <input v-model="city" type="text" id="city" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your city">
           </div>
           <div class="w-1/2">
             <label for="country" class="block text-gray-700 font-bold mb-2">Country</label>
-            <select id="country" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-              <option value="south-africa">South Africa</option>
-              <option value="united-states">United States</option>
-              <option value="canada">Canada</option>
+            <select v-model="countryCode" id="country" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+              <option value="ZA">South Africa</option>
+              <option value="US">United States</option>
+              <option value="UK">United Kingdom</option>
             </select>
           </div>
         </div>
         <div class="flex gap-4 mb-4">
           <div class="w-1/2">
             <label for="state" class="block text-gray-700 font-bold mb-2">State/Province</label>
-            <input type="text" id="state" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your state/province">
+            <input v-model="state" type="text" id="state" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your state/province">
           </div>
           <div class="w-1/2">
             <label for="postal-code" class="block text-gray-700 font-bold mb-2">Postal code</label>
-            <input v-model="user.address.zipcode" type="text" id="postal-code" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your postal code">
+            <input v-model="zipCode" type="text" id="postal-code" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your postal code">
           </div>
         </div>
         <div class="mb-4">
@@ -250,7 +269,7 @@ const placeOrder = (details) => {
             <img
                   :src="cartItem.image"
                   :alt="cartItem.title"
-                  class="w-20 h-20 object-cover mt-[0.35rem] self-start"
+                  class="w-20 h-auto max-h-19 object-cover mt-[0.35rem] self-start"
                 />
             <div class="flex-1 mx-4">
               <p class="font-semibold text-ellipsis overflow-hidden break-words line-clamp-2">{{ cartItem.title }}</p>

@@ -238,6 +238,10 @@ export const useAppStore = defineStore('appStore', {
 
     carts: {},
 
+    order: {},
+
+    orders: {},
+
     // Wishlist management
     /**
      * Wishlist management object.
@@ -725,6 +729,43 @@ export const useAppStore = defineStore('appStore', {
       this.toast.visible = false;
       clearInterval(this.toast.interval);
       this.toast.interval = null;
+    },
+
+    placeOrder(userId, userCart, userPaymentInfo, userShippingAddress){
+      if(Object.values(this.cart.cartItems).length > 0){
+        this.orders = {
+          ...this.orders,
+          [userId]: {
+            ...this.orders[userId],
+            [userPaymentInfo.orderId]: {
+              payment: {
+                ...userPaymentInfo,
+              },
+              cart: {
+                ...userCart,
+              },
+              shippingAddress: {
+                ...userShippingAddress,
+              },
+            },
+          },
+        }
+  
+        // this.cart = {
+        //   isAddingToCart: false,
+        //   addToCartText: 'Add To Cart',
+        //   shippingRate: 0,
+        //   shippingMethod: 'standard',
+        //   payment: {},
+        //   cartItems: {},
+        //   totalItems: 0,
+        //   subTotalAmount: 0,
+        //   taxAmount: 0,
+        //   totalAmount: 0,
+        //   paymentMethod: '',
+        //   status: '',
+        // };
+      }
     },
 
     

@@ -232,7 +232,7 @@ onMounted(() => {
                                 <img
                                     :src="cartItem.image"
                                     :alt="cartItem.title"
-                                    class="w-auto h-20 max-h-full object-cover mt-[0.35rem] self-start"
+                                    class="w-20 h-auto max-h-full object-cover mt-[0.35rem] self-start"
                                 />
                             </router-link>
                         </div>
