@@ -81,31 +81,32 @@ watch(
 <template>
   <div v-if="user">
     <CartSkeleton  v-if="loading" />
-    <div class="bg-gray-100 mb-10">
-      <div
-        class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]"
-      >
-        <h1 class="text-gray-800 text-xl font-bold my-2">Shopping Cart ({{ totalItems }})</h1>
-        <div class="mb-2 text-xs text-right flex items-end ml-auto">
-          <a href="/" class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
-            <span class="flex h-full items-center text-xs text-right">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="20px"
-                viewBox="0 -960 960 960"
-                width="20px"
-                fill="currentColor"
-              >
-                <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
-              </svg>
-              <span class="mb-[0.1rem]">Continue shopping</span>
-            </span>
-          </a>
-        </div>
-      </div>
-    </div>
 
     <div v-show="!loading">
+      <div class="bg-gray-100 mb-10">
+        <div
+          class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]"
+        >
+          <h1 class="text-gray-800 text-xl font-bold my-2">Shopping Cart ({{ totalItems }})</h1>
+          <div class="mb-2 text-xs text-right flex items-end ml-auto">
+            <a href="/" class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
+              <span class="flex h-full items-center text-xs text-right">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="20px"
+                  viewBox="0 -960 960 960"
+                  width="20px"
+                  fill="currentColor"
+                >
+                  <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+                </svg>
+                <span class="mb-[0.1rem]">Continue shopping</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      
       <div v-if="totalItems > 0" class="container mx-auto mb-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 relative">
           <div class="col-span-2 relative bg-white p-8 rounded-lg shadow-md">
