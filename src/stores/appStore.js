@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
 import { defineAsyncComponent, markRaw, reactive, shallowRef } from 'vue'
 import { fetchCategories, fetchSingleProduct, fetchProducts, fetchFavourites } from '../api/api';
-import { calculateSubTotalAmount, calculateTaxAmount, calculateCartTotal, parseObjectToArray } from '../utils/utils'
+import { calculateSubTotalAmount, calculateTaxAmount, calculateCartTotal, parseObjectToArray, promptUserForConfirmation } from '../utils/utils'
 import MainLayout from '../components/includes/MainLayout.vue'
 import PlainLayout from '../components/includes/PlainLayout.vue'
+import { useUserStore } from '../stores/userStore'
 
 /**
  * App store definition using Pinia.
@@ -726,27 +727,27 @@ export const useAppStore = defineStore('appStore', {
 
     
     saveCart(userId, cart){
-      this.carts = {
-        ...this.carts,
-        [userId]: cart
+      if(Object.values(cart.cartItems).length > 0){
+        this.carts = {
+          ...this.carts,
+          [userId]: cart
+        }
+  
+        this.cart = {
+          isAddingToCart: false,
+          addToCartText: 'Add To Cart',
+          shippingRate: 0,
+          shippingMethod: 'standard',
+          payment: {},
+          cartItems: {},
+          totalItems: 0,
+          subTotalAmount: 0,
+          taxAmount: 0,
+          totalAmount: 0,
+          paymentMethod: '',
+          status: '',
+        };
       }
-
-      console.log(userId, cart)
-
-      this.cart = {
-        isAddingToCart: false,
-        addToCartText: 'Add To Cart',
-        shippingRate: 0,
-        shippingMethod: 'standard',
-        payment: {},
-        cartItems: {},
-        totalItems: 0,
-        subTotalAmount: 0,
-        taxAmount: 0,
-        totalAmount: 0,
-        paymentMethod: '',
-        status: '',
-      };
     },
 
     /**
@@ -785,6 +786,8 @@ export const useAppStore = defineStore('appStore', {
       const cartTotalAmount = calculateCartTotal(newCartItems, this.taxRate, cartShippingRate);
 
       if(toastMessage){this.showToast(toastMessage);}
+      const userStore = useUserStore()
+      const userId = userStore.user?.id ? userStore.user.id : 0
 
       this.cart = { 
         ...this.cart,
@@ -794,7 +797,8 @@ export const useAppStore = defineStore('appStore', {
         taxAmount: cartTaxAmount,
         shippingRate: cartShippingRate,
         totalAmount: cartTotalAmount,
-        paymentMethod: this.paymentMethod
+        paymentMethod: this.paymentMethod,
+        user: userId
       };
     },
 
@@ -945,7 +949,39 @@ export const useAppStore = defineStore('appStore', {
      * @returns {Object} - The cart.
      */
     getCart: (state) => (userId) => {
-      console.log(userId, state.carts)
+      const savedCart = state.carts[userId],
+      currentCart = state.cart;
+
+      const savedCartHasItems = Object.values(savedCart.cartItems).length > 0 ? true : false,
+      currentCartHasItems = Object.values(currentCart.cartItems).length > 0 ? true : false;
+
+      if(!currentCartHasItems && savedCartHasItems){
+        state.updateCart(savedCart.cartItems);
+      }
+      if(currentCartHasItems && !savedCartHasItems){
+        state.updateCart(currentCart.cartItems);
+      }
+      if(currentCartHasItems && savedCartHasItems){
+        promptUserForConfirmation("You have items in both your saved cart and your guest cart. Do you want to merge them?")
+        .then((merge) => {
+          if(merge){
+            const mergedCartItems = {...currentCart.cartItems, ...savedCart.cartItems}
+            state.updateCart(mergedCartItems, "Your carts have been merged!")
+          }
+          else {
+            promptUserForConfirmation("Would you like to continue with your guest cart instead of your saved cart?")
+            .then((useGuestCart) => {
+              if(useGuestCart){
+                state.updateCart(currentCart.cartItems, "You are now using your guest cart.")
+              }
+              else {
+                state.updateCart(savedCart.cartItems, "You are now using your saved cart.")
+              }
+            })
+          }
+        })
+      }
+
       return state.cart;
     },
 

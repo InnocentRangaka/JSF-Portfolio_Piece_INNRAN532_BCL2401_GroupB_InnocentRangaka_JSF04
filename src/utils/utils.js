@@ -125,3 +125,10 @@ export function parseObjectToArray(object) {
     }
     return parsedObject;
 }
+
+export function promptUserForConfirmation(message) {
+  return new Promise((resolve) => {
+    const choice = confirm(message);
+    resolve(choice);
+  });
+}

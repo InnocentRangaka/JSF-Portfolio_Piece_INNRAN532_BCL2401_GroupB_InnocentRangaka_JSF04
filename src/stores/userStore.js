@@ -298,6 +298,8 @@ export const useUserStore = defineStore('userStore', {
     isAuthenticated: (state) => state.isAuthenticated,
   },
 
+  loggedInUser: (state) => state.user,
+
   onStoreReady() {
     // Perform any additional setup or fetch data when the store is ready
     console.log('Store is ready!');

@@ -34,8 +34,7 @@ function useCountdownRedirect() {
 const { countdown, startCountdown } = useCountdownRedirect();
 
 onMounted(() => {
-  console.log(userStore.user.id, appStore.cart.value)
-  saveCart(userStore.user.id, appStore.cart.value)
+  saveCart(userStore.user.id, appStore.cart)
   logoutUser();
   startCountdown();
 

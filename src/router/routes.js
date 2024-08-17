@@ -109,10 +109,9 @@ const routes = [
       path: '/auth/login',
       name: 'Login',
       component: () => import('../views/auth/LoginView.vue'),
-      // meta: { requiresAuth: true }, // meta field to identify protected routes
-      // beforeEnter: (to, from, next) => {
-      //   isUserAuthenticated(to, from, next)
-      // },
+      afterEnter: (to, from) => {
+        console.log('afterEnter - to:',to, 'from:',from)
+      },
     },
     {
       path: '/auth/logout',

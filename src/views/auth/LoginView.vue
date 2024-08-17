@@ -61,15 +61,14 @@ const handleSubmit = async () => {
     setAuthentication(data.id, data.token)
 
     getCart(data.id)
-    console.log(data.id)
     // console.log(currentLocation.value.path, currentLocation.value)
     const path = currentLocation.value.path;
     
     if(path.startsWith('/auth') || !path){
       router.push('/')
     } else {
-      console.log(path)
-      router.push(path)
+      console.log(path, appStore.currentLocation)
+      // router.push(path)
     }
 
     console.log('Login Successful:', currentUser.value)
