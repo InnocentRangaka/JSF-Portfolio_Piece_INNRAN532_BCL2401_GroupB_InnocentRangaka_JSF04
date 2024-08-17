@@ -21,12 +21,12 @@ const currentLocation = computed(() => appStore.currentLocation),
  * Determines whether to show the static part of the layout based on the current page.
  * @returns {void}
  */
-const isTopPartShown = () => {
-  const isAuthPage = appStore.pages.authPages.includes(appStore.pageName)
-  const cartPages = appStore.pages.cartPages.includes(appStore.pageName)
+const isTopPartShown = (name) => {
+  const isAuthPage = appStore.pages.authPages.includes(name)
+  const cartPages = appStore.pages.cartPages.includes(name)
 
   showSearchFilterSort.value = !(isAuthPage || cartPages)
-  if(!isAuthPage && cartPages){ 
+  if(!isAuthPage && !cartPages){ 
     fetchCategories()
   }
 }
@@ -42,22 +42,15 @@ const isTopPartShown = () => {
 // }
 
 /**
- * Lifecycle hook to fetch categories and set initial component visibility.
- * @returns {void}
- */
-onMounted(() => {
-  isTopPartShown()
-})
-
-/**
  * Watcher for changes in the current location to update component visibility.
  * @param {Object} newValue - The new value of the watched property.
  * @returns {void}
  */
-watch(currentLocation, () => {
+watch(currentLocation, (newLocation) => {
+  // console.log(newLocation.componentName, appStore.pageName)
   appStore.pageName
   // handleShowSearchFilterSort(currentLocation.value.path)
-  isTopPartShown()
+  isTopPartShown(newLocation.componentName.toLowerCase())
 })
 </script>
 
