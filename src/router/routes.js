@@ -109,9 +109,6 @@ const routes = [
       path: '/auth/login',
       name: 'Login',
       component: () => import('../views/auth/LoginView.vue'),
-      afterEnter: (to, from) => {
-        console.log('afterEnter - to:',to, 'from:',from)
-      },
     },
     {
       path: '/auth/logout',

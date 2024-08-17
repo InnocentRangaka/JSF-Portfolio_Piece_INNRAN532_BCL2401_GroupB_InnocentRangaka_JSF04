@@ -1,12 +1,16 @@
 <script setup>
 import { onMounted, computed, watch } from 'vue'
 import { useAppStore } from '../stores/appStore'
+import { useUserStore } from '../stores/userStore'
 import { parseObjectToArray } from '../utils/utils'
 
 import NoItemFound from '../components/includes/NoItemFound.vue'
 
 const appStore = useAppStore()
-const { cart, isInCartItems, updateCart, removeCartItem, removeAllCartItems } = appStore
+const { cart, isInCartItems, updateCart, removeCartItem, removeAllCartItems, getCart } = appStore
+
+const userStore = useUserStore()
+const { user } = userStore
 
 const subTotalAmount = computed(() => appStore.cart.subTotalAmount),
   totalAmount = computed(() => appStore.cart.totalAmount),
@@ -50,6 +54,8 @@ const updateQuantity = (event, item) => {
 }
 
 onMounted(() => {
+  console.log(user)
+  // getCart(user.id)
   initiateCart()
 })
 
@@ -64,7 +70,7 @@ watch(
 </script>
 
 <template>
-  <div>
+  <div v-if="user">
     <div class="bg-gray-100 mb-10">
       <div
         class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]"

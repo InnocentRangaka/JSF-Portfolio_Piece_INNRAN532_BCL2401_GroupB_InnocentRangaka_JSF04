@@ -331,6 +331,8 @@ export const useAppStore = defineStore('appStore', {
        */
       componentName: '',
 
+      redirectedFrom: '',
+
       /**
        * Object containing previous location details.
        * @type {Object}

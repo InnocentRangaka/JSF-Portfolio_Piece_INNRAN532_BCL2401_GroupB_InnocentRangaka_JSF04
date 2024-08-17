@@ -45,6 +45,7 @@ router.afterEach((to, from) => {
     route: to.route,
     userData: to.userData,
     componentName: to.componentName || to.name,
+    redirectedFrom: to.redirectedFrom,
     previous: {
       path: from.path,
       params: from.params,

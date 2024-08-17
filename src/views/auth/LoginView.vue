@@ -16,7 +16,6 @@ import displayError from '../../components/alerts/displayError.vue'
 const appStore = useAppStore()
 const userStore = useUserStore()
 
-const { getCart } = appStore;
 const { loginUser, setAuthentication, setLoggedInUser } = userStore;
 
 const router = useRouter(),
@@ -28,6 +27,7 @@ credentialsError = ref({
   password: {}
 }),
 loginError = computed(() => appStore.error),
+redirectTo = computed(() => appStore.currentLocation.redirectedFrom),
 currentLocation = computed(() => userStore.currentProtectedLocation),
 currentUser = computed(() => appStore.user);
 
@@ -50,7 +50,7 @@ const handleSubmit = async () => {
   // loginData = data;
   // loginLoading = loading;
 
-  console.log(data)
+  // console.log(data)
   
   if(loading.value) console.log('isLoading:', loading)
   
@@ -60,18 +60,14 @@ const handleSubmit = async () => {
     }
     setAuthentication(data.id, data.token)
 
-    getCart(data.id)
-    // console.log(currentLocation.value.path, currentLocation.value)
-    const path = currentLocation.value.path;
-    
-    if(path.startsWith('/auth') || !path){
+    if(redirectTo.value?.fullPath){
+      router.push(redirectTo.value.fullPath)
+    }
+    else {
       router.push('/')
-    } else {
-      console.log(path, appStore.currentLocation)
-      // router.push(path)
     }
 
-    console.log('Login Successful:', currentUser.value)
+    // console.log('Login Successful:', currentUser.value)
 
   } else if (error.value) {
     appStore.userIsAuthenticated = false;
