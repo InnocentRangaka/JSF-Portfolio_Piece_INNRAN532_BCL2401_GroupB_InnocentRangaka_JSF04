@@ -16,6 +16,58 @@ loading = ref(true);
 const address1 = user.value ? `${user.value.address.number} ${user.value.address.street}` : '';
 // console.log(user)
 
+const calculateDate = (input) => {
+  const today = new Date();
+  
+  // Check if the input is 'now'
+  if (input === "now") {
+    return today;
+  }
+
+  // Extract the number and the unit (d, m, y) using regex
+  const match = input.match(/^(\d+)([dmy])$/);
+  
+  if (!match) {
+    throw new Error("Invalid input format. Please use 'now', 'Xd', 'Xm', or 'Xy' format.");
+  }
+  
+  const number = parseInt(match[1], 10);
+  const unit = match[2];
+
+  // Calculate the new date based on the unit
+  switch (unit) {
+    case 'd':
+      today.setDate(today.getDate() + number);
+      break;
+    case 'm':
+      today.setMonth(today.getMonth() + number);
+      break;
+    case 'y':
+      today.setFullYear(today.getFullYear() + number);
+      break;
+    default:
+      throw new Error("Invalid unit. Use 'd' for days, 'm' for months, or 'y' for years.");
+  }
+
+  return today;
+}
+
+function formatDate(date, format) {
+  const options = {
+    // Full month name
+    MMMM: date.toLocaleString('en-US', { month: 'long' }),
+    // Two-digit day
+    DD: String(date.getDate()).padStart(2, '0'),
+    // Full year
+    YYYY: date.getFullYear(),
+    // Two-digit month
+    MM: String(date.getMonth() + 1).padStart(2, '0'),
+  };
+
+  // Replace format tokens with corresponding date values
+  return format.replace(/MMMM|DD|YYYY|MM/g, (match) => options[match]);
+}
+
 onMounted(() => {
   setTimeout(() => {
     loading.value = false;
@@ -33,11 +85,11 @@ onMounted(() => {
         <div class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]">
           <h1 class="text-gray-800 text-xl font-bold my-2">Order #54879</h1>
           <div class="mb-2 text-xs text-right flex items-end ml-auto">
-            <div class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
+            <a href="/" class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
               <span class="flex h-full items-center text-xs text-right">
-                <span class="mb-[0.1rem]">Order placed <time datetime="2021-03-22">March 22, 2021</time></span>
+                <span class="mb-[0.1rem]">View Invoice</span>
               </span>
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -51,7 +103,7 @@ onMounted(() => {
                         class="w-full h-full text-slate-600 bg-white p-8 rounded-lg shadow-md relative"
                     >
                         <h2 class="text-gray-700 text-lg font-semibold mb-4">Order status</h2>
-                        <p class="text-gray-500">Preparing to ship on <time datetime="2021-03-24">March 24, 2021</time></p>
+                        <p class="text-gray-500">Preparing to ship on <time :datetime="formatDate(calculateDate('14d'), 'YYYY-MM-DD')">{{ formatDate(calculateDate('14d'), 'MMMM DD, YYYY') }}</time></p>
                         <!-- Progress bar -->
                         <div class="relative mt-2 mb-4">
                             <div class="h-2 bg-gray-200 rounded-full">
@@ -71,7 +123,7 @@ onMounted(() => {
                                 <p class="">Ordered</p>
                                 </div>
                                 <div>
-                                <p class=""><time datetime="2021-03-24">March 24, 2021</time></p>
+                                <p class=""><time :datetime="formatDate(calculateDate('now'), 'YYYY-MM-DD')">{{ formatDate(calculateDate('now'), 'MMMM DD, YYYY') }}</time></p>
                                 </div>
                             </div>
                             <div class="flex justify-between mb-0">
@@ -79,15 +131,15 @@ onMounted(() => {
                                 <p class="">Paid</p>
                                 </div>
                                 <div>
-                                <p class=""><time datetime="2021-03-24">March 24, 2021</time></p>
+                                <p class=""><time :datetime="formatDate(calculateDate('1d'), 'YYYY-MM-DD')">{{ formatDate(calculateDate('1d'), 'MMMM DD, YYYY') }}</time></p>
                                 </div>
                             </div>
                             <div class="flex justify-between mb-0">
                                 <div>
-                                <p class="">Delivery (estimated)</p>
+                                <p class="">Delivery (estimate)</p>
                                 </div>
                                 <div>
-                                <p class=""><time datetime="2021-03-24">March 24, 2021</time></p>
+                                <p class=""><time :datetime="formatDate(calculateDate('14d'), 'YYYY-MM-DD')">{{ formatDate(calculateDate('14d'), 'MMMM DD, YYYY') }}</time></p>
                                 </div>
                             </div>
                         </div>
