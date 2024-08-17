@@ -228,41 +228,45 @@ onMounted(() => {
                     <div class="flex justify-between items-center">
                         <div class="flex items-center w-full relative gap-4 sm:gap-10">
                         <div class="grid w-[80px]">
-                            <img
-                                :src="cartItem.image"
-                                :alt="cartItem.title"
-                                class="w-auto h-20 max-h-full object-cover mt-[0.35rem] self-start"
-                            />
+                            <router-link :to="`/product/${cartItem.id}`" class="flex-1 flex flex-col">
+                                <img
+                                    :src="cartItem.image"
+                                    :alt="cartItem.title"
+                                    class="w-auto h-20 max-h-full object-cover mt-[0.35rem] self-start"
+                                />
+                            </router-link>
                         </div>
                         <div class="flex flex-col w-full">
                             <div class="grid w-full grid-cols-1 relative">
-                            <h2 class="text-gray-700 text-lg font-semibold">{{ cartItem.title }}</h2>
-                            <p
-                                class="text-slate-500 text-ellipsis overflow-hidden break-words max-w-full max-h-12 line-clamp-2"
-                            >
-                                {{ cartItem.description }}
-                            </p>
-                            <div
-                                class="flex gap-4 text-slate-600 flex flex-col sm:flex-row items-center sm:justify-between mt-3"
-                            >
-                                <div class="w-full flex flex-row items-center">
-                                <p class="w-full max-w-max text-lg font-semibold">
-                                    $ {{ cartItem.totalPrice }}
-                                </p>
-                                
-                                </div>
-                                <div
-                                class="w-full flex flex-0 mx-auto items-center justify-between pt-4 sm:pt-0"
+                                <router-link :to="`/product/${cartItem.id}`">
+                                    <h2 class="text-gray-700 text-lg font-semibold">{{ cartItem.title }}</h2>
+                                </router-link>
+                                <p
+                                    class="text-slate-500 text-ellipsis overflow-hidden break-words max-w-full max-h-12 line-clamp-2"
                                 >
-                                <div class="flex items-center">
-                                    <p class="w-full max-w-max text-lg ">
-                                        Qty: <span class="font-semibold">{{ cartItem.quantity }} </span>
-                                    </p>
+                                    {{ cartItem.description }}
+                                </p>
+                                <div
+                                    class="flex gap-4 text-slate-600 flex flex-col sm:flex-row items-center sm:justify-between mt-3"
+                                >
+                                    <div class="w-full flex flex-col items-left">
+                                        <p class="w-full max-w-max ">
+                                            Qty: <span class="">{{ cartItem.quantity }} </span>
+                                        </p>
+                                        <p class="w-full max-w-max font-semibold">
+                                            $ {{ cartItem.totalPrice }}
+                                        </p>
+                                        
+                                    </div>
+                                    <div
+                                        class="w-full flex flex-0 mx-auto items-center justify-between pt-4 sm:pt-0"
+                                    >
+                                        <div class="flex items-center">
+                                        </div>
+                                        <div class="inline-flex items-end place-content-center text-xs">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="inline-flex items-end place-content-center text-xs">
-                                </div>
-                                </div>
-                            </div>
                             </div>
                         </div>
                         </div>
