@@ -16,6 +16,7 @@ import displayError from '../../components/alerts/displayError.vue'
 const appStore = useAppStore()
 const userStore = useUserStore()
 
+const { getCart } = appStore;
 const { loginUser, setAuthentication, setLoggedInUser } = userStore;
 
 const router = useRouter(),
@@ -58,6 +59,9 @@ const handleSubmit = async () => {
       setLoggedInUser(data)
     }
     setAuthentication(data.id, data.token)
+
+    getCart(data.id)
+    console.log(data.id)
     // console.log(currentLocation.value.path, currentLocation.value)
     const path = currentLocation.value.path;
     

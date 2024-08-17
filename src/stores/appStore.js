@@ -256,7 +256,7 @@ export const useAppStore = defineStore('appStore', {
       totalItems: 0
     },
 
-    wishList: {},
+    wishLists: {},
 
     // Page navigation
     /**
@@ -582,9 +582,14 @@ export const useAppStore = defineStore('appStore', {
     },
 
     saveFavourites(userId, wishlist){
-      this.wishlist = {
-        ...this.wishlist,
+      this.wishlists = {
+        ...this.wishlists,
         [userId]: wishlist
+      }
+
+      this.wishlist = {
+        items: {},
+        totalItems: 0
       }
     },
 
@@ -719,6 +724,31 @@ export const useAppStore = defineStore('appStore', {
       this.toast.interval = null;
     },
 
+    
+    saveCart(userId, cart){
+      this.carts = {
+        ...this.carts,
+        [userId]: cart
+      }
+
+      console.log(userId, cart)
+
+      this.cart = {
+        isAddingToCart: false,
+        addToCartText: 'Add To Cart',
+        shippingRate: 0,
+        shippingMethod: 'standard',
+        payment: {},
+        cartItems: {},
+        totalItems: 0,
+        subTotalAmount: 0,
+        taxAmount: 0,
+        totalAmount: 0,
+        paymentMethod: '',
+        status: '',
+      };
+    },
+
     /**
      * Adds an item to the cart.
      * @param {Object} item - The item to add to the cart.
@@ -740,13 +770,6 @@ export const useAppStore = defineStore('appStore', {
       }
 
       this.updateCart(newCartItems, 'Product added to cart!');
-    },
-
-    saveCart(userId, cart){
-      this.carts = {
-        ...this.carts,
-        [userId]: cart
-      }
     },
 
     /**
@@ -921,7 +944,8 @@ export const useAppStore = defineStore('appStore', {
      * @param {Object} state - The state object.
      * @returns {Object} - The cart.
      */
-    getCart: (state) => {
+    getCart: (state) => (userId) => {
+      console.log(userId, state.carts)
       return state.cart;
     },
 

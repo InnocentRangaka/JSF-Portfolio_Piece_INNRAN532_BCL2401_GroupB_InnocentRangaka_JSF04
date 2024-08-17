@@ -219,6 +219,7 @@ export const useUserStore = defineStore('userStore', {
 
     setLoggedInUser(userData) {
       this.user = userData;
+      return this.user;
     },
 
     setAuthentication(userId, token) {
