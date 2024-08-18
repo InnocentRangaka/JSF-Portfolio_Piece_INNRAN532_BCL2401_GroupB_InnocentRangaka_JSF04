@@ -7,7 +7,7 @@ import { useAppStore } from '../stores/appStore'
 
 const appStore = useAppStore()
 
-const { fetchFavourites } = appStore
+const { fetchFavourites, removeAllFavourites } = appStore
 const products = computed(() => appStore.products)
 const loading = ref(appStore.loading)
 const error = ref(appStore.error)
@@ -39,6 +39,18 @@ watch(wishListItems, async () => {
     <div v-else-if="!loading.products && !error">
       <ProductCards :products="products" />
     </div>
+
+    <div
+      class="flex justify-center mt-10 mb-20"
+    >
+      <button
+        @click="() => removeAllFavourites()"
+        class="text-xs text-gray-900 hover:text-cyan-900 hover:underline"
+      >
+        Remove All
+      </button>
+    </div>
   </div>
+
   <NoItemFound v-else name="wishlist" />
 </template>

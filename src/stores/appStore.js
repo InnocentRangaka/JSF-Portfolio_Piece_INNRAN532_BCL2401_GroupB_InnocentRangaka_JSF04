@@ -592,15 +592,19 @@ export const useAppStore = defineStore('appStore', {
     },
 
     saveFavourites(userId, wishlist){
-      this.wishlists = {
-        ...this.wishlists,
+      this.wishLists = {
+        ...this.wishLists,
         [userId]: wishlist
       }
 
-      this.wishlist = {
+      this.wishList = {
         items: {},
         totalItems: 0
       }
+    },
+
+    removeAllFavourites(){
+      this.wishList = {}
     },
 
     /**
@@ -1116,6 +1120,61 @@ export const useAppStore = defineStore('appStore', {
      * @param {Object} state - The state object.
      * @returns {Function} - A function that takes a product ID and returns true if the product is in the wishlist, otherwise false.
      */
+    getWhishList: (state) => (userId) => {
+      const savedWhishList = state.wishLists[userId],
+      currentWishList = state.wishList;
+
+      const bothWishList = savedWhishList?.items && currentWishList?.items
+
+      if(!bothWishList){return}
+
+      const savedWishListHasItems = Object.values(savedWhishList.items).length > 0 ? true : false,
+      currentWishListHasItems = Object.values(currentWishList.items).length > 0 ? true : false;
+
+      if(!currentWishListHasItems && savedWishListHasItems){
+        state.updateCart(savedWhishList.items);
+      }
+      if(currentWishListHasItems && !savedWishListHasItems){
+        state.updateCart(currentWishList.items);
+      }
+      if(currentWishListHasItems && savedWishListHasItems){
+        promptUserForConfirmation("You have items in both your saved wishlist and your guest wishlist. Do you want to merge them?")
+        .then((merge) => {
+          if(merge){
+            const mergedWishListItems = {...currentWishList.items, ...savedWhishList.items}
+            state.wishList = {
+              ...mergedWishListItems,
+              items: mergedWishListItems.items, 
+              totalItems: Object.entries(mergedWishListItems.items).length
+            }
+          }
+          else {
+            promptUserForConfirmation("Would you like to continue with your guest whishlist instead of your saved whishlist?")
+            .then((currentWishList) => {
+              if(currentWishList){
+                state.wishList = {
+                  ...currentWishList,
+                  items: currentWishList.items, 
+                  totalItems: Object.entries(currentWishList.items).length
+                }
+              }
+              else {
+                if(savedWhishList){
+                  state.wishList = {
+                    ...savedWhishList,
+                    items: savedWhishList.items, 
+                    totalItems: Object.entries(savedWhishList.items).length
+                  }
+                }
+              }
+            })
+          }
+        })
+      }
+
+      return state.cart;
+    },
+
     isInWishList: (state) => (id) => {
       return Object.prototype.hasOwnProperty.call(state.wishList.items, id);
     },

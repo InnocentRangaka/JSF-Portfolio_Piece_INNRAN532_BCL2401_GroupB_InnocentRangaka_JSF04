@@ -59,6 +59,8 @@ const handleSubmit = async () => {
       setLoggedInUser(data)
     }
     setAuthentication(data.id, data.token)
+    appStore.getCart(data.id)
+    appStore.getWhishList(data.id)
 
     if(redirectTo.value?.fullPath){
       router.push(redirectTo.value.fullPath)
@@ -94,7 +96,7 @@ const handleSubmit = async () => {
 
     loginError;
 
-    console.log('Login Error:', error.value.code, loginError.value, appStore.getError)
+    // console.log('Login Error:', error.value.code, loginError.value, appStore.getError)
   }
 }
 
