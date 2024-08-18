@@ -96,6 +96,15 @@ const routes = [
         isUserAuthenticated(to, from, next)
       },
     },
+    {
+      path: '/order/confirm/:id',
+      name: 'OrderConfirmation',
+      component: () => import('../views/OrderConfirmationView.vue'),
+      meta: { requiresAuth: true }, // meta field to identify protected routes
+      beforeEnter: (to, from, next) => {
+        isUserAuthenticated(to, from, next)
+      },
+    },
     /**
      * Wishlist page route.
      * @type {Object}

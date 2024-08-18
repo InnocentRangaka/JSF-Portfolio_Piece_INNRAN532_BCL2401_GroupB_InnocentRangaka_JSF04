@@ -242,6 +242,9 @@ export const useAppStore = defineStore('appStore', {
 
     orders: {},
 
+    confirmOrderId: '',
+    confirmOrderStatus: '',
+
     // Wishlist management
     /**
      * Wishlist management object.
@@ -733,16 +736,26 @@ export const useAppStore = defineStore('appStore', {
 
     placeOrder(userId, userCart, userPaymentInfo, userShippingAddress){
       if(Object.values(this.cart.cartItems).length > 0){
+        const cart = {
+          shippingRate: userCart?.shippingRate,
+          shippingMethod: userCart?.shippingMethod,
+          cartItems: userCart?.cartItems,
+          totalItems: userCart?.totalItems,
+          subTotalAmount: userCart?.subTotalAmount,
+          taxAmount: userCart?.taxAmount,
+          totalAmount: userCart?.totalAmount,
+        }
+
         this.orders = {
           ...this.orders,
           [userId]: {
             ...this.orders[userId],
-            [userPaymentInfo.orderId]: {
+            [userPaymentInfo.id]: {
               payment: {
                 ...userPaymentInfo,
               },
               cart: {
-                ...userCart,
+                ...cart,
               },
               shippingAddress: {
                 ...userShippingAddress,
@@ -751,23 +764,84 @@ export const useAppStore = defineStore('appStore', {
           },
         }
   
-        // this.cart = {
-        //   isAddingToCart: false,
-        //   addToCartText: 'Add To Cart',
-        //   shippingRate: 0,
-        //   shippingMethod: 'standard',
-        //   payment: {},
-        //   cartItems: {},
-        //   totalItems: 0,
-        //   subTotalAmount: 0,
-        //   taxAmount: 0,
-        //   totalAmount: 0,
-        //   paymentMethod: '',
-        //   status: '',
-        // };
+        this.cart = {
+          isAddingToCart: false,
+          addToCartText: 'Add To Cart',
+          shippingRate: 0,
+          shippingMethod: 'standard',
+          payment: {},
+          cartItems: {},
+          totalItems: 0,
+          subTotalAmount: 0,
+          taxAmount: 0,
+          totalAmount: 0,
+          paymentMethod: '',
+          status: '',
+        };
+
+        if (this.carts[userId]) {
+          delete this.carts[userId];
+        }
+        this.closeToast();
       }
     },
 
+    updateOrderConfirmation(orderId, orderStatus){
+      this.confirmOrderId = orderId;
+      this.confirmOrderStatus = orderStatus;
+    },
+
+    saveOrder(userId, userCart, userPaymentInfo, userShippingAddress){
+      if(Object.values(userCart.cartItems).length > 0){
+        const cart = {
+          shippingRate: userCart?.shippingRate,
+          shippingMethod: userCart?.shippingMethod,
+          cartItems: userCart?.cartItems,
+          totalItems: userCart?.totalItems,
+          subTotalAmount: userCart?.subTotalAmount,
+          taxAmount: userCart?.taxAmount,
+          totalAmount: userCart?.totalAmount,
+        }
+
+        this.orders = {
+          ...this.orders,
+          [userId]: {
+            ...this.orders[userId],
+            [userPaymentInfo.id]: {
+              payment: {
+                ...userPaymentInfo,
+              },
+              cart: {
+                ...cart,
+              },
+              shippingAddress: {
+                ...userShippingAddress,
+              },
+            },
+          },
+        }
+  
+        this.cart = {
+          isAddingToCart: false,
+          addToCartText: 'Add To Cart',
+          shippingRate: 0,
+          shippingMethod: 'standard',
+          payment: {},
+          cartItems: {},
+          totalItems: 0,
+          subTotalAmount: 0,
+          taxAmount: 0,
+          totalAmount: 0,
+          paymentMethod: '',
+          status: '',
+        };
+
+        if (this.carts[userId]) {
+          delete this.carts[userId];
+        }
+        this.closeToast();
+      }
+    },
     
     saveCart(userId, cart){
       if(Object.values(cart.cartItems).length > 0){

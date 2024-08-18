@@ -79,7 +79,7 @@ watch(
 </script>
 
 <template>
-  <div v-if="user">
+  <div v-show="user">
     <CartSkeleton  v-if="loading" />
 
     <div v-show="!loading">
@@ -106,7 +106,7 @@ watch(
           </div>
         </div>
       </div>
-      
+
       <div v-if="totalItems > 0" class="container mx-auto mb-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 relative">
           <div class="col-span-2 relative bg-white p-8 rounded-lg shadow-md">

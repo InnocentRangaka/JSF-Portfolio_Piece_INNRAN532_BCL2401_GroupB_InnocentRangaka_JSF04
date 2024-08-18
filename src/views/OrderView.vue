@@ -80,21 +80,23 @@ onMounted(() => {
 
 <template>
     
-    <!-- Order Header -->
-    <div class="bg-gray-100 mb-10">
-        <div class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]">
-          <h1 class="text-gray-800 text-xl font-bold my-2">Order #54879</h1>
-          <div class="mb-2 text-xs text-right flex items-end ml-auto">
-            <a href="/" class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
-              <span class="flex h-full items-center text-xs text-right">
-                <span class="mb-[0.1rem]">View Invoice</span>
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
+    <
 
-      <div>
+      <div v-show="!loading">
+
+        !-- Order Header -->
+        <div class="bg-gray-100 mb-10">
+            <div class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]">
+            <h1 class="text-gray-800 text-xl font-bold my-2">Order #54879</h1>
+            <div class="mb-2 text-xs text-right flex items-end ml-auto">
+                <a href="/" class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
+                <span class="flex h-full items-center text-xs text-right">
+                    <span class="mb-[0.1rem]">View Invoice</span>
+                </span>
+                </a>
+            </div>
+            </div>
+        </div>
 
         <div v-if="totalItems > 0" class="container mx-auto mb-4">
             <div class="grid grid-cols-1 gap-3 relative">
@@ -278,7 +280,7 @@ onMounted(() => {
             </div>
           </div>
       
-          <!-- <NoItemFound v-if="totalItems == 0" name="cart" /> -->
+          <NoItemFound v-if="totalItems == 0" name="cart" />
       </div>
 </template>
 
