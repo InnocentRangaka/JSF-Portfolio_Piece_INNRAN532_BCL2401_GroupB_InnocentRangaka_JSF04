@@ -13,23 +13,20 @@ const { saveCart } = appStore;
 
 function useCountdownRedirect() {
   const countdown = ref(5); // Start countdown from 5 seconds
-  const router = useRouter(); // Use Vue Router for redirection
 
-  const startCountdown = () => {
+  const startCountdown = (redirectTo = '/') => {
     const interval = setInterval(() => {
       countdown.value--; // Decrement countdown
 
       if (countdown.value <= 0) {
         clearInterval(interval); // Stop the interval when countdown reaches 0
-        router.push('/'); // Redirect to the home page
+        router.push(redirectTo); // Redirect to the home page
       }
     }, 1000); // Set interval to 1 second (1000 milliseconds)
   };
 
   return { countdown, startCountdown };
 }   
-
-
 
 const { countdown, startCountdown } = useCountdownRedirect();
 

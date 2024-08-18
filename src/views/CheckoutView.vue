@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAppStore } from '../stores/appStore'
 import { useUserStore } from '../stores/userStore'
 import { loadScript } from "@paypal/paypal-js";
@@ -7,6 +8,7 @@ import { loadScript } from "@paypal/paypal-js";
 import NoItemFound from '../components/includes/NoItemFound.vue'
 import CheckoutSkeleton from '../components/cart/CheckoutSkeleton.vue'
 
+const router = useRouter();
 const appStore = useAppStore()
 const userStore = useUserStore()
 
@@ -40,11 +42,13 @@ const ShippingAddress = {
     zipCode: zipCode.value,
   }
 
-const loading = ref(true)
-const isCancelOrder = ref(false);
-const cancelOrderId = ref('');
-const showCancelConfirmation = ref(false);
-const isReloadPage = ref(false);
+const loading = ref(true),
+  isCancelOrder = ref(false),
+  cancelOrderId = ref(''),
+  showCancelConfirmation = ref(false),
+  isReloadPage = ref(false),
+  isPaymentConfirmed = ref(false),
+  orderNumber = ref('');
 
   console.log(user.value, currentCartItems)
   // saveCart(user.value.id, currentCartItems)
@@ -68,6 +72,28 @@ const initiateCart = () => {
 const updateShippingMethod = (method) => {
   updateShipping(method, appStore)
 };
+
+function useCountdownRedirect() {
+  const countdown = ref(5); // Start countdown from 5 seconds
+
+  const startCountdown = (redirectTo = '/', delayBy = 0) => {
+    const seconds = delayBy * 1000;
+    setTimeout(() => {
+      const interval = setInterval(() => {
+        countdown.value--; // Decrement countdown
+
+        if (countdown.value <= 0) {
+          clearInterval(interval); // Stop the interval when countdown reaches 0
+          router.push(redirectTo); // Redirect to the home page
+        }
+      }, 1000); // Set interval to 1 second (1000 milliseconds)
+    }, seconds);
+  };
+
+  return { countdown, startCountdown };
+}
+
+const { countdown, startCountdown } = useCountdownRedirect();
 
 const paypalContainer = ref(null); // Reference to the PayPal button container
 
@@ -107,11 +133,21 @@ const renderPayPalButtons = (paypal) => {
           paymentMethod: data.paymentSource,
           facilitatorAccessToken: data.facilitatorAccessToken,
         }
-        placeOrder(user.value.id, appStore.cart, paymentInfo, ShippingAddress);
 
-        alert('Transaction completed by ' + details.payer.name.given_name);
+        orderNumber.value = details.id;
 
-        console.log(appStore.orders)
+        const paypalOverlay = document.querySelector('.paypal-checkout-sandbox')
+
+        if(paypalOverlay){
+          paypalOverlay.remove()
+        }
+
+        isPaymentConfirmed.value = placeOrder(user.value.id, appStore.cart, paymentInfo, ShippingAddress);
+        startCountdown(`/order/${orderNumber.value}`);
+
+        // alert('Transaction completed by ' + details.payer.name.given_name);
+
+        console.log('orders', appStore.orders)
       });
     },
     onCancel: (data) => {
@@ -181,6 +217,7 @@ function cancelOrder() {
     status: 'cancelled',
     id: cancelOrderId,
   }
+
   saveOrder(user.value.id, appStore.cart, paymentInfo, ShippingAddress);
 
   // Trigger the order cancellation logic
@@ -196,6 +233,10 @@ function closeCancellationConfirmation() {
 
 function reloadPage() {
   window.location.reload();  // Reloads the current page
+}
+
+function navigateTo(path){
+  router.push(path);
 }
 
 </script>
@@ -221,12 +262,12 @@ function reloadPage() {
       </div>
     </div>
 
-    <div v-if="totalItems > 0" class="container mx-auto text-gray-800 mb-10">
+    <div v-if="totalItems > 0" v-show="!loading" class="container mx-auto text-gray-800 mb-10">
       <!-- <h1 class="text-3xl font-bold mb-6">Checkout</h1> -->
 
       <div class="flex flex-col lg:flex-row gap-3">
         <!-- Contact and Shipping Information -->
-        <div class="w-full lg:w-1/2 bg-white p-8 rounded-lg shadow-md ">
+        <div class="w-full lg:w-1/2 h-fit bg-white p-8 rounded-lg shadow-md ">
           <h2 class="text-xl font-bold mb-4">Contact Information</h2>
           <div class="mb-4">
             <label for="email" class="block text-gray-700 font-bold mb-2">Email address</label>
@@ -374,11 +415,23 @@ function reloadPage() {
     </div>
   </div>
 
-  <NoItemFound v-if="totalItems == 0" name="checkout" />
+  <NoItemFound v-if="totalItems == 0" v-show="!loading" name="checkout" />
+
+  <div v-if="isPaymentConfirmed" class="fixed inset-0 bg-gray-700 bg-opacity-70 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
+      <h2 class="text-gray-700 text-2xl font-semibold mb-4">Payment successful</h2>
+      <p class="text-gray-700 mb-2">Thank you for your order <strong>#{{ orderNumber }}</strong>!</p>
+      <p class="text-gray-700 mb-4">We will email you confirmation shortly. You will automatically be redirected to your order in {{ countdown }}</p>
+      <div class="flex justify-end space-x-4">
+        <button @click="navigateTo('/')" class="text-gray-700 px-4 py-2 rounded hover:bg-red-500 hover:text-white">Continue Shopping</button>
+        <button @click="navigateTo(`/order/${orderNumber}`)" class="bg-cyan-700 text-white px-4 py-2 rounded hover:bg-blue-700">Track Your Order</button>
+      </div>
+    </div>
+  </div>
 
   <div v-if="isCancelOrder" class="fixed inset-0 bg-gray-700 bg-opacity-70 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
-      <h2 class="text-gray-700 text-2xl font-semibold mb-4">Payment Failed</h2>
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
+      <h2 class="text-gray-700 text-2xl font-semibold mb-4">Payment failed</h2>
       <p class="text-gray-700 mb-4">Unfortunately, your payment did not go through. Would you like to try again or cancel the order?</p>
       <div class="flex justify-end space-x-4">
         <button @click="confirmCancellation" class="text-gray-700 px-4 py-2 rounded hover:bg-red-500 hover:text-white">Cancel Order</button>
@@ -389,8 +442,8 @@ function reloadPage() {
   
   <!-- Order Cancellation Confirmation Modal -->
   <div v-if="showCancelConfirmation" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
-      <h2 class="text-gray-700 text-2xl font-semibold mb-4">Confirm Cancellation</h2>
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
+      <h2 class="text-gray-700 text-2xl font-semibold mb-4">Confirm cancellation</h2>
       <p class="text-gray-700 mb-4">Are you sure you want to cancel your order?</p>
       <div class="flex justify-end space-x-4">
         <button @click="cancelOrder" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500">Yes, Cancel Order</button>
@@ -400,7 +453,7 @@ function reloadPage() {
   </div>
 
   <div v-if="isReloadPage" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
       <h2 class="text-gray-700 text-2xl font-semibold mb-4">Something went wrong</h2>
       <p class="text-gray-700 mb-4">An error occurred. Please try reloading the page.</p>
       <div class="flex justify-end space-x-4">

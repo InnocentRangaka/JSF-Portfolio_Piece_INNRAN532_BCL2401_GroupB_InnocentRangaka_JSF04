@@ -215,30 +215,33 @@ watch(
               </div>
             </div>
           </div>
-  
-          <div
-            class="col-span-2 sm:col-span-1 text-slate-600 bg-white p-8 rounded-lg shadow-md relative sm:sitcky"
-          >
-            <h2 class="text-gray-700 text-lg font-semibold mb-4">Order summary</h2>
-            <div class="flex justify-between mb-2">
-              <span>Subtotal</span>
-              <span class="text-gray-700">$ {{ subTotalAmount }}</span>
-            </div>
-            <div class="flex justify-between mb-2">
-              <span>Shipping estimate</span>
-              <span class="text-gray-700">$ 0.00</span>
-            </div>
-            <div class="flex justify-between font-semibold text-lg mb-8">
-              <span>Order total</span>
-              <span class="text-gray-700">$ {{ totalAmount }}</span>
-            </div>
-            <a
-              href="/checkout"
-              class="flex justify-center bg-cyan-700 hover:bg-cyan-900 w-full font-bold text-white py-2 px-4 rounded"
+          
+          <div>
+            <div
+              class="col-span-2 sm:col-span-1 h-fit text-slate-600 bg-white p-8 rounded-lg shadow-md relative sm:sitcky"
             >
-              <span>Checkout</span>
-            </a>
-  
+              <h2 class="text-gray-700 text-lg font-semibold mb-4">Order summary</h2>
+              <div class="flex justify-between mb-2">
+                <span>Subtotal</span>
+                <span class="text-gray-700">$ {{ subTotalAmount }}</span>
+              </div>
+              <div class="flex justify-between mb-2">
+                <span>Shipping estimate</span>
+                <span class="text-gray-700">$ 0.00</span>
+              </div>
+              <div class="flex justify-between font-semibold text-lg mb-8">
+                <span>Order total</span>
+                <span class="text-gray-700">$ {{ totalAmount }}</span>
+              </div>
+              <a
+                href="/checkout"
+                class="flex justify-center bg-cyan-700 hover:bg-cyan-900 w-full font-bold text-white py-2 px-4 rounded"
+              >
+                <span>Checkout</span>
+              </a>
+    
+            </div>
+
             <div
               class="flex justify-center mt-10"
             >
@@ -249,7 +252,6 @@ watch(
                 Remove All
               </button>
             </div>
-  
           </div>
         </div>
       </div>

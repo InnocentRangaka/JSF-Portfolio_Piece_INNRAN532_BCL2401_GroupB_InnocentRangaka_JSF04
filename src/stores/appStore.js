@@ -735,60 +735,7 @@ export const useAppStore = defineStore('appStore', {
     },
 
     placeOrder(userId, userCart, userPaymentInfo, userShippingAddress){
-      if(Object.values(this.cart.cartItems).length > 0){
-        const cart = {
-          shippingRate: userCart?.shippingRate,
-          shippingMethod: userCart?.shippingMethod,
-          cartItems: userCart?.cartItems,
-          totalItems: userCart?.totalItems,
-          subTotalAmount: userCart?.subTotalAmount,
-          taxAmount: userCart?.taxAmount,
-          totalAmount: userCart?.totalAmount,
-        }
-
-        this.orders = {
-          ...this.orders,
-          [userId]: {
-            ...this.orders[userId],
-            [userPaymentInfo.id]: {
-              payment: {
-                ...userPaymentInfo,
-              },
-              cart: {
-                ...cart,
-              },
-              shippingAddress: {
-                ...userShippingAddress,
-              },
-            },
-          },
-        }
-  
-        this.cart = {
-          isAddingToCart: false,
-          addToCartText: 'Add To Cart',
-          shippingRate: 0,
-          shippingMethod: 'standard',
-          payment: {},
-          cartItems: {},
-          totalItems: 0,
-          subTotalAmount: 0,
-          taxAmount: 0,
-          totalAmount: 0,
-          paymentMethod: '',
-          status: '',
-        };
-
-        if (this.carts[userId]) {
-          delete this.carts[userId];
-        }
-        this.closeToast();
-      }
-    },
-
-    updateOrderConfirmation(orderId, orderStatus){
-      this.confirmOrderId = orderId;
-      this.confirmOrderStatus = orderStatus;
+      return this.saveOrder(userId, userCart, userPaymentInfo, userShippingAddress)
     },
 
     saveOrder(userId, userCart, userPaymentInfo, userShippingAddress){
@@ -803,6 +750,18 @@ export const useAppStore = defineStore('appStore', {
           totalAmount: userCart?.totalAmount,
         }
 
+        this.order = {
+          payment: {
+            ...userPaymentInfo,
+          },
+          cart: {
+            ...cart,
+          },
+          shippingAddress: {
+            ...userShippingAddress,
+          },
+        }
+
         this.orders = {
           ...this.orders,
           [userId]: {
@@ -840,7 +799,17 @@ export const useAppStore = defineStore('appStore', {
           delete this.carts[userId];
         }
         this.closeToast();
+
+        return true
       }
+      return false
+    },
+
+    findOrder(userId, orderId){
+      if(this.orders[userId] && this.orders[userId][orderId]){
+        this.order = this.orders[userId][orderId];
+      }
+      return this.order;
     },
     
     saveCart(userId, cart){
@@ -1068,6 +1037,10 @@ export const useAppStore = defineStore('appStore', {
     getCart: (state) => (userId) => {
       const savedCart = state.carts[userId],
       currentCart = state.cart;
+
+      const bothCart = savedCart?.cartItems && currentCart?.cartItems
+
+      if(!bothCart){return}
 
       const savedCartHasItems = Object.values(savedCart.cartItems).length > 0 ? true : false,
       currentCartHasItems = Object.values(currentCart.cartItems).length > 0 ? true : false;

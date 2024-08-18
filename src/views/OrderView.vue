@@ -1,34 +1,69 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useAppStore } from '../stores/appStore'
 
+import NoItemFound from '../components/includes/NoItemFound.vue'
+import CheckoutSkeleton from '../components/cart/CheckoutSkeleton.vue'
+
+const route = useRoute()
+const router = useRouter()
 const appStore = useAppStore()
 
-const currentCartItems = ref(appStore.cart.cartItems),
-totalItems = ref(appStore.cart.totalItems),
-subTotalAmount = ref(appStore.cart.subTotalAmount),
-shippingRate = ref(appStore.cart.shippingRate),
-taxAmount = ref(appStore.cart.taxAmount),
-totalAmount = ref(appStore.cart.totalAmount),
+const orderId = ref(route.params.id),
 user = ref(appStore.user),
-loading = ref(true);
+loading = ref(true),
+{ findOrder } = appStore;
 
-const address1 = user.value ? `${user.value.address.number} ${user.value.address.street}` : '';
+if(orderId.value !== appStore.order.payment.id){
+    findOrder(user.value.id, orderId.value)
+}
+
+console.log(route)
+console.log(appStore.order)
+
+const order = ref(appStore.order),
+orderproducts = ref(appStore.order.cart.cartItems),
+totalItems = ref(appStore.order.cart.totalItems),
+subTotalAmount = ref(appStore.order.cart.subTotalAmount),
+shippingRate = ref(appStore.order.cart.shippingRate),
+taxAmount = ref(appStore.order.cart.taxAmount),
+totalAmount = ref(appStore.order.cart.totalAmount);
+
+const orderTime = ref(appStore.order.payment.created_time),
+paymentTime = ref(appStore.order.payment.update_time)
+
+
+
+const street = ref(appStore.order.shippingAddress.street),
+    apartment = ref(appStore.order.shippingAddress.apartment),
+    city = ref(appStore.order.shippingAddress.city),
+    countryCode = ref(appStore.order.shippingAddress.countryCode),
+    state = ref(appStore.order.shippingAddress.state),
+    zipCode = ref(appStore.order.shippingAddress.zipCode);
+
 // console.log(user)
 
-const calculateDate = (input) => {
-  const today = new Date();
-  
+const calculateDate = (input = 'now', baseDate = '') => {
   // Check if the input is 'now'
   if (input === "now") {
-    return today;
+    return baseDate ? new Date(baseDate) : new Date();
   }
+
+  // Check if the input is a valid date string (ISO format)
+  const parsedDate = Date.parse(input);
+  if (!isNaN(parsedDate)) {
+    return new Date(parsedDate);
+  }
+
+  // Use the baseDate if provided, otherwise default to the current date
+  const today = baseDate ? new Date(baseDate) : new Date();
 
   // Extract the number and the unit (d, m, y) using regex
   const match = input.match(/^(\d+)([dmy])$/);
   
   if (!match) {
-    throw new Error("Invalid input format. Please use 'now', 'Xd', 'Xm', or 'Xy' format.");
+    throw new Error("Invalid input format. Please use 'now', 'Xd', 'Xm', 'Xy', or a valid date string format.");
   }
   
   const number = parseInt(match[1], 10);
@@ -53,6 +88,21 @@ const calculateDate = (input) => {
 }
 
 function formatDate(date, format) {
+  // Check if date is valid
+  if (!date) {
+    throw new Error("Invalid date value: date is undefined or null");
+  }
+
+  // Convert the input to a Date object if it's a string or number
+  if (typeof date === 'string' || typeof date === 'number') {
+    date = new Date(date);
+  }
+
+  // Check if the conversion was successful
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid date format");
+  }
+
   const options = {
     // Full month name
     MMMM: date.toLocaleString('en-US', { month: 'long' }),
@@ -68,26 +118,25 @@ function formatDate(date, format) {
   return format.replace(/MMMM|DD|YYYY|MM/g, (match) => options[match]);
 }
 
+
+
 onMounted(() => {
   setTimeout(() => {
     loading.value = false;
   }, 2000);
 
 })
-
-
 </script>
 
 <template>
-    
-    <
+    <CheckoutSkeleton  v-if="loading" />
 
       <div v-show="!loading">
 
-        !-- Order Header -->
+        <!-- Order Header -->
         <div class="bg-gray-100 mb-10">
             <div class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]">
-            <h1 class="text-gray-800 text-xl font-bold my-2">Order #54879</h1>
+            <h1 class="text-gray-800 text-xl font-bold my-2">Order #{{ orderId }}</h1>
             <div class="mb-2 text-xs text-right flex items-end ml-auto">
                 <a href="/" class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
                 <span class="flex h-full items-center text-xs text-right">
@@ -125,7 +174,7 @@ onMounted(() => {
                                 <p class="">Ordered</p>
                                 </div>
                                 <div>
-                                <p class=""><time :datetime="formatDate(calculateDate('now'), 'YYYY-MM-DD')">{{ formatDate(calculateDate('now'), 'MMMM DD, YYYY') }}</time></p>
+                                <p class=""><time :datetime="formatDate(calculateDate('0d', orderTime), 'YYYY-MM-DD')">{{ formatDate(calculateDate('0d', orderTime), 'MMMM DD, YYYY') }}</time></p>
                                 </div>
                             </div>
                             <div class="flex justify-between mb-0">
@@ -133,7 +182,7 @@ onMounted(() => {
                                 <p class="">Paid</p>
                                 </div>
                                 <div>
-                                <p class=""><time :datetime="formatDate(calculateDate('1d'), 'YYYY-MM-DD')">{{ formatDate(calculateDate('1d'), 'MMMM DD, YYYY') }}</time></p>
+                                <p class=""><time :datetime="formatDate(calculateDate('0d', paymentTime), 'YYYY-MM-DD')">{{ formatDate(calculateDate('0d', paymentTime), 'MMMM DD, YYYY') }}</time></p>
                                 </div>
                             </div>
                             <div class="flex justify-between mb-0">
@@ -141,7 +190,7 @@ onMounted(() => {
                                 <p class="">Delivery (estimate)</p>
                                 </div>
                                 <div>
-                                <p class=""><time :datetime="formatDate(calculateDate('14d'), 'YYYY-MM-DD')">{{ formatDate(calculateDate('14d'), 'MMMM DD, YYYY') }}</time></p>
+                                <p class=""><time :datetime="formatDate(calculateDate('14d', paymentTime), 'YYYY-MM-DD')">{{ formatDate(calculateDate('14d', paymentTime), 'MMMM DD, YYYY') }}</time></p>
                                 </div>
                             </div>
                         </div>
@@ -152,10 +201,12 @@ onMounted(() => {
                     >
                         <h2 class="text-gray-700 text-lg font-semibold mb-4">Shipping address</h2>
                         <div class="grid grid-cols-1 justify-between mb-4">
-                            <p class="text-gray-700 ">{{ address1 }}</p>
-                            <p class="text-gray-700 ">$ {{ subTotalAmount }}</p>
-                            <p class="text-gray-700 ">$ {{ subTotalAmount }}</p>
-                            <p class="text-gray-700 ">$ {{ subTotalAmount }}</p>
+                            <p class="text-gray-700 ">{{ apartment }}</p>
+                            <p class="text-gray-700 ">{{ street }}</p>
+                            <p class="text-gray-700 ">{{ city }}</p>
+                            <p class="text-gray-700 ">{{ state }}</p>
+                            <p class="text-gray-700 ">{{ zipCode }}</p>
+                            <p class="text-gray-700 ">{{ countryCode }}</p>
                         </div>
 
                         <h2 class="text-gray-700 text-lg font-semibold mb-4">Delivery Method</h2>
@@ -226,37 +277,37 @@ onMounted(() => {
                 </div>
 
                 <div class="relative bg-white p-8 rounded-lg shadow-md">
-                    <div v-for="cartItem in currentCartItems" :key="cartItem.id" class="border-b pb-4 mb-4">
+                    <div v-for="product in orderproducts" :key="product.id" class="border-b pb-4 mb-4">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center w-full relative gap-4 sm:gap-10">
                         <div class="grid w-[80px]">
-                            <router-link :to="`/product/${cartItem.id}`" class="flex-1 flex flex-col">
+                            <router-link :to="`/product/${product.id}`" class="flex-1 flex flex-col">
                                 <img
-                                    :src="cartItem.image"
-                                    :alt="cartItem.title"
+                                    :src="product.image"
+                                    :alt="product.title"
                                     class="w-20 h-auto max-h-full object-cover mt-[0.35rem] self-start"
                                 />
                             </router-link>
                         </div>
                         <div class="flex flex-col w-full">
                             <div class="grid w-full grid-cols-1 relative">
-                                <router-link :to="`/product/${cartItem.id}`">
-                                    <h2 class="text-gray-700 text-lg font-semibold">{{ cartItem.title }}</h2>
+                                <router-link :to="`/product/${product.id}`">
+                                    <h2 class="text-gray-700 text-lg font-semibold">{{ product.title }}</h2>
                                 </router-link>
                                 <p
                                     class="text-slate-500 text-ellipsis overflow-hidden break-words max-w-full max-h-12 line-clamp-2"
                                 >
-                                    {{ cartItem.description }}
+                                    {{ product.description }}
                                 </p>
                                 <div
                                     class="flex gap-4 text-slate-600 flex flex-col sm:flex-row items-center sm:justify-between mt-3"
                                 >
                                     <div class="w-full flex flex-col items-left">
                                         <p class="w-full max-w-max ">
-                                            Qty: <span class="">{{ cartItem.quantity }} </span>
+                                            Qty: <span class="">{{ product.quantity }} </span>
                                         </p>
                                         <p class="w-full max-w-max font-semibold">
-                                            $ {{ cartItem.totalPrice }}
+                                            $ {{ product.totalPrice }}
                                         </p>
                                         
                                     </div>
@@ -278,9 +329,9 @@ onMounted(() => {
 
                 
             </div>
-          </div>
+        </div>
       
           <NoItemFound v-if="totalItems == 0" name="cart" />
-      </div>
+    </div>
 </template>
 

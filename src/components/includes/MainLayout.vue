@@ -25,7 +25,7 @@ const isTopPartShown = (name) => {
   const isAuthPage = appStore.pages.authPages.includes(name)
   const cartPages = appStore.pages.cartPages.includes(name)
 
-  showSearchFilterSort.value = !(isAuthPage || cartPages)
+  // showSearchFilterSort.value = !isAuthPage || !cartPages
   if(!isAuthPage && !cartPages){ 
     fetchCategories()
   }
@@ -62,7 +62,8 @@ watch(currentLocation, (newLocation) => {
     <main>
       <div class="page-content">
         <!-- Search Filter Sort -->
-        <SearchFilterSort v-if="showSearchFilterSort" />
+        <!-- <SearchFilterSort v-if="showSearchFilterSort" /> -->
+        <SearchFilterSort />
 
         <!-- Error -->
         <div v-if="error" class="w-full flex justify-center">
