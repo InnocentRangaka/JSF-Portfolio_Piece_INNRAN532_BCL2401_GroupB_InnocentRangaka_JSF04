@@ -257,6 +257,8 @@ export const useAppStore = defineStore('appStore', {
        */
       items: {},
 
+      products: {},
+
       /**
        * Total number of items in the wishlist.
        * @type {number}
@@ -586,25 +588,43 @@ export const useAppStore = defineStore('appStore', {
       this.showToast('Product added to wishlist!');
 
       this.wishList = {
+        ...this.wishList,
         items: newWishList, 
         totalItems: Object.entries(newWishList).length
       };
     },
 
     saveFavourites(userId, wishlist){
-      this.wishLists = {
-        ...this.wishLists,
-        [userId]: wishlist
+      if(userId && Object.values(wishlist.items).length > 0){
+        this.wishLists = {
+          ...this.wishLists,
+          [userId]: wishlist
+        }
+  
+        this.wishList = {
+          items: {},
+          products: {},
+          totalItems: 0
+        }
       }
+    },
 
+    updateFavourites(newWishList) {
       this.wishList = {
-        items: {},
-        totalItems: 0
-      }
+        ...this.wishList,
+        ...newWishList,
+        items: newWishList.items,
+        products: newWishList.products, 
+        totalItems: Object.values(newWishList).length
+      };
     },
 
     removeAllFavourites(){
       this.wishList = {}
+    },
+
+    setFavourites(products) {
+      this.wishList.products = products;
     },
 
     /**
@@ -1132,10 +1152,10 @@ export const useAppStore = defineStore('appStore', {
       currentWishListHasItems = Object.values(currentWishList.items).length > 0 ? true : false;
 
       if(!currentWishListHasItems && savedWishListHasItems){
-        state.updateCart(savedWhishList.items);
+        state.updateFavourites(savedWhishList);
       }
       if(currentWishListHasItems && !savedWishListHasItems){
-        state.updateCart(currentWishList.items);
+        state.updateFavourites(currentWishList);
       }
       if(currentWishListHasItems && savedWishListHasItems){
         promptUserForConfirmation("You have items in both your saved wishlist and your guest wishlist. Do you want to merge them?")
@@ -1144,7 +1164,8 @@ export const useAppStore = defineStore('appStore', {
             const mergedWishListItems = {...currentWishList.items, ...savedWhishList.items}
             state.wishList = {
               ...mergedWishListItems,
-              items: mergedWishListItems.items, 
+              items: mergedWishListItems.items,
+              products: mergedWishListItems.products,  
               totalItems: Object.entries(mergedWishListItems.items).length
             }
           }
@@ -1154,7 +1175,8 @@ export const useAppStore = defineStore('appStore', {
               if(currentWishList){
                 state.wishList = {
                   ...currentWishList,
-                  items: currentWishList.items, 
+                  items: currentWishList.items,
+                  products: currentWishList.products,
                   totalItems: Object.entries(currentWishList.items).length
                 }
               }
@@ -1162,7 +1184,8 @@ export const useAppStore = defineStore('appStore', {
                 if(savedWhishList){
                   state.wishList = {
                     ...savedWhishList,
-                    items: savedWhishList.items, 
+                    items: savedWhishList.items,
+                    products: savedWhishList.products,
                     totalItems: Object.entries(savedWhishList.items).length
                   }
                 }
@@ -1172,7 +1195,7 @@ export const useAppStore = defineStore('appStore', {
         })
       }
 
-      return state.cart;
+      return state.wishList;
     },
 
     isInWishList: (state) => (id) => {

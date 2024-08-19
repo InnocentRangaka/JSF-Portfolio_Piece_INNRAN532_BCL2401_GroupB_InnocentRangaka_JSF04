@@ -153,6 +153,7 @@ export const fetchFavourites = async (objectArray, app) => {
   );
 
   if (!errorOccurred && list.length > 0) {
+    app.setFavourites(list)
     app.setProducts(list);
     app.setOriginalProducts(JSON.parse(JSON.stringify(list)));
     app.searchProducts();
