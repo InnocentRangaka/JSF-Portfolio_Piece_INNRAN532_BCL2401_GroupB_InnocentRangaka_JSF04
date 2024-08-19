@@ -81,7 +81,7 @@ watch(
             </div>
           </div>
           <div class="text-base line-clamp-2 font-extrabold text-slate-600 leading-snug">
-            <h2>{{ appStore.currency }} {{ product.price }}</h2>
+            <h2>{{ appStore.currency }} {{ product.price.toFixed(2) }}</h2>
           </div>
         </div>
         <div class="flex mt-1 space-x-2 place-items-center">

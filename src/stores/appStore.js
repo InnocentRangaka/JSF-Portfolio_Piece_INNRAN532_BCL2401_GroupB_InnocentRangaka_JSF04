@@ -268,6 +268,24 @@ export const useAppStore = defineStore('appStore', {
 
     wishLists: {},
 
+    compareList: {
+      /**
+       * Items in the wishlist.
+       * @type {Object}
+       */
+      items: {},
+
+      products: {},
+
+      /**
+       * Total number of items in the wishlist.
+       * @type {number}
+       */
+      totalItems: 0
+    },
+
+    compareLists: {},
+
     // Page navigation
     /**
      * Current page name.
@@ -625,6 +643,56 @@ export const useAppStore = defineStore('appStore', {
 
     setFavourites(products) {
       this.wishList.products = products;
+    },
+
+    addToCompareList(id) {
+      const newCompareList = { ...this.compareList.items };
+      if (newCompareList[id]) {
+        delete newCompareList[id];
+      } else {
+        newCompareList[id] = true;
+      }
+
+      this.showToast('Product added to wishlist!');
+
+      this.compareList = {
+        ...this.compareList,
+        items: newCompareList, 
+        totalItems: Object.entries(newCompareList).length
+      };
+    },
+
+    saveCompareList(userId, comparelist){
+      if(userId && Object.values(comparelist.items).length > 0){
+        this.compareLists = {
+          ...this.compareLists,
+          [userId]: comparelist
+        }
+  
+        this.compareList = {
+          items: {},
+          products: {},
+          totalItems: 0
+        }
+      }
+    },
+
+    updateCompareList(comparelist) {
+      this.compareList = {
+        ...this.compareList,
+        ...comparelist,
+        items: comparelist.items,
+        products: comparelist.products, 
+        totalItems: Object.values(comparelist).length
+      };
+    },
+
+    setCompareList(products) {
+      this.wishList.products = products;
+    },
+
+    removeAllCompareList(){
+      this.compareList = {}
     },
 
     /**

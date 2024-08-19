@@ -82,7 +82,7 @@ watchEffect(() => {
               {{ product.category }}
             </span>
             <h3 class="text-xl md:text-2xl lg:text-2xl font-extrabold text-slate-600">
-              {{ currency }} {{ product.price }}
+              {{ currency }} {{ product.price.toFixed(2) }}
             </h3>
             <div class="flex w-full justify-start space-x-2 mt-2 place-items-center items-center">
               <button

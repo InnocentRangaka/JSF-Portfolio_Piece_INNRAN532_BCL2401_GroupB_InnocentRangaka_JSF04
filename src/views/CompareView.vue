@@ -120,7 +120,7 @@ grayStar = `
                   {{ product[feature].rate || 0 }}/5 ({{ product[feature].count || 0 }} reviews)
                 </span>
                 <span v-else-if="feature === 'price'" class="flex items-center">
-                  {{ appStore.currency }} {{ product.price }}
+                  {{ appStore.currency }} {{ product.price.toFixed(2) }}
                 </span>
                 <span v-else class="">
                   {{ product[feature] || 'N/A' }}
