@@ -2,6 +2,7 @@
 import { watch, ref, onMounted } from 'vue'
 import { useAppStore } from '../../stores/appStore'
 import RatingStars from '../icons/RatingStars.vue'
+import CompareButton from './CompareButton.vue';
 
 /**
  * Application store for managing global state, including products, cart, and wishlist.
@@ -85,6 +86,7 @@ watch(
         </div>
         <div class="flex mt-1 space-x-2 place-items-center">
           <div class="flex w-full justify-end space-x-2 mt-2 place-items-center items-center">
+            <CompareButton />
             <button
               class="bg-transparent flex-0"
               :class="

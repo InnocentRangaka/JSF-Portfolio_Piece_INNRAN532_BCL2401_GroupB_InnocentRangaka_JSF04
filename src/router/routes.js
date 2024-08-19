@@ -108,6 +108,16 @@ const routes = [
       name: 'Wishlist',
       component: () => import('../views/WishlistView.vue'),
     },
+    {
+      path: '/compare',
+      name: 'Compare',
+      component: () => import('../views/CompareView.vue'),
+      meta: { requiresAuth: true }, // meta field to identify protected routes
+      beforeEnter: (to, from, next) => {
+        // console.log('to:',to.path, 'from:',from.name)
+        isUserAuthenticated(to, from, next)
+      },
+    },
     /**
      * Login page route.
      * @type {Object}
