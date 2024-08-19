@@ -1,13 +1,27 @@
 <script setup>
-  import { ref } from 'vue';
-  
-  const isAdded = ref(false);
-  
-  // Function to handle adding to compare
-  function addToCompare() {
-    isAdded.value = !isAdded.value;
+    import { ref } from 'vue';
+    import { useAppStore } from '../../stores/appStore'
+
+    const appStore = useAppStore()
+
+    const isAdded = ref(false);
+
+    const { addToCompareList, isInCompareList } = appStore;
+
+    // Define the `ratingNumber` prop
+    const props = defineProps({
+        productId: {
+            type: Number,
+            required: true
+        }
+    })
+
+    // Function to handle adding to compare
+    function addToCompare() {
+            isAdded.value = !isAdded.value;
     // Add your logic to handle adding the item to a comparison list here
-  }
+    console.log(props.productId)
+    }
 </script>
   
 <template>

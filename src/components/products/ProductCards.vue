@@ -86,7 +86,7 @@ watch(
         </div>
         <div class="flex mt-1 space-x-2 place-items-center">
           <div class="flex w-full justify-end space-x-2 mt-2 place-items-center items-center">
-            <CompareButton />
+            <CompareButton :productId="product.id" />
             <button
               class="bg-transparent flex-0"
               :class="

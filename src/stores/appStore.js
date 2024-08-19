@@ -1288,6 +1288,10 @@ export const useAppStore = defineStore('appStore', {
       return state.wishList.totalPrice;
     },
 
+    isInCompareList: (state) => (id) => {
+      return Object.prototype.hasOwnProperty.call(state.wishList.items, id);
+    },
+
     /**
      * Gets the loading state.
      * @param {Object} state - The state object.
