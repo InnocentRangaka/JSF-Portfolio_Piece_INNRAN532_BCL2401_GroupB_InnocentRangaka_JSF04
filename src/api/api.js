@@ -198,3 +198,55 @@ export const fetchUserDataByToken = async (token) => {
   // Return the entire response data for further usage
   return { data: fetchData, error: fetchError, loading: fetchLoading};
 }
+
+export const fetchCompareListItems = async (objectArray, app) => {
+  app.setProductsLoading(true);
+
+  const ids = [...new Set(Object.values(objectArray))];
+  const promises = ids.map(id => useFetch(`/products/${id}`));
+  console.log(ids)
+
+  const results = await Promise.all(promises);
+
+  let list = [];
+  let errorOccurred = false;
+
+  await Promise.all(
+    results.map(async ({ data, error, fetching }) => {
+      return new Promise((resolve) => {
+        watch(fetching, (isFetching) => {
+          if (!isFetching) {
+            if (error.value) {
+              errorOccurred = true;
+              app.setError({
+                status: error.value.status,
+                message: 'Data fetching failed :( , please check your network connection and reload.',
+                type: 'network/fetch',
+              });
+            } else if (data.value) {
+              list.push(data.value);
+            }
+            resolve();
+          }
+        });
+      });
+    })
+  );
+
+  if (!errorOccurred && list.length > 0) {
+    console.log(list)
+    app.setCompareList(list)
+    app.setProducts(list);
+    app.setOriginalProducts(JSON.parse(JSON.stringify(list)));
+    app.searchProducts();
+    app.sortProducts();
+  }
+
+  app.setProductsLoading(false);
+
+  setTimeout(() => {
+    app.pageLoading = false;
+  }, 1000);
+
+  return { list, error: errorOccurred };
+};

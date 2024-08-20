@@ -7,6 +7,7 @@ import CartIcon from '../icons/CartIcon.vue'
 import HeartIcon from '../icons/HeartIcon.vue'
 import HamburgerIcon from '../icons/HamburgerIcon.vue'
 import UserIconButton from './UserIconButton.vue'
+import CompareIcon from '../icons/CompareIcon.vue'
 
 /**
  * Vue Router instance used for navigation.
@@ -49,6 +50,8 @@ const cartTotalItems = computed(() => appStore.cart.totalItems)
  * @type {ComputedRef<Array<Object>>}
  */
 const wishListItems = computed(() => appStore.wishList)
+
+const compareList = computed(() => appStore.compareList)
 
 /**
  * Computed property for getting the current route name.
@@ -164,6 +167,27 @@ onMounted(async () => {
               <ul
                 class="flex flex-row h-[32px] font-medium md:p-0 border border-gray-100 rounded-lg bg-white gap-2 md-gap-4 rtl:space-x-reverse items-center md:mt-0 md:border-0"
               >
+              <li>
+                <button
+                  @click="navigateTo('/compare')"
+                  :class="{
+                    'text-cyan-700': isActivePage('compare'),
+                    'text-gray-700': !isActivePage('compare')
+                  }"
+                  class="group inline-flex p-2 w-[32px] h-[32px] rounded-full hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 justify-center items-center focus:outline-none focus:ring-2 focus:ring-gray-200"
+                >
+                  <div class="block md:block relative">
+                    <div v-if="compareList.totalItems" class="mt-0 absolute left-3 -top-3">
+                      <p
+                        class="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white"
+                      >
+                        {{ compareList.totalItems }}
+                      </p>
+                    </div>
+                    <CompareIcon class="hover:bg-transparent" />
+                  </div>
+                </button>
+              </li>
                 <li>
                   <button
                     @click="navigateTo('/wishlist')"

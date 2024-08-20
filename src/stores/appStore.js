@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { defineAsyncComponent, markRaw, reactive, shallowRef } from 'vue'
-import { fetchCategories, fetchSingleProduct, fetchProducts, fetchFavourites } from '../api/api';
+import { fetchCategories, fetchSingleProduct, fetchProducts, fetchFavourites, fetchCompareListItems } from '../api/api';
 import { calculateSubTotalAmount, calculateTaxAmount, calculateCartTotal, parseObjectToArray, promptUserForConfirmation } from '../utils/utils'
 import MainLayout from '../components/includes/MainLayout.vue'
 import PlainLayout from '../components/includes/PlainLayout.vue'
@@ -449,6 +449,43 @@ export const useAppStore = defineStore('appStore', {
        */
       display: null,
     },
+    errorToast: {
+      /**
+       * Flag indicating toast visibility.
+       * @type {boolean}
+       */
+      visible: false,
+
+      /**
+       * Toast delay in milliseconds.
+       * @type {number}
+       */
+      delay: 5000,
+
+      /**
+       * Toast progress percentage.
+       * @type {number}
+       */
+      percent: 0,
+
+      /**
+       * Toast interval ID.
+       * @type {number|null}
+       */
+      interval: null,
+
+      /**
+       * Toast message.
+       * @type {string|null}
+       */
+      message: null,
+
+      /**
+       * Toast display component.
+       * @type {string|null}
+       */
+      display: null,
+    },
   }),
 
   actions: {
@@ -649,17 +686,22 @@ export const useAppStore = defineStore('appStore', {
       const newCompareList = { ...this.compareList.items };
       if (newCompareList[id]) {
         delete newCompareList[id];
+        this.showErrorToast('Product removed to compare list!');
       } else {
         newCompareList[id] = true;
+        this.showToast('Product added to compare list!');
       }
-
-      this.showToast('Product added to wishlist!');
 
       this.compareList = {
         ...this.compareList,
         items: newCompareList, 
-        totalItems: Object.entries(newCompareList).length
+        totalItems: Object.entries(newCompareList).length,
+        removeItem: false,
       };
+    },
+
+    async fetchCompareListItems(objectArray) {
+      await fetchCompareListItems(objectArray, this);
     },
 
     saveCompareList(userId, comparelist){
@@ -688,11 +730,57 @@ export const useAppStore = defineStore('appStore', {
     },
 
     setCompareList(products) {
-      this.wishList.products = products;
+      this.compareList.products = products;
     },
 
-    removeAllCompareList(){
-      this.compareList = {}
+    removeCompareListItem(item, el){
+      if (el.hasAttribute('disabled')) return;
+    
+      this.disableElement(el);
+
+      const parsedObject = parseObjectToArray(this.compareList.products);
+      const findItemInCompare = Object.values(parsedObject).find(product => product.id === item.id) || false;
+      
+      if (findItemInCompare) {
+        const compareItems = Object.values(parseObjectToArray(this.compareList.products));
+        const index = compareItems.indexOf(findItemInCompare);
+        compareItems[index].removeItem = true;
+
+        setTimeout(() => {
+          const newCompareListItems = [...compareItems];
+          const newIndex = newCompareListItems.indexOf(findItemInCompare);
+          newCompareListItems.splice(newIndex, 1);
+
+          const newCompareListIds = this.compareList.items
+          if (newCompareListIds.hasOwnProperty(item.id)) {
+            delete newCompareListIds[item.id];
+          }
+          this.disableElement(el, false);
+
+          const createCompareList = {
+            items: newCompareListIds,
+            products: newCompareListItems, 
+            totalItems: Object.values(newCompareListIds).length
+          }
+
+          // this.updateCompareList(createCompareList);
+          this.compareList = createCompareList;
+
+          if (compareItems[index]) {
+            compareItems[index].removeItem = false;
+          }
+        }, 2000);
+      }
+    },
+
+    removeAllCompareListItems(){
+      this.compareList = {
+        items: {},
+        products: {},
+        totalItems: 0
+      }
+
+      this.products = [];
     },
 
     /**
@@ -813,6 +901,45 @@ export const useAppStore = defineStore('appStore', {
         if (this.toast.percent >= 100) {
           clearInterval(this.toast.interval);
           this.toast.interval = null;
+        }
+      }, 30);
+    },
+
+    showErrorToast(message) {
+      if(this.errorToast.visible || this.errorToast.display){
+        this.errorToast.visible = false;
+        this.errorToast.display = false;
+        this.errorToast.message = '';
+      }
+
+      this.errorToast.message = message;
+      this.errorToast.visible = true;
+      this.errorToast.display = true;
+      
+      if (this.errorToast.interval) {
+        clearInterval(this.errorToast.interval);
+        this.errorToast.interval = null;
+      }
+  
+      if (this.errorToast.timeout) {
+        clearTimeout(this.errorToast.timeout);
+        this.errorToast.timeout = null;
+      }
+
+      this.errorToast.timeout = setTimeout(() => {
+        this.errorToast.visible = false;
+        this.errorToast.timeout = null;
+      }, this.errorToast.delay);
+  
+      const startDate = Date.now();
+      const futureDate = startDate + this.errorToast.delay;
+
+      this.errorToast.interval = setInterval(() => {
+        const dateNow = Date.now();
+        this.errorToast.percent = Math.floor((dateNow - startDate) * 100 / (futureDate - startDate));
+        if (this.errorToast.percent >= 100) {
+          clearInterval(this.errorToast.interval);
+          this.errorToast.interval = null;
         }
       }, 30);
     },
@@ -1288,8 +1415,66 @@ export const useAppStore = defineStore('appStore', {
       return state.wishList.totalPrice;
     },
 
+    getCompareList: (state) => (userId) => {
+      const savedCompareList = state.compareLists[userId],
+      currentCompareList = state.compareList;
+
+      const bothCompareList = savedCompareList?.items && currentCompareList?.items
+
+      if(!bothCompareList){return}
+
+      const savedCompareListHasItems = Object.values(savedCompareList.items).length > 0 ? true : false,
+      currentCompareListHasItems = Object.values(currentCompareList.items).length > 0 ? true : false;
+
+      if(!currentCompareListHasItems && savedCompareListHasItems){
+        state.updateCompareList(savedCompareList);
+      }
+      if(currentCompareListHasItems && !savedCompareListHasItems){
+        state.updateCompareList(currentCompareList);
+      }
+      if(currentCompareListHasItems && savedCompareListHasItems){
+        promptUserForConfirmation("You have items in both your saved wishlist and your guest wishlist. Do you want to merge them?")
+        .then((merge) => {
+          if(merge){
+            const mergedCompareListItems = {...currentCompareList.items, ...savedCompareList.items}
+            state.compareList = {
+              ...mergedCompareListItems,
+              items: mergedCompareListItems.items,
+              products: mergedCompareListItems.products,  
+              totalItems: Object.entries(mergedCompareListItems.items).length
+            }
+          }
+          else {
+            promptUserForConfirmation("Would you like to continue with your guest whishlist instead of your saved whishlist?")
+            .then((currentCompareList) => {
+              if(currentCompareList){
+                state.compareList = {
+                  ...currentCompareList,
+                  items: currentCompareList.items,
+                  products: currentCompareList.products,
+                  totalItems: Object.entries(currentCompareList.items).length
+                }
+              }
+              else {
+                if(savedCompareList){
+                  state.compareList = {
+                    ...savedCompareList,
+                    items: savedCompareList.items,
+                    products: savedCompareList.products,
+                    totalItems: Object.entries(savedCompareList.items).length
+                  }
+                }
+              }
+            })
+          }
+        })
+      }
+
+      return state.compareList;
+    },
+
     isInCompareList: (state) => (id) => {
-      return Object.prototype.hasOwnProperty.call(state.wishList.items, id);
+      return Object.prototype.hasOwnProperty.call(state.compareList.items, id);
     },
 
     /**

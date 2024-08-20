@@ -9,6 +9,7 @@ import SearchFilterSort from './SearchFilterSort.vue'
 import Footer from './MainFooter.vue'
 import Header from './StickyHeader.vue'
 import SuccessToast from './SuccessToast.vue'
+import ErrorToast from './ErrorToast.vue'
 
 const appStore = useAppStore()
 const { fetchCategories, error } = appStore
@@ -79,6 +80,7 @@ watch(currentLocation, (newLocation) => {
 
     <!-- Toast Notification -->
     <SuccessToast />
+    <!-- <ErrorToast /> -->
 
     <!-- Footer -->
     <Footer />

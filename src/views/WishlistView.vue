@@ -15,7 +15,7 @@ const wishList = computed(() => appStore.wishList)
 const wishListItems = computed(() => appStore.wishList.totalItems)
 const wishListIds = computed(() => Object.keys(appStore.wishList.items))
 
-const wishListProducts = () => {
+const wishListProducts = async () => {
   fetchFavourites(wishListIds.value)
 }
 
@@ -30,8 +30,7 @@ watch(wishListItems, async () => {
 
 <template>
   <div v-if="wishList.totalItems > 0" class="grid justify-center">
-    <div
-      v-if="loading.products"
+    <div v-if="loading.products"
       class="container mx-auto grid gap-4 grid-cols-1 lg:grid-cols-4 md:grid-cols-2 items-center lg:max-w-none my-4"
     >
       <ProductCardSkeleton v-for="i in wishListItems" :key="i" />

@@ -2,7 +2,7 @@
 import { watch, ref, onMounted } from 'vue'
 import { useAppStore } from '../../stores/appStore'
 import RatingStars from '../icons/RatingStars.vue'
-import CompareButton from './CompareButton.vue';
+import CompareButton from '../compare/CompareButton.vue';
 
 /**
  * Application store for managing global state, including products, cart, and wishlist.
