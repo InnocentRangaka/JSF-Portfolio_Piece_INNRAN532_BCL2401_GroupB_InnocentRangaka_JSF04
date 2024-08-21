@@ -98,8 +98,17 @@ export const fetchProducts = async (app) => {
           type: 'network/fetch',
         });
       } else if (data.value) {
-        app.setProducts(data.value);
-        app.setOriginalProducts(JSON.parse(JSON.stringify(data.value)));
+        let DataProducts = null;
+        app.applyDiscounts(app, data.value);
+        if(app.discountedProducts.length > 0){
+          DataProducts = {
+            ...data.value,
+            ...app.discountedProducts,
+          }
+        }
+
+        app.setProducts(DataProducts);
+        app.setOriginalProducts(JSON.parse(JSON.stringify(DataProducts)));
         app.searchProducts();
         app.sortProducts();
       }
@@ -153,9 +162,27 @@ export const fetchFavourites = async (objectArray, app) => {
   );
 
   if (!errorOccurred && list.length > 0) {
-    app.setFavourites(list)
-    app.setProducts(list);
-    app.setOriginalProducts(JSON.parse(JSON.stringify(list)));
+    let DataProducts = null;
+    if(app.discountedProducts.length > 0){
+      const isDiscounted = list.map((listItem) => {
+        return app.discountedProducts.find((product) => product.id === listItem.id)
+      })
+
+      const cleanDiscounted = isDiscounted.filter((product) => product !== undefined)
+      if(cleanDiscounted.length > 0){
+        DataProducts = {
+          ...list,
+          ...cleanDiscounted,
+        }
+      }
+      else {
+        DataProducts = {...list};
+      }
+      
+    }
+    app.setFavourites(DataProducts)
+    app.setProducts(DataProducts);
+    app.setOriginalProducts(JSON.parse(JSON.stringify(DataProducts)));
     app.searchProducts();
     app.sortProducts();
   }
@@ -204,7 +231,6 @@ export const fetchCompareListItems = async (objectArray, app) => {
 
   const ids = [...new Set(Object.values(objectArray))];
   const promises = ids.map(id => useFetch(`/products/${id}`));
-  console.log(ids)
 
   const results = await Promise.all(promises);
 
@@ -234,10 +260,28 @@ export const fetchCompareListItems = async (objectArray, app) => {
   );
 
   if (!errorOccurred && list.length > 0) {
-    console.log(list)
-    app.setCompareList(list)
-    app.setProducts(list);
-    app.setOriginalProducts(JSON.parse(JSON.stringify(list)));
+    let DataProducts = null;
+    if(app.discountedProducts.length > 0){
+      const isDiscounted = list.map((listItem) => {
+        return app.discountedProducts.find((product) => product.id === listItem.id)
+      })
+
+      const cleanDiscounted = isDiscounted.filter((product) => product !== undefined)
+      if(cleanDiscounted.length > 0){
+        DataProducts = {
+          ...list,
+          ...cleanDiscounted,
+        }
+      }
+      else {
+        DataProducts = {...list};
+      }
+      
+    }
+    console.log(DataProducts)
+    app.setCompareList(DataProducts)
+    app.setProducts(DataProducts);
+    app.setOriginalProducts(JSON.parse(JSON.stringify(DataProducts)));
     app.searchProducts();
     app.sortProducts();
   }

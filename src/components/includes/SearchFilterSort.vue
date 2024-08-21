@@ -264,7 +264,7 @@ watch(currentLocation, async () => {
             type="search"
             id="search-dropdown"
             name="searchInput"
-            class="p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+            class="p-2.5 w-full z-20 text-sm text-gray-900 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Search products..."
             v-model="searchTerm"
             @input="searchProducts(searchTerm)"
@@ -297,13 +297,13 @@ watch(currentLocation, async () => {
     <div class="flex w-full items-end justify-end">
       <!-- Sort -->
       <div class="flex max-w-[21rem] w-full">
-        <label for="sort" class="w-20 my-auto mr-2 font-semibold text-gray-700">Sort by:</label>
+        <label for="sort" class="w-20 my-auto mr-2 font-semibold ">Sort by:</label>
         <select
           @change="sortProducts($event.target.value)"
           :bind="currentSortTerm.value"
           v-model="currentSortTerm"
           id="sort"
-          class="p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          class="p-2.5 w-full text-sm text-gray-900 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="default">Default</option>
           <option value="low">Price: Low to High</option>

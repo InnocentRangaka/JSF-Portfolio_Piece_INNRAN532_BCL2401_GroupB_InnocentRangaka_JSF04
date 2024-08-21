@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { defineAsyncComponent, markRaw, reactive, shallowRef } from 'vue'
+import { defineAsyncComponent, markRaw, reactive, shallowRef, ref } from 'vue'
 import { fetchCategories, fetchSingleProduct, fetchProducts, fetchFavourites, fetchCompareListItems } from '../api/api';
 import { calculateSubTotalAmount, calculateTaxAmount, calculateCartTotal, parseObjectToArray, promptUserForConfirmation } from '../utils/utils'
 import MainLayout from '../components/includes/MainLayout.vue'
@@ -37,6 +37,8 @@ export const useAppStore = defineStore('appStore', {
      * @type {Object}
      */
     selectedProduct: {},
+
+    discountedProducts: [],
 
     /**
      * Loading states for different parts of the application.
@@ -617,6 +619,51 @@ export const useAppStore = defineStore('appStore', {
      */
     async fetchProducts() {
       await fetchProducts(this);
+    },
+
+    applyDiscounts(app, products) {
+      const originalPrices = ref({});
+      let discountTimeout;
+    
+      const applyDiscount = () => {
+        // Reset previous discounts if any
+        if (discountTimeout) {
+          clearTimeout(discountTimeout);
+          products.forEach((product) => {
+            if (originalPrices.value[product.id]) {
+              product.price = originalPrices.value[product.id];
+            }
+          });
+        }
+    
+        // Select 5 random products
+        while (app.discountedProducts.length < 5 && products.length > 0) {
+          const randomIndex = Math.floor(Math.random() * products.length);
+          const product = products[randomIndex];
+    
+          // If the product isn't already discounted
+          if (!originalPrices.value[product.id]) {
+            originalPrices.value[product.id] = product.price;
+
+            product.originalPrice = product.price;
+            product.discount = '10%';
+            product.price = (product.price * 0.9).toFixed(2);
+            product.saveAmount = parseFloat((product.price - (product.price * 0.9))).toFixed(2); // Apply 10% discount
+            
+            app.discountedProducts.push(product);
+          }
+        }
+    
+        // Set timeout to reselect products after an hour (3600000 ms)
+        discountTimeout = setTimeout(() => {
+          applyDiscount();
+        }, 3600000);
+
+        return app.discountedProducts;
+      };
+    
+      // Call the discount function initially
+      applyDiscount();
     },
 
     /**

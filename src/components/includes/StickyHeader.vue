@@ -8,6 +8,7 @@ import HeartIcon from '../icons/HeartIcon.vue'
 import HamburgerIcon from '../icons/HamburgerIcon.vue'
 import UserIconButton from './UserIconButton.vue'
 import CompareIcon from '../icons/CompareIcon.vue'
+import ThemeButton from './ThemeButton.vue'
 
 /**
  * Vue Router instance used for navigation.
@@ -167,6 +168,9 @@ onMounted(async () => {
               <ul
                 class="flex flex-row h-[32px] font-medium md:p-0 border border-gray-100 rounded-lg bg-white gap-2 md-gap-4 rtl:space-x-reverse items-center md:mt-0 md:border-0"
               >
+              <li>
+                <ThemeButton />
+              </li>
               <li>
                 <button
                   @click="navigateTo('/compare')"

@@ -1,6 +1,7 @@
 <script setup>
-import { watch, ref, onMounted } from 'vue'
+import { watch, ref, onMounted, computed } from 'vue'
 import { useAppStore } from '../../stores/appStore'
+import { useUserStore } from '../../stores/userStore'
 import RatingStars from '../icons/RatingStars.vue'
 import CompareButton from '../compare/CompareButton.vue';
 
@@ -9,6 +10,7 @@ import CompareButton from '../compare/CompareButton.vue';
  * @type {ReturnType<typeof useAppStore>}
  */
 const appStore = useAppStore()
+const userStore = useUserStore()
 
 const { isInWishList, addToCart, addToFavourites } = appStore
 
@@ -16,7 +18,8 @@ const { isInWishList, addToCart, addToFavourites } = appStore
  * Reactive reference to store the current products.
  * @type {Ref<Array>}
  */
-let currentProducts = ref(appStore.products)
+let currentProducts = ref(appStore.products),
+user = computed(() => userStore.user);
 
 // Fetch products on component mount
 onMounted(async () => {
@@ -43,16 +46,16 @@ watch(
     <div
       v-for="product in appStore.getProducts"
       :key="product.id"
-      class="flex flex-col max-h-[130rem] max-w-80 hover:-translate-y-1 hover:scale-105 duration-300 bg-white border border-slate-200 shadow shadow-slate-950/5 rounded-2xl overflow-hidden"
+      class="flex flex-col max-h-[130rem] max-w-80 hover:-translate-y-1 hover:scale-105 duration-300 border border-slate-200 shadow shadow-slate-950/5 rounded-2xl overflow-hidden"
     >
-      <router-link :to="`/product/${product.id}`" class="flex-1 flex flex-col">
+      <router-link :to="`/product/${product.id}`" class="flex-1 flex flex-col relative  bg-white border rounded-xl w-[95%] mt-2 mx-auto">
         <img
-          class="object-contain h-48 mt-3 cursor-pointer"
+          class="object-contain h-48 cursor-pointer"
           :src="product.image"
           :alt="product.title"
         />
       </router-link>
-      <div class="flex-1 flex flex-col p-6">
+      <div class="flex-1 flex flex-col p-6 items-start">
         <div class="flex-1">
           <header class="mb-2 flex-2">
             <div
@@ -74,19 +77,19 @@ watch(
             </div>
             <div class="justify-end items-right flex-0">
               <span
-                class="ml-auto inline-flex items-center justify-end rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10"
+                class="ml-auto inline-flex items-center justify-end rounded-md px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10"
               >
                 {{ product.category }}
               </span>
             </div>
           </div>
           <div class="text-base line-clamp-2 font-extrabold text-slate-600 leading-snug">
-            <h2>{{ appStore.currency }} {{ product.price.toFixed(2) }}</h2>
+            <h2>{{ appStore.currency }} {{ parseFloat(product.price).toFixed(2) }}</h2>
           </div>
         </div>
-        <div class="flex mt-1 space-x-2 place-items-center">
+        <div class="flex w-full mt-1 space-x-2 place-items-center">
           <div class="flex w-full justify-end space-x-2 mt-2 place-items-center items-center">
-            <CompareButton :productId="product.id" />
+            <CompareButton v-if="user?.id" :productId="product.id" />
             <button
               class="bg-transparent flex-0"
               :class="

@@ -9,7 +9,7 @@ const userStore = useUserStore()
 const appStore = useAppStore()
 
 const { logoutUser } = userStore;
-const { wishList, saveCart, saveFavourites } = appStore;
+const { wishList, saveCart, saveFavourites, removeAllCompareListItems } = appStore;
 
 
 function useCountdownRedirect() {
@@ -34,6 +34,7 @@ const { countdown, startCountdown } = useCountdownRedirect();
 onMounted(() => {
   saveCart(userStore.user.id, appStore.cart)
   saveFavourites(userStore.user.id, wishList)
+  removeAllCompareListItems()
   logoutUser();
   startCountdown();
 

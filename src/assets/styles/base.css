@@ -4,53 +4,103 @@
 
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --sc-white: #e0e0e0;
+  --sc-white-soft: #f8f8f8;
+  --sc-white-mute: #f2f2f2;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  --sc-black: #181818;
+  --sc-black-soft: #222222;
+  --sc-black-mute: #282828;
 
-  --vt-c-indigo: #2c3e50;
+  --sc-indigo: #2c3e50;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  --sc-divider-light-1: rgba(60, 60, 60, 0.29);
+  --sc-divider-light-2: rgba(60, 60, 60, 0.12);
+  --sc-divider-dark-1: rgba(84, 84, 84, 0.65);
+  --sc-divider-dark-2: rgba(84, 84, 84, 0.48);
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  --sc-text-light-1: var(--sc-indigo);
+  --sc-text-light-2: rgba(60, 60, 60, 0.66);
+  --sc-text-dark-1: var(--sc-white);
+  --sc-text-dark-2: rgba(235, 235, 235, 0.64);
 }
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --color-background: var(--sc-white);
+  --color-background-soft: var(--sc-white-soft);
+  --color-background-mute: var(--sc-white-mute);
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-border: var(--sc-divider-light-2);
+  --color-border-hover: var(--sc-divider-light-1);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-heading: var(--sc-text-light-1);
+  --color-text: var(--sc-text-light-1);
 
   --section-gap: 160px;
 }
 
+/* Light Theme */
+html.light {
+  --color-background: var(--sc-white);
+  --color-background-soft: var(--sc-white-soft);
+  --color-background-mute: var(--sc-white-mute);
+
+  --color-border: var(--sc-divider-light-2);
+  --color-border-hover: var(--sc-divider-light-1);
+
+  --color-heading: var(--sc-text-light-1);
+  --color-text: var(--sc-text-light-1);
+}
+
+/* Dark Theme */
+html.dark {
+  --color-background: var(--sc-black);
+  --color-background-soft: var(--sc-black-soft);
+  --color-background-mute: var(--sc-black-mute);
+
+  --color-border: var(--sc-divider-dark-2);
+  --color-border-hover: var(--sc-divider-dark-1);
+
+  --color-heading: var(--sc-text-dark-1);
+  --color-text: var(--sc-text-dark-2);
+}
+
+/* System Theme (Matches system preference) */
+html.system {
+  --color-background: var(--sc-white);
+  --color-background-soft: var(--sc-white-soft);
+  --color-background-mute: var(--sc-white-mute);
+
+  --color-border: var(--sc-divider-light-2);
+  --color-border-hover: var(--sc-divider-light-1);
+
+  --color-heading: var(--sc-text-light-1);
+  --color-text: var(--sc-text-light-1);
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
+    --color-background: var(--sc-black);
+    --color-background-soft: var(--sc-black-soft);
+    --color-background-mute: var(--sc-black-mute);
 
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
+    --color-border: var(--sc-divider-dark-2);
+    --color-border-hover: var(--sc-divider-dark-1);
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
+    --color-heading: var(--sc-text-dark-1);
+    --color-text: var(--sc-text-dark-2);
+  }
+  html.system {
+    --color-background: var(--sc-black);
+    --color-background-soft: var(--sc-black-soft);
+    --color-background-mute: var(--sc-black-mute);
+
+    --color-border: var(--sc-divider-dark-2);
+    --color-border-hover: var(--sc-divider-dark-1);
+
+    --color-heading: var(--sc-text-dark-1);
+    --color-text: var(--sc-text-dark-2);
   }
 }
 
@@ -65,7 +115,7 @@
 body {
   /* min-height: 100vh; */
   color: var(--color-text);
-  /* background: var(--color-background); */
+  background: var(--color-background);
   transition:
     color 0.5s,
     background-color 0.5s;
