@@ -27,44 +27,93 @@
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--sc-white);
-  --color-background-soft: var(--sc-white-soft);
-  --color-background-mute: var(--sc-white-mute);
+  /* Light Theme */
+  --color-background: #f7fafc; /* bg-gray-100 */
+  --color-heading: #2d3748;    /* text-gray-800 */
+  --color-text: #1a202c;       /* text-gray-900 */
+  --color-cyan: #0987a0;       /* text-cyan-900 */
 
-  --color-border: var(--sc-divider-light-2);
-  --color-border-hover: var(--sc-divider-light-1);
+  /* Additional colors */
+  --color-slate: #4a5568;      /* text-slate-500/600 */
+  --color-green: #48bb78;      /* text-green-500 */
+  --color-yellow: #ecc94b;     /* text-yellow-500 */
+  --color-cyan-bg: #2c7a7b;    /* bg-cyan-700 */
 
-  --color-heading: var(--sc-text-light-1);
-  --color-text: var(--sc-text-light-1);
+  /* Dark Theme */
+  --color-background-dark: #1a1a1a;    /* bg-gray-100 -> #f7fafc to #1a1a1a */
+  --color-heading-dark: #f5f5f5;       /* text-gray-800 -> #2d3748 to #f5f5f5 */
+  --color-text-dark: #e5e5e5;          /* text-gray-900 -> #1a202c to #e5e5e5 */
+  --color-cyan-dark: #33d2e2;          /* text-cyan-900 -> #0987a0 to #33d2e2 */
 
-  --section-gap: 160px;
+  /* Additional dark colors */
+  --color-slate-dark: #e5e5e5;    /* text-slate-500/600 -> #4a5568 to #e5e5e5 */
+  --color-green-dark: #68d391;    /* text-green-500 -> #48bb78 to #68d391 */
+  --color-yellow-dark: #f6e05e;   /* text-yellow-500 -> #ecc94b to #f6e05e */
+  --color-cyan-bg-dark: #285e61;  /* bg-cyan-700 -> #2c7a7b to #285e61 */
 }
 
 /* Light Theme */
 html.light {
-  --color-background: var(--sc-white);
-  --color-background-soft: var(--sc-white-soft);
-  --color-background-mute: var(--sc-white-mute);
-
-  --color-border: var(--sc-divider-light-2);
-  --color-border-hover: var(--sc-divider-light-1);
-
-  --color-heading: var(--sc-text-light-1);
-  --color-text: var(--sc-text-light-1);
+  --color-background: var(--color-background);
+  --color-heading: var(--color-heading);
+  --color-text: var(--color-text);
+  --color-cyan: var(--color-cyan);
+  --color-slate: var(--color-slate);
+  --color-green: var(--color-green);
+  --color-yellow: var(--color-yellow);
+  --color-cyan-bg: var(--color-cyan-bg);
 }
 
 /* Dark Theme */
 html.dark {
-  --color-background: var(--sc-black);
-  --color-background-soft: var(--sc-black-soft);
-  --color-background-mute: var(--sc-black-mute);
-
-  --color-border: var(--sc-divider-dark-2);
-  --color-border-hover: var(--sc-divider-dark-1);
-
-  --color-heading: var(--sc-text-dark-1);
-  --color-text: var(--sc-text-dark-2);
+  --color-background: var(--color-background-dark);
+  --color-heading: var(--color-heading-dark);
+  --color-text: var(--color-text-dark);
+  --color-cyan: var(--color-cyan-dark);
+  --color-slate: var(--color-slate-dark);
+  --color-green: var(--color-green-dark);
+  --color-yellow: var(--color-yellow-dark);
+  --color-cyan-bg: var(--color-cyan-bg-dark);
 }
+
+/* Use these variables in your custom CSS */
+.bg-background {
+  background-color: var(--color-background);
+}
+
+.text-heading {
+  color: var(--color-heading);
+}
+
+.text-text {
+  color: var(--color-text);
+}
+
+.hover\:underline:hover {
+  text-decoration: underline;
+}
+
+.hover\:text-cyan:hover {
+  color: var(--color-cyan);
+}
+
+/* You can add additional classes for green, yellow, etc. */
+.text-slate {
+  color: var(--color-slate);
+}
+
+.text-green {
+  color: var(--color-green);
+}
+
+.text-yellow {
+  color: var(--color-yellow);
+}
+
+.bg-cyan-bg {
+  background-color: var(--color-cyan-bg);
+}
+
 
 /* System Theme (Matches system preference) */
 html.system {

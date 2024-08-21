@@ -2,6 +2,7 @@
 import { onMounted, ref, computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductCarousel from '../components/products/ProductCarousel.vue'
+import WishlistCarousel from '../components/includes/WishlistCarousel.vue'
 import ProductCards from '../components/products/ProductCards.vue'
 import ProductCardSkeleton from '../components/products/ProductCardSkeleton.vue'
 import { useAppStore } from '../stores/appStore'
@@ -73,11 +74,11 @@ watchEffect(() => {
 
 <template>
   <div
-      v-if="user?.id"
-      class="container lg:max-h-[130rem] mx-auto items-center max-w-[92%] my-4 px-2 md:px-0"
-    >
-      <ProductCarousel />
-    </div>
+    v-if="user?.id"
+    class="container lg:max-h-[130rem] mx-auto items-center max-w-[92%] my-4 px-2 md:px-0"
+  >
+    <ProductCarousel />
+  </div>
 
   <div class="grid justify-center">
     <!-- Show skeleton loading cards while products are loading -->
@@ -90,5 +91,12 @@ watchEffect(() => {
     <!-- Show product cards when products are loaded and no error -->
     <!-- <ProductCards v-if="!appStore.loading.products" /> -->
     <ProductCards />
+  </div>
+
+  <div
+    v-if="user?.id"
+    class="container lg:max-h-[130rem] mx-auto items-center max-w-[92%] my-4 px-2 md:px-0"
+  >
+    <WishlistCarousel />
   </div>
 </template>

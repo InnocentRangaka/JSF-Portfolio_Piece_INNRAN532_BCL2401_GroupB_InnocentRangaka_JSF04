@@ -4,34 +4,32 @@
   import { useUserStore } from '../../stores/userStore'
   import RatingStars from '../icons/RatingStars.vue'
   import CompareButton from '../compare/CompareButton.vue';
-  import ProductCards from './ProductCards.vue'
-  import ProductCardSkeleton from './ProductCardSkeleton.vue'
+  import ProductCards from '../products/ProductCards.vue'
+  import ProductCardSkeleton from '../products/ProductCardSkeleton.vue'
   
   const appStore = useAppStore()
   const userStore = useUserStore()
 
   const user = computed(() => userStore.user)
 
-    const { isInWishList, addToCart, addToFavourites } = appStore
+  const { isInWishList, addToCart, addToFavourites } = appStore
   const currentSlide = ref(0);
   const slideWidth = 300; // Adjust this based on the width of the product card
   
-  const discountedProducts = computed(() =>
-    appStore.getDiscountedProducts.filter((product) => product.discount)
-  );
+  const wishListProducts = computed(() => appStore.wishList.products);
   
   const prevSlide = () => {
     currentSlide.value =
-      currentSlide.value > 0 ? currentSlide.value - 1 : (discountedProducts.value.length - 3) - 1;
+      currentSlide.value > 0 ? currentSlide.value - 1 : (wishListProducts.value.length - 3) - 1;
   };
   
   const nextSlide = () => {
     currentSlide.value =
-      currentSlide.value < (discountedProducts.value.length - 3) - 1
+      currentSlide.value < (wishListProducts.value.length - 3) - 1
         ? currentSlide.value + 1
         : 0;
 
-        console.log(currentSlide.value, discountedProducts.value.length)
+        console.log(currentSlide.value, wishListProducts.value.length)
   };
   </script>
   
@@ -45,14 +43,14 @@
         :style="{ transform: `translateX(-${currentSlide * slideWidth}px)` }"
       >
       <div
-        v-for="product in discountedProducts"
+        v-for="product in wishListProducts"
         :key="product.id"
         class="flex flex-col relative max-h-[130rem] w-[318px] max-w-80 hover:-translate-y-1 hover:scale-105 duration-300 border border-slate-200 shadow shadow-slate-950/5 rounded-2xl overflow-hidden"
       >
         <!-- 10% Off Label -->
         <span
           v-if="product?.discount"
-          class="absolute z-[1] top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 -ml-[0.5px] rounded-xl "
+          class="absolute z-[1] top-2 left-2 text-white text-xs font-bold px-2 py-1 -ml-[0.5px] rounded-xl "
         >
           {{ product.discount }}<br>Off
         </span>

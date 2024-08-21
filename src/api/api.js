@@ -100,7 +100,10 @@ export const fetchProducts = async (app) => {
         });
       } else if (data.value) {
         DataProducts = app.applyDiscounts(app, data.value.slice());
-        
+        // console.log(DataProducts)
+        // const toSort = Object.values(DataProducts)
+        // DataProducts = [...toSort].sort((a, b) => toSort.indexOf(a) - toSort.indexOf(b));
+        // console.log(app.discountedProducts, {...data.value, ...toSort})
         app.setProducts(DataProducts);
         app.setOriginalProducts(JSON.parse(JSON.stringify(DataProducts)));
         app.searchProducts();
@@ -175,7 +178,7 @@ export const fetchFavourites = async (objectArray, app) => {
         DataProducts = {...list};
       }
     }
-    DataProducts = DataProducts.sort((a, b) => DataProducts.indexOf(a) - DataProducts.indexOf(b));
+    // DataProducts = DataProducts.sort((a, b) => DataProducts.indexOf(a) - DataProducts.indexOf(b));
     app.setFavourites(DataProducts)
     app.setProducts(DataProducts);
     app.setOriginalProducts(JSON.parse(JSON.stringify(DataProducts)));

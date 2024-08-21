@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref, onMounted } from 'vue'
+import { watch, ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppStore } from '../stores/appStore'
 import ProductCards from '../components/products/ProductCards.vue'
@@ -25,17 +25,31 @@ const fetchProductsByCategory = async (name) => {
 
   setFilterItem(currentCategory)
   const { data, error, fetching } = await fetchProducts(appStore)
-  while (fetching.value) {
+  while (fetching?.value) {
     await new Promise((resolve) => setTimeout(resolve, 100))
   }
 
-  categoryProducts.value = data.value
+  if(!data?.value){
+    fetch(`https://fakestoreapi.com/products/category/${currentCategory}`)
+    .then(response => response.json())
+    .then(json => {
+      if(json[0]?.id){
+        appStore.setProducts(json);
+        appStore.setOriginalProducts(JSON.parse(JSON.stringify(json)));
+        appStore.searchProducts();
+        appStore.sortProducts();
+      }
+    });
+  }
+
+  categoryProducts.value = data?.value
 
   return currentCategory
 }
 
 const getCategoryProducts = async (newCategory) => {
   appStore.products = []
+  // console.log(newCategory)
   let currentCategory = await fetchProductsByCategory(newCategory)
 
   // console.log(newCategory, currentCategory, getCategories, appStore.categories)

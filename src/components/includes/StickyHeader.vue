@@ -170,6 +170,25 @@ onMounted(async () => {
               >
               <li>
                 <ThemeButton />
+                <button
+                  @click="navigateTo('/compare')"
+                  :class="{
+                    'text-cyan-700': isActivePage('compare'),
+                    'text-gray-700': !isActivePage('compare')
+                  }"
+                  class="group inline-flex p-2 w-[32px] h-[32px] rounded-full hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 justify-center items-center focus:outline-none focus:ring-2 focus:ring-gray-200"
+                >
+                  <div class="block md:block relative">
+                    <div v-if="compareList.totalItems" class="mt-0 absolute left-3 -top-3">
+                      <p
+                        class="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white"
+                      >
+                        {{ compareList.totalItems }}
+                      </p>
+                    </div>
+                    <CompareIcon class="hover:bg-transparent" />
+                  </div>
+                </button>
               </li>
               <li>
                 <button

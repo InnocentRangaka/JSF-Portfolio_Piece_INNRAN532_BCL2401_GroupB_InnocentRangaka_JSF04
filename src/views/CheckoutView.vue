@@ -50,7 +50,7 @@ const loading = ref(true),
   isPaymentConfirmed = ref(false),
   orderNumber = ref('');
 
-  console.log(user.value, currentCartItems)
+  // console.log(user.value, currentCartItems)
   // saveCart(user.value.id, currentCartItems)
 
 const initiateCart = () => {

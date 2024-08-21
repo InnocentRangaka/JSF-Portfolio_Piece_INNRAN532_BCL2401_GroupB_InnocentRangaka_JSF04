@@ -618,7 +618,8 @@ export const useAppStore = defineStore('appStore', {
      * @returns {Promise<void>}
      */
     async fetchProducts() {
-      await fetchProducts(this);
+      const { data, error, fetching, fetchData } = await fetchProducts(this);
+      return { data, error, fetching, fetchData };
     },
 
     applyDiscounts(app, products) {
@@ -1139,7 +1140,6 @@ export const useAppStore = defineStore('appStore', {
     },
     
     saveCart(userId, cart){
-      if(Object.values(cart.cartItems).length > 0){
         this.carts = {
           ...this.carts,
           [userId]: cart
@@ -1159,7 +1159,6 @@ export const useAppStore = defineStore('appStore', {
           paymentMethod: '',
           status: '',
         };
-      }
     },
 
     /**
@@ -1371,6 +1370,8 @@ export const useAppStore = defineStore('appStore', {
     getCart: (state) => (userId) => {
       const savedCart = state.carts[userId],
       currentCart = state.cart;
+
+      console.log(savedCart)
 
       const bothCart = savedCart?.cartItems && currentCart?.cartItems
 

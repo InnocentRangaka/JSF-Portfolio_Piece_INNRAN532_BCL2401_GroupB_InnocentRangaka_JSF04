@@ -15,6 +15,9 @@ export function useFetch(url) {
   const data = reactive({ value: null })
   const error = reactive({ value: null })
   const fetching = ref(false)
+  const products = reactive([])
+
+  url = url.replace('//', '/')
 
   /**
    * Fetch data from the given URL.
@@ -23,8 +26,8 @@ export function useFetch(url) {
    */
   const fetchData = async () => {
     fetching.value = true
-    data.value = null
-    error.value = null
+    // data.value = null
+    // error.value = null
 
     // console.log(url)
 
@@ -34,21 +37,24 @@ export function useFetch(url) {
         throw response
       }
       data.value = response.data
-      // console.log(response.data)
+      products.value = data.value
+      // console.log(data.value, response.data)
     } catch (err) {
       error.value = err
     } finally {
       fetching.value = false
     }
+
+    return { data, error, fetching }
   }
 
   /**
    * Watch the effect to fetch data whenever the URL changes.
    * This ensures the data is always up-to-date based on the provided URL.
    */
-  watchEffect(() => {
-    fetchData()
-  })
+  watchEffect(async () => {
+    await fetchData()
+  });
 
-  return { data, error, fetching }
+  return { data, error, fetching, fetchData }
 }
