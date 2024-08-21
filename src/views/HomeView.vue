@@ -1,12 +1,17 @@
 <script setup>
 import { onMounted, ref, computed, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import ProductCarousel from '../components/products/ProductCarousel.vue'
 import ProductCards from '../components/products/ProductCards.vue'
 import ProductCardSkeleton from '../components/products/ProductCardSkeleton.vue'
 import { useAppStore } from '../stores/appStore'
+import { useUserStore } from '../stores/userStore'
 
+const userStore = useUserStore()
 const appStore = useAppStore()
 const { fetchProducts, products, loading } = appStore
+
+const user = computed(() => userStore.user)
 
 // Using vue-router hooks
 const route = useRoute()
@@ -67,6 +72,13 @@ watchEffect(() => {
 </script>
 
 <template>
+  <div
+      v-if="user?.id"
+      class="container lg:max-h-[130rem] mx-auto items-center max-w-[92%] my-4 px-2 md:px-0"
+    >
+      <ProductCarousel />
+    </div>
+
   <div class="grid justify-center">
     <!-- Show skeleton loading cards while products are loading -->
     <div

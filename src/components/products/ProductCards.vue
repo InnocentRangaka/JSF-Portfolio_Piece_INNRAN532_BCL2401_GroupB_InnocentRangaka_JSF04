@@ -46,9 +46,16 @@ watch(
     <div
       v-for="product in appStore.getProducts"
       :key="product.id"
-      class="flex flex-col max-h-[130rem] max-w-80 hover:-translate-y-1 hover:scale-105 duration-300 border border-slate-200 shadow shadow-slate-950/5 rounded-2xl overflow-hidden"
+      class="flex flex-col relative max-h-[130rem] max-w-80 hover:-translate-y-1 hover:scale-105 duration-300 border border-slate-200 shadow shadow-slate-950/5 rounded-2xl overflow-hidden"
     >
-      <router-link :to="`/product/${product.id}`" class="flex-1 flex flex-col relative  bg-white border rounded-xl w-[95%] mt-2 mx-auto">
+      <!-- 10% Off Label -->
+      <span
+        v-if="product?.discount"
+        class="absolute z-[1] top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 -ml-[0.5px] rounded-xl "
+      >
+        {{ product.discount }}<br>Off
+      </span>
+      <router-link :to="`/product/${product.id}`" class="z-0 flex-1 flex flex-col relative  bg-white border rounded-xl w-[95%] mt-2 mx-auto">
         <img
           class="object-contain h-48 cursor-pointer"
           :src="product.image"
@@ -83,8 +90,9 @@ watch(
               </span>
             </div>
           </div>
-          <div class="text-base line-clamp-2 font-extrabold text-slate-600 leading-snug">
+          <div class="flex w-fulltext-base line-clamp-2 font-extrabold text-slate-600 leading-snug">
             <h2>{{ appStore.currency }} {{ parseFloat(product.price).toFixed(2) }}</h2>
+            <p v-if="product?.originalPrice" class="ml-4 text-gray-500 line-through">{{ appStore.currency }} {{ parseFloat(product.originalPrice).toFixed(2) }}</p>
           </div>
         </div>
         <div class="flex w-full mt-1 space-x-2 place-items-center">

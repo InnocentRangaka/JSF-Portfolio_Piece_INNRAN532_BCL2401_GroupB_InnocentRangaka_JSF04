@@ -651,6 +651,12 @@ export const useAppStore = defineStore('appStore', {
             product.saveAmount = parseFloat((product.price - (product.price * 0.9))).toFixed(2); // Apply 10% discount
             
             app.discountedProducts.push(product);
+
+            // Replace product in products with discounted product
+            // const index = products.findIndex((p) => p.id === product.id);
+            // if (index !== -1) {
+            //   products[index] = product;
+            // }
           }
         }
     
@@ -659,11 +665,65 @@ export const useAppStore = defineStore('appStore', {
           applyDiscount();
         }, 3600000);
 
-        return app.discountedProducts;
+        const filteredProducts = products.filter(product =>
+          !app.discountedProducts.some(discounted => discounted.id === product.id)
+        );
+
+        // Array to store the final products
+        const finalProducts = [];
+        const productsTotal = Object.values(products).length;
+
+        // Loop from 1 to 20
+        for (let i = 1; i <= productsTotal; i++) {
+          // Find the product in the products object
+          const product = Object.values(filteredProducts).find(p => p.id === i);
+
+          // Check if the product exists in discountedProducts
+          const discountedProduct = Object.values(app.discountedProducts).find(dp => dp.id === i);
+
+          if (discountedProduct) {
+            // If discounted product exists, add it to the finalProducts array
+            finalProducts.push(discountedProduct);
+          } else if (product) {
+            // If no discounted product but product exists, add the product to finalProducts
+            finalProducts.push(product);
+          }
+        }
+
+        return finalProducts;
       };
     
       // Call the discount function initially
-      applyDiscount();
+      return applyDiscount();
+    },
+
+    mergeProductsWithPriority(products, discountedProducts) {
+      const mergedProducts = [];
+      const productMap = new Map(); // Map for efficient duplicate handling
+    
+      // Add products with priority to originals
+      products.forEach((product) => {
+        const existingProduct = productMap.get(product.id);
+        if (!existingProduct || (existingProduct && !existingProduct.originalPrice)) {
+          mergedProducts.push(product);
+          productMap.set(product.id, product);
+        }
+      });
+
+      // Convert non-array discountedProducts to an array (if necessary)
+      discountedProducts = Array.isArray(discountedProducts) ? discountedProducts : Array.from(discountedProducts);
+    
+      // Add discounted products (excluding duplicates)
+      discountedProducts.forEach((product) => {
+        if (!productMap.has(product.id)) {
+          mergedProducts.push(product);
+          productMap.set(product.id, product);
+        }
+      });
+
+      // console.log(mergedProducts)
+    
+      return mergedProducts;
     },
 
     /**
@@ -1274,6 +1334,14 @@ export const useAppStore = defineStore('appStore', {
         return state.products;
       } else {
         return state.products.filter((product) => product.category === state.filterItem);
+      }
+    },
+
+    getDiscountedProducts: (state) => {
+      if (state.filterItem === 'All categories') {
+        return state.discountedProducts;
+      } else {
+        return state.discountedProducts.filter((product) => product.category === state.filterItem);
       }
     },
 

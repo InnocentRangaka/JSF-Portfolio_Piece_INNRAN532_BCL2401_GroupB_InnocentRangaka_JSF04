@@ -87,6 +87,7 @@ export const fetchProducts = async (app) => {
     : `/`;
 
   const { data, error, fetching } = await useFetch(`/products/${url}`);
+  let DataProducts = null;
 
   // Watch fetching to detect when the request is completed
   watch(fetching, async (isFetching) => {
@@ -98,15 +99,8 @@ export const fetchProducts = async (app) => {
           type: 'network/fetch',
         });
       } else if (data.value) {
-        let DataProducts = null;
-        app.applyDiscounts(app, data.value);
-        if(app.discountedProducts.length > 0){
-          DataProducts = {
-            ...data.value,
-            ...app.discountedProducts,
-          }
-        }
-
+        DataProducts = app.applyDiscounts(app, data.value.slice());
+        
         app.setProducts(DataProducts);
         app.setOriginalProducts(JSON.parse(JSON.stringify(DataProducts)));
         app.searchProducts();
@@ -116,7 +110,7 @@ export const fetchProducts = async (app) => {
   });
 
   // Return data, error, and fetching for further use if needed
-  return { data, error, fetching };
+  return { data: DataProducts, error, fetching };
 };
 
   
@@ -161,8 +155,10 @@ export const fetchFavourites = async (objectArray, app) => {
     })
   );
 
+  
+  let DataProducts = null;
+
   if (!errorOccurred && list.length > 0) {
-    let DataProducts = null;
     if(app.discountedProducts.length > 0){
       const isDiscounted = list.map((listItem) => {
         return app.discountedProducts.find((product) => product.id === listItem.id)
@@ -178,8 +174,8 @@ export const fetchFavourites = async (objectArray, app) => {
       else {
         DataProducts = {...list};
       }
-      
     }
+    DataProducts = DataProducts.sort((a, b) => DataProducts.indexOf(a) - DataProducts.indexOf(b));
     app.setFavourites(DataProducts)
     app.setProducts(DataProducts);
     app.setOriginalProducts(JSON.parse(JSON.stringify(DataProducts)));
@@ -193,7 +189,7 @@ export const fetchFavourites = async (objectArray, app) => {
     app.pageLoading = false;
   }, 1000);
 
-  return { list, error: errorOccurred };
+  return { list: DataProducts, error: errorOccurred };
 };
 
 export const fetchUserDataByToken = async (token) => {
@@ -258,9 +254,10 @@ export const fetchCompareListItems = async (objectArray, app) => {
       });
     })
   );
+  
+  let DataProducts = null;
 
   if (!errorOccurred && list.length > 0) {
-    let DataProducts = null;
     if(app.discountedProducts.length > 0){
       const isDiscounted = list.map((listItem) => {
         return app.discountedProducts.find((product) => product.id === listItem.id)
@@ -278,7 +275,7 @@ export const fetchCompareListItems = async (objectArray, app) => {
       }
       
     }
-    console.log(DataProducts)
+    DataProducts = DataProducts.sort((a, b) => DataProducts.indexOf(a) - DataProducts.indexOf(b));
     app.setCompareList(DataProducts)
     app.setProducts(DataProducts);
     app.setOriginalProducts(JSON.parse(JSON.stringify(DataProducts)));
