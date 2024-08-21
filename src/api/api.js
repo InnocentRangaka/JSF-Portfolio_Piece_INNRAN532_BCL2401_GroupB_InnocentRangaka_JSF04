@@ -278,7 +278,7 @@ export const fetchCompareListItems = async (objectArray, app) => {
       }
       
     }
-    DataProducts = DataProducts.sort((a, b) => DataProducts.indexOf(a) - DataProducts.indexOf(b));
+    DataProducts = Object.values(DataProducts).sort((a, b) => Object.values(DataProducts).indexOf(a) - Object.values(DataProducts).indexOf(b));
     app.setCompareList(DataProducts)
     app.setProducts(DataProducts);
     app.setOriginalProducts(JSON.parse(JSON.stringify(DataProducts)));

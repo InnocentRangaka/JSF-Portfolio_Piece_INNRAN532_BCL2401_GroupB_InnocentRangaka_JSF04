@@ -73,9 +73,9 @@ watch(compareList, async () => {
         <div
           class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]"
         >
-          <h1 class="text-gray-800 text-xl font-bold my-2">Compare Products ({{ compareListItems }})</h1>
+          <h1 class="text-gray-700 text-xl font-bold my-2">Compare Products ({{ compareListItems }})</h1>
           <div class="mb-2 text-xs text-right flex items-end ml-auto">
-            <a href="/" class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
+            <a href="/" class="cursor-pointer text-gray-700 hover:text-cyan-900 hover:underline">
               <span class="flex h-full items-center text-xs text-right">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +96,7 @@ watch(compareList, async () => {
       <div class="container mx-auto mb-8">
         <div class="grid grid-cols-1 relative">
           <div class="overflow-x-auto">
-            <table class="w-full bg-white border border-gray-200">
+            <table class="w-full bg-background-secondary border border-color">
               <thead>
                 <tr class="flex-wrap table-row">
                   <th class="p-4 text-left w-full md:w-auto"></th>
