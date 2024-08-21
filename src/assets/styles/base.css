@@ -4,7 +4,7 @@
 
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
-  --sc-white: #e0e0e0;
+  --sc-white: #fff;
   --sc-white-soft: #f8f8f8;
   --sc-white-mute: #f2f2f2;
 
@@ -27,58 +27,75 @@
 
 /* semantic color variables for this project */
 :root {
+  /* Primary Colors */
+  --color-primary: #0987a0;         /* Cyan */
+  --color-primary-bg: #2c7a7b;      /* Cyan Background */
+  
+  /* Secondary Colors */
+  --color-secondary: #4a5568;       /* Slate */
+  --color-secondary-bg: #f7fafc;    /* Gray Background */
+  
+  /* Tertiary Colors */
+  --color-tertiary: #48bb78;        /* Green */
+  --color-tertiary-bg: #ecc94b;     /* Yellow Background */
+  
   /* Light Theme */
-  --color-background: #f7fafc; /* bg-gray-100 */
-  --color-heading: #2d3748;    /* text-gray-800 */
-  --color-text: #1a202c;       /* text-gray-900 */
-  --color-cyan: #0987a0;       /* text-cyan-900 */
+  --color-background: #f7fafc;      /* bg-gray-100 */
+  --color-heading: #2d3748;         /* text-gray-800 */
+  --color-text: #1a202c;            /* text-gray-900 */
+  --color-cyan: #0987a0;            /* text-cyan-900 */
 
-  /* Additional colors */
-  --color-slate: #4a5568;      /* text-slate-500/600 */
-  --color-green: #48bb78;      /* text-green-500 */
-  --color-yellow: #ecc94b;     /* text-yellow-500 */
-  --color-cyan-bg: #2c7a7b;    /* bg-cyan-700 */
+  /* Additional Colors */
+  --color-slate: #4a5568;           /* text-slate-500/600 */
+  --color-green: #48bb78;           /* text-green-500 */
+  --color-yellow: #ecc94b;          /* text-yellow-500 */
+  --color-cyan-bg: #2c7a7b;         /* bg-cyan-700 */
 
   /* Dark Theme */
-  --color-background-dark: #1a1a1a;    /* bg-gray-100 -> #f7fafc to #1a1a1a */
-  --color-heading-dark: #f5f5f5;       /* text-gray-800 -> #2d3748 to #f5f5f5 */
-  --color-text-dark: #e5e5e5;          /* text-gray-900 -> #1a202c to #e5e5e5 */
-  --color-cyan-dark: #33d2e2;          /* text-cyan-900 -> #0987a0 to #33d2e2 */
+  --color-background-dark: #1a1a1a; /* bg-gray-100 -> #f7fafc to #1a1a1a */
+  --color-heading-dark: #f5f5f5;    /* text-gray-800 -> #2d3748 to #f5f5f5 */
+  --color-text-dark: #e5e5e5;       /* text-gray-900 -> #1a202c to #e5e5e5 */
+  --color-cyan-dark: #33d2e2;       /* text-cyan-900 -> #0987a0 to #33d2e2 */
 
-  /* Additional dark colors */
-  --color-slate-dark: #e5e5e5;    /* text-slate-500/600 -> #4a5568 to #e5e5e5 */
-  --color-green-dark: #68d391;    /* text-green-500 -> #48bb78 to #68d391 */
-  --color-yellow-dark: #f6e05e;   /* text-yellow-500 -> #ecc94b to #f6e05e */
-  --color-cyan-bg-dark: #285e61;  /* bg-cyan-700 -> #2c7a7b to #285e61 */
+  /* Additional Dark Colors */
+  --color-slate-dark: #e5e5e5;      /* text-slate-500/600 -> #4a5568 to #e5e5e5 */
+  --color-green-dark: #68d391;      /* text-green-500 -> #48bb78 to #68d391 */
+  --color-yellow-dark: #f6e05e;     /* text-yellow-500 -> #ecc94b to #f6e05e */
+  --color-cyan-bg-dark: #285e61;    /* bg-cyan-700 -> #2c7a7b to #285e61 */
+
+  /* Primary Dark Theme */
+  --color-primary-dark: #33d2e2;    /* Cyan */
+  --color-primary-bg-dark: #285e61; /* Cyan Background */
+  
+  /* Secondary Dark Theme */
+  --color-secondary-dark: #e5e5e5;  /* Slate */
+  --color-secondary-bg-dark: #2d2d2d; /* Gray Background */
+  
+  /* Tertiary Dark Theme */
+  --color-tertiary-dark: #68d391;   /* Green */
+  --color-tertiary-bg-dark: #f6e05e;/* Yellow Background */
 }
 
-/* Light Theme */
-html.light {
-  --color-background: var(--color-background);
-  --color-heading: var(--color-heading);
-  --color-text: var(--color-text);
-  --color-cyan: var(--color-cyan);
-  --color-slate: var(--color-slate);
-  --color-green: var(--color-green);
-  --color-yellow: var(--color-yellow);
-  --color-cyan-bg: var(--color-cyan-bg);
+.header {
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary);
 }
 
-/* Dark Theme */
-html.dark {
-  --color-background: var(--color-background-dark);
-  --color-heading: var(--color-heading-dark);
-  --color-text: var(--color-text-dark);
-  --color-cyan: var(--color-cyan-dark);
-  --color-slate: var(--color-slate-dark);
-  --color-green: var(--color-green-dark);
-  --color-yellow: var(--color-yellow-dark);
-  --color-cyan-bg: var(--color-cyan-bg-dark);
+.text-secondary {
+  color: var(--color-secondary-bg);
 }
 
-/* Use these variables in your custom CSS */
-.bg-background {
-  background-color: var(--color-background);
+.bg-tertiary {
+  background-color: var(--color-tertiary-bg);
+}
+
+/* Utility Classes */
+.bg-background, body {
+  background-color: var(--sc-white);
+}
+
+.bg-background-secondary {
+  background-color: var(--color-secondary-bg);
 }
 
 .text-heading {
@@ -97,7 +114,6 @@ html.dark {
   color: var(--color-cyan);
 }
 
-/* You can add additional classes for green, yellow, etc. */
 .text-slate {
   color: var(--color-slate);
 }
@@ -113,6 +129,99 @@ html.dark {
 .bg-cyan-bg {
   background-color: var(--color-cyan-bg);
 }
+
+/* Background Colors */
+.bg-gray-100 {
+  background-color: var(--color-background); /* Light theme background */
+}
+
+.bg-cyan-700 {
+  background-color: var(--color-cyan-bg); /* Cyan background */
+}
+
+.bg-white {
+  background-color: var(--sc-white); /* White background */
+}
+
+/* Text Colors */
+.text-gray-800 {
+  color: var(--color-heading); /* Light theme heading */
+}
+
+.text-gray-900 {
+  color: var(--color-text); /* Light theme text */
+}
+
+.text-cyan-900 {
+  color: var(--color-cyan); /* Cyan text */
+}
+
+.text-slate-500, .text-slate-600, .text-gray-700 {
+  color: var(--color-slate); /* Slate text */
+}
+
+.text-green-500 {
+  color: var(--color-green); /* Green text */
+}
+
+.text-yellow-500 {
+  color: var(--color-yellow); /* Yellow text */
+}
+
+.border-color {
+  border-color: var(--sc-divider-dark-2);
+}
+
+/* Hover Effects */
+.hover\:underline:hover {
+  text-decoration: underline;
+}
+
+.hover\:text-cyan:hover {
+  color: var(--color-cyan); /* Cyan text on hover */
+}
+
+.dark .bg-background, .dark body {
+  background-color: var(--color-background-dark); /* Dark theme background */
+}
+
+.dark .bg-background-secondary {
+  background-color: var(--color-secondary-bg-dark);
+}
+
+/* Dark Theme Classes */
+.dark .bg-gray-100 {
+  background-color: var(--color-background-dark); /* Dark theme background */
+}
+
+.dark .text-gray-800 {
+  color: var(--color-heading-dark); /* Dark theme heading */
+}
+
+.dark .text-gray-900 {
+  color: var(--color-text-dark); /* Dark theme text */
+}
+
+.dark .text-cyan-900 {
+  color: var(--color-cyan-dark); /* Cyan text in dark mode */
+}
+
+.dark .text-slate-500, .dark .text-slate-600, .dark .text-gray-700 {
+  color: var(--color-slate-dark); /* Slate text in dark mode */
+}
+
+.dark .text-green-500 {
+  color: var(--color-green-dark); /* Green text in dark mode */
+}
+
+.dark .text-yellow-500 {
+  color: var(--color-yellow-dark); /* Yellow text in dark mode */
+}
+
+.dark .bg-cyan-700 {
+  background-color: var(--color-cyan-bg-dark); /* Cyan background in dark mode */
+}
+
 
 
 /* System Theme (Matches system preference) */
@@ -130,7 +239,7 @@ html.system {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--sc-black);
+    --color-background: var(--bg-background);
     --color-background-soft: var(--sc-black-soft);
     --color-background-mute: var(--sc-black-mute);
 
@@ -140,8 +249,9 @@ html.system {
     --color-heading: var(--sc-text-dark-1);
     --color-text: var(--sc-text-dark-2);
   }
+
   html.system {
-    --color-background: var(--sc-black);
+    --color-background: var(--sc-white);
     --color-background-soft: var(--sc-black-soft);
     --color-background-mute: var(--sc-black-mute);
 

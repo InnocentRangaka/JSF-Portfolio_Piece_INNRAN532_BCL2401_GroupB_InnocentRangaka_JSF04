@@ -37,7 +37,7 @@ const isActivePage = (name) => {
             'text-cyan-700': isActivePage('login'),
             'text-gray-700': !isActivePage('login')
         }"
-        class="group inline-flex w-[32px] h-[32px] rounded-full hover:bg-transparent md:hover:text-blue-700 justify-center items-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+        class="group inline-flex w-[32px] h-[32px] rounded-full hover:bg-transparent md:hover:text-blue-700 justify-center items-center hover:bg-background focus:outline-none focus:ring-2 focus:ring-gray-200"
         >
         <UserIcon />
     </button>
@@ -49,7 +49,7 @@ const isActivePage = (name) => {
             'text-cyan-700': isActivePage('logout'),
             'text-gray-700': !isActivePage('logout')
         }"
-        class="group inline-flex w-[32px] h-[32px] rounded-full hover:bg-transparent md:hover:text-blue-700 justify-center items-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+        class="group inline-flex w-[32px] h-[32px] rounded-full hover:bg-transparent md:hover:text-blue-700 justify-center items-center hover:bg-background focus:outline-none focus:ring-2 focus:ring-gray-200"
         >
         <UserLoggedInIcon />
     </button>

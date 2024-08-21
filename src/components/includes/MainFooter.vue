@@ -67,7 +67,7 @@ const menuName = (category) => {
 
 <template>
   <!-- Footer section -->
-  <footer v-if="isShowing(pageName)" class="bg-white py-8 bottom-0 left-0 right-0 mt-auto">
+  <footer v-if="isShowing(pageName)" class="bg-background-secondary py-8 bottom-0 left-0 right-0 mt-auto">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Footer columns layout -->
       <div
@@ -75,7 +75,7 @@ const menuName = (category) => {
       >
         <!-- Categories section -->
         <div class="flex flex-col space-y-2">
-          <h3 class="text-sm font-bold text-gray-900">Categories</h3>
+          <h3 class="text-sm font-bold text-gray-700">Categories</h3>
           <a href="/" class="text-sm text-gray-700 md:hover:text-blue-700">All</a>
           <a
             v-for="category in categories"
@@ -88,7 +88,7 @@ const menuName = (category) => {
         </div>
         <!-- Support section -->
         <div class="flex flex-col space-y-2 mt-6 md:mt-0">
-          <h3 class="text-sm font-bold text-gray-900">Support</h3>
+          <h3 class="text-sm font-bold text-gray-700">Support</h3>
           <a href="#/" class="text-sm text-gray-700 md:hover:text-blue-700">Pricing</a>
           <a href="#/" class="text-sm text-gray-700 md:hover:text-blue-700">Documentation</a>
           <a href="#/" class="text-sm text-gray-700 md:hover:text-blue-700">Guides</a>
@@ -96,7 +96,7 @@ const menuName = (category) => {
         </div>
         <!-- Company section -->
         <div class="flex flex-col space-y-2 mt-6 md:mt-0">
-          <h3 class="text-sm font-bold text-gray-900">Company</h3>
+          <h3 class="text-sm font-bold text-gray-700">Company</h3>
           <a href="#/" class="text-sm text-gray-700 md:hover:text-blue-700">About</a>
           <a href="#/" class="text-sm text-gray-700 md:hover:text-blue-700">Blog</a>
           <a href="#/" class="text-sm text-gray-700 md:hover:text-blue-700">Jobs</a>
@@ -105,14 +105,14 @@ const menuName = (category) => {
         </div>
         <!-- Legal section -->
         <div class="flex flex-col space-y-2 mt-6 md:mt-0">
-          <h3 class="text-sm font-bold text-gray-900">Legal</h3>
+          <h3 class="text-sm font-bold text-gray-700">Legal</h3>
           <a href="#/" class="text-sm text-gray-700 md:hover:text-blue-700">Claim</a>
           <a href="#/" class="text-sm text-gray-700 md:hover:text-blue-700">Privacy</a>
           <a href="#/" class="text-sm text-gray-700 md:hover:text-blue-700">Terms</a>
         </div>
         <!-- Newsletter subscription section -->
         <div class="flex flex-col space-y-2 mt-6 md:mt-0 md:col-span-2">
-          <h3 class="text-sm font-bold text-gray-900">Subscribe to our newsletter</h3>
+          <h3 class="text-sm font-bold text-gray-700">Subscribe to our newsletter</h3>
           <p class="text-sm text-gray-700">
             The latest news, articles, and resources, sent to your inbox weekly.
           </p>
@@ -122,7 +122,7 @@ const menuName = (category) => {
               id="emailSubscriptionInput"
               type="email"
               placeholder="Enter your email"
-              class="p-2 border border-gray-300 rounded-l-md sm:w-full"
+              class="p-2 border border-color bg-background-secondary rounded-l-md sm:w-full"
             />
             <button class="p-2.5 bg-cyan-700 text-white rounded-r-md hover:bg-cyan-900 sm:w-full">
               Subscribe

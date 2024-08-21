@@ -14,7 +14,7 @@
     <div class="grid grid-cols-1 gap-3 relative">
       <div class="grid grid-cols-1 md:grid-cols-3 h-fit gap-3 relative">
         <!-- Order Status Skeleton -->
-        <div class="w-full h-full text-slate-600 bg-white p-8 rounded-lg shadow-md relative">
+        <div class="w-full h-full text-slate-600 bg-background-secondary p-8 rounded-lg shadow-md relative">
           <div class="h-6 bg-gray-300 rounded w-36 mb-4"></div>
           <div class="h-4 bg-gray-300 rounded w-full mb-4"></div>
           <!-- Progress bar -->
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Shipping Address Skeleton -->
-        <div class="w-full h-full text-slate-600 bg-white p-8 rounded-lg shadow-md relative">
+        <div class="w-full h-full text-slate-600 bg-background-secondary p-8 rounded-lg shadow-md relative">
           <div class="h-6 bg-gray-300 rounded w-36 mb-4"></div>
           <div class="space-y-4">
             <div class="h-4 bg-gray-300 rounded w-full"></div>
@@ -53,7 +53,7 @@
         </div>
 
         <!-- Order Summary Skeleton -->
-        <div class="w-full h-full text-slate-600 bg-white p-8 rounded-lg shadow-md relative">
+        <div class="w-full h-full text-slate-600 bg-background-secondary p-8 rounded-lg shadow-md relative">
           <div class="h-6 bg-gray-300 rounded w-36 mb-4"></div>
           <div class="space-y-4">
             <div class="flex justify-between">
@@ -87,7 +87,7 @@
       </div>
 
       <!-- Product Items Skeleton -->
-      <div class="relative bg-white p-8 rounded-lg shadow-md">
+      <div class="relative bg-background-secondary p-8 rounded-lg shadow-md">
         <div v-for="i in 2" :key="i" class="border-b pb-4 mb-4">
           <div class="flex justify-between items-center">
             <div class="flex items-center w-full relative gap-4 sm:gap-10">

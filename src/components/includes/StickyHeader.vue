@@ -123,7 +123,7 @@ onMounted(async () => {
 
 <template>
   <header class="sticky z-50 top-0">
-    <nav class="bg-white border-gray-200">
+    <nav class="bg-background-secondary border-gray-200">
       <div class="container flex flex-wrap items-center justify-between mx-auto px-4 py-3">
         <!-- SwiftCart Logo -->
         <router-link to="/" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -166,29 +166,10 @@ onMounted(async () => {
           <div class="flex flex-wrap items-center justify-end">
             <div class="block md:w-auto" id="navbar-dropdown">
               <ul
-                class="flex flex-row h-[32px] font-medium md:p-0 border border-gray-100 rounded-lg bg-white gap-2 md-gap-4 rtl:space-x-reverse items-center md:mt-0 md:border-0"
+                class="flex flex-row h-[32px] font-medium md:p-0 border border-gray-100 rounded-lg bg-background-secondary gap-2 md-gap-4 rtl:space-x-reverse items-center md:mt-0 md:border-0"
               >
               <li>
                 <ThemeButton />
-                <button
-                  @click="navigateTo('/compare')"
-                  :class="{
-                    'text-cyan-700': isActivePage('compare'),
-                    'text-gray-700': !isActivePage('compare')
-                  }"
-                  class="group inline-flex p-2 w-[32px] h-[32px] rounded-full hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 justify-center items-center focus:outline-none focus:ring-2 focus:ring-gray-200"
-                >
-                  <div class="block md:block relative">
-                    <div v-if="compareList.totalItems" class="mt-0 absolute left-3 -top-3">
-                      <p
-                        class="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white"
-                      >
-                        {{ compareList.totalItems }}
-                      </p>
-                    </div>
-                    <CompareIcon class="hover:bg-transparent" />
-                  </div>
-                </button>
               </li>
               <li>
                 <button
@@ -259,7 +240,7 @@ onMounted(async () => {
                 <li class="md:hidden">
                   <button
                     @click="toggleMobileMenu"
-                    class="group inline-flex self-end p-2 w-[32px] h-[32px] justify-center items-center text-sm text-gray-700 md:hover:text-blue-700 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                    class="group inline-flex self-end p-2 w-[32px] h-[32px] justify-center items-center text-sm text-gray-700 md:hover:text-blue-700 rounded-full hover:bg-background-secondary focus:outline-none focus:ring-2 focus:ring-gray-200"
                     aria-controls="navbar-default"
                     :aria-expanded="mobileMenuOpen"
                   >
@@ -277,7 +258,7 @@ onMounted(async () => {
       <div class="w-full md:block md:w-auto">
         <ul
           v-if="mobileMenuOpen"
-          class="flex flex-col top-10 p-4 md:p-0 border border-gray-100 rounded-lg bg-white md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:hidden"
+          class="flex flex-col top-10 p-4 md:p-0 border border-gray-100 rounded-lg bg-background-secondary md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:hidden"
         >
         <li v-if="categories.length > 0">
           <router-link
@@ -286,7 +267,7 @@ onMounted(async () => {
               'text-cyan-700 font-medium': isActivePage('home'),
               'text-gray-700': !isActivePage('home')
             }"
-            class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
+            class="block py-2 px-3 rounded hover:bg-background-secondary md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
           >
             All
           </router-link>
@@ -298,7 +279,7 @@ onMounted(async () => {
                 'text-cyan-700 font-medium': isActivePage(menuName(category)),
                 'text-gray-700': !isActivePage(menuName(category))
               }"
-              class="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
+              class="block py-2 px-3 rounded hover:bg-background-secondary md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
             >
               {{ capitalizeMenuName(category) }}
             </router-link>

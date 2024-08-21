@@ -69,7 +69,7 @@
     <div class="relative inline-block theme-toggle text-gray-700 ">
         <button v-if="themeStore.currentTheme === 'light'" ref="dropdownButton" @click="toggleDropdown" 
             :class="[
-                'group text-gray-700 hover:bg-transparent md:hover:text-blue-700 hover:bg-gray-100 inline-flex w-[32px] h-[32px] rounded-full justify-center items-center focus:outline-none focus:ring-2 focus:ring-gray-200',
+                'group text-gray-700 hover:bg-transparent md:hover:text-blue-700 hover:bg-background inline-flex w-[32px] h-[32px] rounded-full justify-center items-center focus:outline-none focus:ring-2 focus:ring-gray-200',
                 { 'md:hover:text-blue-700': themeStore.currentTheme === 'light' }
             ]"
         >
@@ -77,7 +77,7 @@
         </button>
         <button v-if="themeStore.currentTheme === 'dark'" ref="dropdownButton" @click="toggleDropdown" 
             :class="[
-                'group text-gray-700 hover:bg-transparent md:hover:text-blue-700 hover:bg-gray-100 inline-flex w-[32px] h-[32px] rounded-full justify-center items-center focus:outline-none focus:ring-2 focus:ring-gray-200',
+                'group text-gray-700 hover:bg-transparent md:hover:text-blue-700 hover:bg-background inline-flex w-[32px] h-[32px] rounded-full justify-center items-center focus:outline-none focus:ring-2 focus:ring-gray-200',
                 { 'md:hover:text-blue-700': themeStore.currentTheme === 'dark' }
             ]"
         >
@@ -85,7 +85,7 @@
         </button>
         <button v-if="themeStore.currentTheme === 'system'" ref="dropdownButton" @click="toggleDropdown" 
             :class="[
-                'group text-gray-700 hover:bg-transparent md:hover:text-blue-700 hover:bg-gray-100 inline-flex w-[32px] h-[32px] rounded-full justify-center items-center focus:outline-none focus:ring-2 focus:ring-gray-200',
+                'group text-gray-700 hover:bg-transparent md:hover:text-blue-700 hover:bg-background inline-flex w-[32px] h-[32px] rounded-full justify-center items-center focus:outline-none focus:ring-2 focus:ring-gray-200',
                 { 'md:hover:text-blue-700': themeStore.currentTheme === 'system' }
             ]"
         >
@@ -93,26 +93,26 @@
         </button>
         <ul
           v-if="isOpen"
-          class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-md"
+          class="absolute right-0 mt-2 w-48 bg-background-secondary rounded-md shadow-md"
           ref="dropdownList"
         >
           <li
-            class="flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-gray-100 text-gray-700 hover:text-blue-700"
+            class="group flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-background text-gray-700 hover:text-blue-700"
             @click="selectOption('light')"
           >
-            <SunIcon class="text-gray-700" /> Light
+            <SunIcon class="text-gray-700 group-hover:text-blue-700" /> Light
           </li>
           <li
-            class="flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-gray-100 text-gray-700 hover:text-blue-700"
+            class="group flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-background text-gray-700 hover:text-blue-700"
             @click="selectOption('dark')"
           >
-            <MoonIcon class="text-gray-700" /> Dark
+            <MoonIcon class="text-gray-700 group-hover:text-blue-700" /> Dark
           </li>
           <li
-            class="flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-gray-100 text-gray-700 hover:text-blue-700"
+            class="group flex items-center gap-2 cursor-pointer px-4 py-2 hover:bg-background text-gray-700 hover:text-blue-700"
             @click="selectOption('system')"
           >
-            <ComputerIcon class="text-gray-700" /> System
+            <ComputerIcon class="text-gray-700 group-hover:text-blue-700" /> System
           </li>
         </ul>
       </div>

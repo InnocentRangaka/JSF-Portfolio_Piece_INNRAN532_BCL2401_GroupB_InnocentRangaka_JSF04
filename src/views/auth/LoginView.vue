@@ -152,17 +152,17 @@ onMounted(() => {
     <div class="flex min-h-full w-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 m-auto">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
         <img class="mx-auto h-10 w-auto" src="../../assets/icons/cart.svg" alt="SwiftCart Logo" />
-        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-700">
           Sign in to your account
         </h2>
       </div>
 
       <displayError :message="loginError?.message"/>
 
-      <div class="bg-white rounded-lg shadow-md mt-10 p-6 sm:mx-auto sm:w-full sm:max-w-sm">
+      <div class="bg-background-secondary rounded-lg shadow-md mt-10 p-6 sm:mx-auto sm:w-full sm:max-w-sm">
         <form @submit.prevent="handleSubmit" class="space-y-6" action="#" method="POST">
           <div>
-            <label for="email" class="block text-sm font-medium leading-6 text-gray-900"
+            <label for="email" class="block text-sm font-medium leading-6 text-gray-700"
               >Username / Email address</label
             >
             <div class="mt-2">
@@ -173,7 +173,7 @@ onMounted(() => {
                 type="text"
                 autocomplete="username"
                 required
-                class="block w-full rounded-md p-2.5 text-sm text-gray-900 bg-gray-50 rounded-e-lg border border-1 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                class="block w-full rounded-md p-2.5 text-sm text-gray-700 bg-background rounded-e-lg border border-1 border-color focus:ring-blue-500 focus:border-blue-500"
               />
               <span class="text-xs text-red-700" id="userNameError" v-if="credentialsError.value?.input == 'username'">{{ credentialsError.value.message }}</span>
             </div>
@@ -182,7 +182,7 @@ onMounted(() => {
           <div>
             <div class="flex items-center justify-between">
               <label 
-                for="password" class="block text-sm font-medium leading-6 text-gray-900"
+                for="password" class="block text-sm font-medium leading-6 text-gray-700"
               >
                 Password
               </label>
@@ -196,12 +196,12 @@ onMounted(() => {
                 :type="showPassword ? 'text' : 'password'"
                 autocomplete="current-password"
                 required
-                class="block w-full rounded-md p-2.5 pr-8 text-sm text-gray-900 bg-gray-50 rounded-e-lg border border-1 border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                class="block w-full rounded-md p-2.5 pr-8 text-sm text-gray-700 bg-background rounded-e-lg border border-1 border-color focus:ring-blue-500 focus:border-blue-500"
               />
 
               <button 
                 @click="handleShowPassword"
-                class="absolute text-gray-900 inset-y-[0.5625rem] end-0 grid place-content-center items-center px-4 h-6 w-6"
+                class="absolute text-gray-700 inset-y-[0.5625rem] end-0 grid place-content-center items-center px-4 h-6 w-6"
               >
                 <EyeOn v-if="!showPassword" />
                 <EyeOff v-else />
@@ -212,15 +212,15 @@ onMounted(() => {
 
           <div class="flex items-start mb-5">
             <div class="flex items-center h-5">
-              <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
+              <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-color rounded bg-background focus:ring-3 focus:ring-blue-300 " />
             </div>
-            <label for="remember" class="ms-2 block text-sm font-medium  text-gray-900">Remember me</label>
+            <label for="remember" class="ms-2 block text-sm font-medium  text-gray-700">Remember me</label>
           </div>
 
           <div>
             <button
               type="submit"
-              class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              class="flex w-full justify-center rounded-md bg-cyan-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Sign in
             </button>
@@ -231,7 +231,7 @@ onMounted(() => {
           <div class="block text-sm">
             <router-link
               to="/auth/forgot_password"
-              class="font-semibold text-indigo-600 hover:text-indigo-500"
+              class="font-semibold text-cyan-700 hover:text-blue-900"
               >Forgot password?</router-link
             >
           </div>
@@ -240,7 +240,7 @@ onMounted(() => {
             Not a member?
             <router-link
               to="/auth/signup"
-              class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              class="font-semibold leading-6 text-cyan-700 hover:text-blue-900"
               >Sign up</router-link
             >
           </p>

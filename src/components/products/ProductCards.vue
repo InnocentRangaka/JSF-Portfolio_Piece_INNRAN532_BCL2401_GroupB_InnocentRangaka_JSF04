@@ -50,7 +50,7 @@ watch(
     <div
       v-for="product in currentProducts"
       :key="product.id"
-      class="flex flex-col relative max-h-[130rem] max-w-80 hover:-translate-y-1 hover:scale-105 duration-300 border border-slate-200 shadow shadow-slate-950/5 rounded-2xl overflow-hidden"
+      class="flex flex-col relative max-h-[130rem] max-w-80 bg-background-secondary hover:-translate-y-1 hover:scale-105 duration-300 border border-color shadow shadow-slate-950/5 rounded-2xl overflow-hidden"
     >
       <!-- 10% Off Label -->
       <span

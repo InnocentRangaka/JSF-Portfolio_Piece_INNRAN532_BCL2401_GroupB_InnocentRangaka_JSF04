@@ -4,7 +4,7 @@
 </script>
 <!-- components/ComparisonSkeleton.vue -->
 <template>
-    <div class="bg-gray-100 mb-10">
+    <div class="bg-background mb-10">
         <div class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]">
           <!-- Skeleton for Heading -->
           <div class="h-8 bg-gray-300 rounded-md w-3/4 animate-pulse"></div>
@@ -31,10 +31,10 @@
                 </th>
               </tr>
               <tr>
-                <th class="p-4 text-left text-gray-600 bg-gray-100 font-medium w-full md:w-auto capitalize place-content-baseline">
+                <th class="p-4 text-left text-gray-600 bg-background font-medium w-full md:w-auto capitalize place-content-baseline">
                   <div class="w-1/4 h-6 bg-gray-300 rounded animate-pulse"></div>
                 </th>
-                <th v-for="n in columns" :key="n" class="place-content-baseline p-4 text-left text-gray-600 bg-gray-100 font-medium w-full md:w-auto">
+                <th v-for="n in columns" :key="n" class="place-content-baseline p-4 text-left text-gray-600 bg-background font-medium w-full md:w-auto">
                   <div class="w-3/4 h-6 bg-gray-300 rounded animate-pulse"></div>
                 </th>
               </tr>

@@ -1,7 +1,7 @@
 <script></script>
 
 <template>
-  <div class="bg-gray-100 mb-10">
+  <div class="bg-background mb-10">
     <div class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]">
       <!-- Skeleton for Heading -->
       <div class="h-8 bg-gray-300 rounded-md w-3/4 animate-pulse"></div>
@@ -18,7 +18,7 @@
   <div class="container mx-auto mb-4">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 relative">
       <!-- Skeleton for Cart Items -->
-      <div class="col-span-2 relative bg-white p-8 rounded-lg shadow-md">
+      <div class="col-span-2 relative bg-background-secondary p-8 rounded-lg shadow-md">
         <div v-for="n in 3" :key="n" class="border-b pb-4 mb-4 animate-pulse">
           <div class="flex justify-between items-center">
             <div class="flex items-center w-full relative gap-4 sm:gap-10">
@@ -44,7 +44,7 @@
         </div>
       </div>
       <!-- Skeleton for Order Summary -->
-      <div class="col-span-2 sm:col-span-1 text-slate-600 bg-white p-8 rounded-lg shadow-md relative animate-pulse">
+      <div class="col-span-2 sm:col-span-1 text-slate-600 bg-background-secondary p-8 rounded-lg shadow-md relative animate-pulse">
         <div class="h-4 bg-gray-300 rounded-md w-1/2 mb-4"></div>
         <div class="flex justify-between mb-2">
           <div class="h-4 bg-gray-200 rounded-md w-1/4"></div>

@@ -83,13 +83,13 @@ watch(
     <CartSkeleton  v-if="loading" />
 
     <div v-show="!loading">
-      <div class="bg-gray-100 mb-10">
+      <div class="bg-background mb-10">
         <div
           class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]"
         >
           <h1 class="text-gray-800 text-xl font-bold my-2">Shopping Cart ({{ totalItems }})</h1>
           <div class="mb-2 text-xs text-right flex items-end ml-auto">
-            <a href="/" class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
+            <a href="/" class="cursor-pointer text-gray-700 hover:text-cyan-900 hover:underline">
               <span class="flex h-full items-center text-xs text-right">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -109,14 +109,14 @@ watch(
 
       <div v-if="totalItems > 0" class="container mx-auto mb-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 relative">
-          <div class="col-span-2 relative bg-white p-8 rounded-lg shadow-md">
+          <div class="col-span-2 relative bg-background-secondary p-8 rounded-lg shadow-md">
             <div v-for="cartItem in currentCartItems" :key="cartItem.id" class="border-b pb-4 mb-4">
               <div class="flex justify-between items-center">
                 <div class="flex items-center w-full relative gap-4 sm:gap-10">
                   <img
                     :src="cartItem.image"
                     :alt="cartItem.title"
-                    class="w-20 h-20 max-h-full object-cover mt-[0.35rem] self-start"
+                    class="w-20 h-20 max-h-full object-cover mt-[0.35rem] bg-white self-start"
                   />
                   <div class="flex flex-col">
                     <div class="grid w-full grid-cols-1 relative">
@@ -174,13 +174,13 @@ watch(
                           <div class="flex items-center">
                             <div class="border rounded-lg pl-2 pr-1 py-1 relative">
                               <input
-                                class="w-[20px] absolute left-3 z-0 bg-white"
+                                class="w-[20px] absolute left-3 z-0 bg-background-secondary"
                                 type="text"
                                 :value="cartItem.quantity"
                                 readonly
                               />
                               <select
-                                class="w-[40px] z-1"
+                                class="w-[40px] z-1 bg-background-secondary"
                                 @change="updateQuantity($event, cartItem)"
                                 :value="cartItem.quantity"
                                 :disabled="cartItem.quantityUpdating"
@@ -218,7 +218,7 @@ watch(
           
           <div>
             <div
-              class="col-span-2 sm:col-span-1 h-fit text-slate-600 bg-white p-8 rounded-lg shadow-md relative sm:sitcky"
+              class="col-span-2 sm:col-span-1 h-fit text-slate-600 bg-background-secondary p-8 rounded-lg shadow-md relative sm:sitcky"
             >
               <h2 class="text-gray-700 text-lg font-semibold mb-4">Order summary</h2>
               <div class="flex justify-between mb-2">
@@ -247,7 +247,7 @@ watch(
             >
               <button
                 @click="() => removeAllCartItems()"
-                class="text-xs text-gray-900 hover:text-cyan-900 hover:underline"
+                class="text-xs text-gray-700 hover:text-cyan-900 hover:underline"
               >
                 Remove All
               </button>

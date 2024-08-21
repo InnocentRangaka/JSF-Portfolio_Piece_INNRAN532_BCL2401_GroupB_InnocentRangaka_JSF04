@@ -134,7 +134,7 @@ onMounted(() => {
       <div v-show="!loading">
 
         <!-- Order Header -->
-        <div class="bg-gray-100 mb-10">
+        <div class="bg-background mb-10">
             <div class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]">
             <h1 class="text-gray-800 text-xl font-bold my-2">Order #{{ orderId }}</h1>
             <div class="mb-2 text-xs text-right flex items-end ml-auto">

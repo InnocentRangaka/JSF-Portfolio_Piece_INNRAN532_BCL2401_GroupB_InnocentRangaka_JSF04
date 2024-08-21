@@ -248,9 +248,9 @@ function navigateTo(path){
   <div v-show="!loading">
     <div class="bg-gray-100 mb-10">
       <div class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]">
-        <h1 class="text-gray-800 text-xl font-bold my-2">Checkout</h1>
+        <h1 class="text-gray-700 text-xl font-bold my-2">Checkout</h1>
         <div class="mb-2 text-xs text-right flex items-end ml-auto">
-          <router-link to="/" class="cursor-pointer text-gray-900 hover:text-cyan-900 hover:underline">
+          <router-link to="/" class="cursor-pointer text-gray-700 hover:text-cyan-900 hover:underline">
             <span class="flex h-full items-center text-xs text-right">
               <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
                 <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
@@ -267,43 +267,43 @@ function navigateTo(path){
 
       <div class="flex flex-col lg:flex-row gap-3">
         <!-- Contact and Shipping Information -->
-        <div class="w-full lg:w-1/2 h-fit bg-white p-8 rounded-lg shadow-md ">
-          <h2 class="text-xl font-bold mb-4">Contact Information</h2>
+        <div class="w-full lg:w-1/2 h-fit bg-background-secondary p-8 rounded-lg shadow-md ">
+          <h2 class="text-xl font-bold mb-4 text-gray-700">Contact Information</h2>
           <div class="mb-4">
             <label for="email" class="block text-gray-700 font-bold mb-2">Email address</label>
-            <input v-model="user.email" type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your email">
+            <input v-model="user.email" type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your email">
           </div>
           <h2 class="text-xl font-bold mb-4">Shipping Information</h2>
           <div class="flex gap-4 mb-4">
             <div class="w-1/2">
               <label for="first-name" class="block text-gray-700 font-bold mb-2">First name</label>
-              <input v-model="user.name.firstname" type="text" id="first-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your first name">
+              <input v-model="user.name.firstname" type="text" id="first-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your first name">
             </div>
             <div class="w-1/2">
               <label for="last-name" class="block text-gray-700 font-bold mb-2">Last name</label>
-              <input v-model="user.name.lastname" type="text" id="last-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your last name">
+              <input v-model="user.name.lastname" type="text" id="last-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your last name">
             </div>
           </div>
           <div class="mb-4">
             <label for="company" class="block text-gray-700 font-bold mb-2">Company</label>
-            <input type="text" id="company" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your company name">
+            <input type="text" id="company" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your company name">
           </div>
           <div class="mb-4">
             <label for="address" class="block text-gray-700 font-bold mb-2">Address</label>
-            <input  v-model="street" type="text" id="address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your address">
+            <input  v-model="street" type="text" id="address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your address">
           </div>
           <div class="mb-4">
             <label for="apartment" class="block text-gray-700 font-bold mb-2">Apartment, suite, etc.</label>
-            <input v-model="apartment" type="text" id="apartment" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter apartment, suite, etc.">
+            <input v-model="apartment" type="text" id="apartment" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter apartment, suite, etc.">
           </div>
           <div class="flex gap-4 mb-4">
             <div class="w-1/2">
               <label for="city" class="block text-gray-700 font-bold mb-2">City</label>
-              <input v-model="city" type="text" id="city" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your city">
+              <input v-model="city" type="text" id="city" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your city">
             </div>
             <div class="w-1/2">
               <label for="country" class="block text-gray-700 font-bold mb-2">Country</label>
-              <select v-model="countryCode" id="country" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+              <select v-model="countryCode" id="country" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline">
                 <option value="ZA">South Africa</option>
                 <option value="US">United States</option>
                 <option value="UK">United Kingdom</option>
@@ -313,25 +313,25 @@ function navigateTo(path){
           <div class="flex gap-4 mb-4">
             <div class="w-1/2">
               <label for="state" class="block text-gray-700 font-bold mb-2">State/Province</label>
-              <input v-model="state" type="text" id="state" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your state/province">
+              <input v-model="state" type="text" id="state" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your state/province">
             </div>
             <div class="w-1/2">
               <label for="postal-code" class="block text-gray-700 font-bold mb-2">Postal code</label>
-              <input v-model="zipCode" type="text" id="postal-code" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your postal code">
+              <input v-model="zipCode" type="text" id="postal-code" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your postal code">
             </div>
           </div>
           <div class="mb-4">
             <label for="phone" class="block text-gray-700 font-bold mb-2">Phone</label>
-            <input type="tel" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your phone number">
+            <input type="tel" id="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-background leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter your phone number">
           </div>
         </div>
 
         <!-- Order Summary -->
         <div class="w-full lg:w-1/2 h-fit sticky flex flex-col gap-3">
-          <div class="text-gray-700 bg-white p-8 rounded-lg shadow-md">
+          <div class="text-gray-700 bg-background-secondary p-8 rounded-lg shadow-md">
             <h2 class="text-xl font-bold mb-4">Delivery Method</h2>
             <div class="flex gap-4 mb-4">
-              <div class="flex flex-col w-1/2 border rounded p-4">
+              <div class="flex flex-col w-1/2 border border-color rounded p-4">
                 <div class="flex items-center">
                   <input type="radio" id="standard" name="delivery" class="mr-2" value="standard" 
                     x-model="cart.shippingMethod" 
@@ -343,7 +343,7 @@ function navigateTo(path){
                 <p class="text-gray-700">4-10 business days</p>
                 <p class="font-bold">$5.00</p>
               </div>
-              <div class="flex flex-col w-1/2 border rounded p-4">
+              <div class="flex flex-col w-1/2 border border-color rounded p-4">
                 <div class="flex items-center">
                   <input type="radio" id="express" name="delivery" class="mr-2" value="express"
                     @change="updateShippingMethod('express')" 
@@ -356,14 +356,14 @@ function navigateTo(path){
               </div>
             </div>
           </div>
-          <div class="text-gray-700 bg-white p-8 rounded-lg shadow-md">
+          <div class="text-gray-700 bg-background-secondary p-8 rounded-lg shadow-md">
             <h2 class="text-xl font-bold mb-4">Order Summary</h2>
             <div class="border rounded-lg p-4 mb-4 ">
               <div v-for="(cartItem, index) in currentCartItems" :key="cartItem.id" class="flex justify-between mb-4">
                 <img
                       :src="cartItem.image"
                       :alt="cartItem.title"
-                      class="w-20 h-auto max-h-19 object-cover mt-[0.35rem] self-start"
+                      class="w-20 h-auto max-h-19 bg-white object-cover mt-[0.35rem] self-start"
                     />
                 <div class="flex-1 mx-4">
                   <p class="font-semibold text-ellipsis overflow-hidden break-words line-clamp-2">{{ cartItem.title }}</p>
@@ -418,7 +418,7 @@ function navigateTo(path){
   <NoItemFound v-if="totalItems == 0" v-show="!loading" name="checkout" />
 
   <div v-if="isPaymentConfirmed" class="fixed inset-0 bg-gray-700 bg-opacity-70 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
+    <div class="gray-700 rounded-lg shadow-lg p-6 max-w-lg mx-auto">
       <h2 class="text-gray-700 text-2xl font-semibold mb-4">Payment successful</h2>
       <p class="text-gray-700 mb-2">Thank you for your order <strong>#{{ orderNumber }}</strong>!</p>
       <p class="text-gray-700 mb-4">We will email you confirmation shortly. You will automatically be redirected to your order in {{ countdown }}</p>
@@ -430,7 +430,7 @@ function navigateTo(path){
   </div>
 
   <div v-if="isCancelOrder" class="fixed inset-0 bg-gray-700 bg-opacity-70 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
+    <div class="gray-700 rounded-lg shadow-lg p-6 max-w-lg mx-auto">
       <h2 class="text-gray-700 text-2xl font-semibold mb-4">Payment failed</h2>
       <p class="text-gray-700 mb-4">Unfortunately, your payment did not go through. Would you like to try again or cancel the order?</p>
       <div class="flex justify-end space-x-4">
@@ -442,7 +442,7 @@ function navigateTo(path){
   
   <!-- Order Cancellation Confirmation Modal -->
   <div v-if="showCancelConfirmation" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
+    <div class="gray-700 rounded-lg shadow-lg p-6 max-w-lg mx-auto">
       <h2 class="text-gray-700 text-2xl font-semibold mb-4">Confirm cancellation</h2>
       <p class="text-gray-700 mb-4">Are you sure you want to cancel your order?</p>
       <div class="flex justify-end space-x-4">
@@ -453,7 +453,7 @@ function navigateTo(path){
   </div>
 
   <div v-if="isReloadPage" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
+    <div class="gray-700 rounded-lg shadow-lg p-6 max-w-lg mx-auto">
       <h2 class="text-gray-700 text-2xl font-semibold mb-4">Something went wrong</h2>
       <p class="text-gray-700 mb-4">An error occurred. Please try reloading the page.</p>
       <div class="flex justify-end space-x-4">
