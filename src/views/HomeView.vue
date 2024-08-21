@@ -46,10 +46,15 @@ const handleSearchParams = () => {
   if (!sort || sort == 'undefined' || sort.toString().startsWith('function')) {
     appStore.setSorting('default')
   }
+
+  return {filter, search, sort}
 }
 
 const getHomeProducts = () => {
-  handleSearchParams()
+  const {filter} = handleSearchParams()
+  if (!filter || filter == 'undefined' || filter.toString().startsWith('function')) {
+    appStore.setFilterItem('All categories')
+  }
   fetchProducts()
 }
 
@@ -69,6 +74,7 @@ watchEffect(() => {
   homeProducts
   productsLoading.value = appStore.loading.products
   appStore.products
+  // console.log(appStore.products)
 })
 </script>
 

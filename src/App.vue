@@ -76,7 +76,7 @@ onMounted(async () => {
 
 // Update layout based on the current path
 watch(
-  currentLocation,
+  currentLocation.value,
   (newLocation) => {
     // appStore.updateLayout(newLocation.path)
     // console.log(newLocation)

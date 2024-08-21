@@ -12,7 +12,7 @@ import CompareButton from '../compare/CompareButton.vue';
 const appStore = useAppStore()
 const userStore = useUserStore()
 
-const { isInWishList, addToCart, addToFavourites, applyDiscounts } = appStore
+const { isInWishList, addToCart, addToFavourites, fetchProducts } = appStore
 
 /**
  * Reactive reference to store the current products.
@@ -23,9 +23,12 @@ user = computed(() => userStore.user);
 
 // Fetch products on component mount
 onMounted(async () => {
-  
+  if(appStore.currentLocation.path === '/'){
+    if(Object.values(appStore.products).length < 20){
+      fetchProducts();
+    }
+  }
   // const DataProducts = applyDiscounts(appStore, currentProducts.value.slice());
-          
   //  console.log(DataProducts)
   currentProducts.value = appStore.products
 })
@@ -37,6 +40,10 @@ watch(
     currentProducts.value = newProducts
     appStore.getProducts
     // appStore.products
+    if(Object.values(currentProducts) === 0){
+      fetchProducts();
+      currentProducts.value = appStore.products;
+    }
   },
   { immediate: true }
 )
@@ -48,7 +55,7 @@ watch(
     class="container mx-auto grid gap-4 grid-cols-1 lg:grid-cols-4 md:grid-cols-2 items-center lg:max-w-none my-4 px-2 md:px-0"
   >
     <div
-      v-for="product in currentProducts"
+      v-for="product in appStore.products"
       :key="product.id"
       class="flex flex-col relative max-h-[130rem] max-w-80 bg-background-secondary hover:-translate-y-1 hover:scale-105 duration-300 border border-color shadow shadow-slate-950/5 rounded-2xl overflow-hidden"
     >

@@ -186,7 +186,7 @@ const updateURL = () => {
  * @param {string} pathName - The current path name.
  */
 const handleShowSearchFilterSort = (pathName) => {
-  const isNotProductShow = pathName.startsWith('/auth') || pathName.startsWith('/cart')
+  const isNotProductShow = pathName.startsWith('/auth') || pathName.startsWith('/cart') || pathName.startsWith('/checkout')
   showSearchFilterSort.value = !isNotProductShow
 }
 

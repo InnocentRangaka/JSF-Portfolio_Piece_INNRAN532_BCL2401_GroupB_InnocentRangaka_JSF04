@@ -69,7 +69,7 @@ watch(compareList, async () => {
     </div>
 
     <div v-else>
-      <div class="bg-gray-100 mb-10">
+      <div class="bg-background mb-10">
         <div
           class="container grid grid-cols-1 sm:grid-cols-2 items-center mx-auto px-4 py-4 min-h-[44px]"
         >
@@ -96,9 +96,9 @@ watch(compareList, async () => {
       <div class="container mx-auto mb-8">
         <div class="grid grid-cols-1 relative">
           <div class="overflow-x-auto">
-            <table class="w-full bg-background-secondary border border-color">
+            <table class="w-full bg-background-secondary border-0">
               <thead>
-                <tr class="flex-wrap table-row">
+                <tr class="flex-wrap table-row bg-background-secondary border border-color">
                   <th class="p-4 text-left w-full md:w-auto"></th>
                   <th v-for="(product, index) in products" :key="index" class="p-4 text-left w-full md:w-auto items-center justify-center">
                     <router-link :to="`/product/${product.id}`" class="flex-1 flex flex-col mx-auto w-fit">
@@ -111,9 +111,9 @@ watch(compareList, async () => {
                   </th>
                 </tr>
       
-                <tr>
-                  <th class="p-4 text-left text-gray-600 bg-gray-100 font-medium w-full md:w-auto capitalize place-content-baseline">Title</th>
-                  <th v-for="(product, index) in products" :key="index" class="place-content-baseline p-4 text-left text-gray-600 bg-gray-100 font-medium w-full md:w-auto">
+                <tr class=" border border-color">
+                  <th class="p-4 text-left text-gray-700 font-medium w-full md:w-auto capitalize place-content-baseline">Title</th>
+                  <th v-for="(product, index) in products" :key="index" class="place-content-baseline p-4 text-left text-gray-700 font-medium w-full md:w-auto">
                     <router-link :to="`/product/${product.id}`" class="">
                       {{ product.title }}
                     </router-link>
@@ -121,19 +121,19 @@ watch(compareList, async () => {
                 </tr>
     
               </thead>
-              <tbody>
+              <tbody class="bg-background-secondary border border-color">
                 <!-- Iterate over features -->
-                <tr v-for="(feature, index) in features" :key="index" class="flex-wrap justify-start items-start place-content-baseline table-row border-b border-gray-200">
-                  <td class="p-4 text-gray-600 font-medium max-w-fit md:w-auto capitalize w-[83.5px]">{{ feature }}</td>
+                <tr v-for="(feature, index) in features" :key="index" class="flex-wrap justify-start items-start place-content-baseline table-row border-b border-color">
+                  <td class="p-4 text-gray-700 font-medium max-w-fit md:w-auto capitalize w-[83.5px]">{{ feature }}</td>
                   <!-- Iterate over products to display feature values -->
-                  <td v-for="(product, productIndex) in products" :key="productIndex" class="place-content-baseline p-4 text-gray-600 min-w-[192.5px] w-[31,46%] max-w-[467.66px] md:w-auto">
+                  <td v-for="(product, productIndex) in products" :key="productIndex" class="place-content-baseline p-4 text-gray-700 min-w-[192.5px] w-[31,46%] max-w-[467.66px] md:w-auto">
                     <!-- Handle nested objects like rating -->
                     <span v-if="typeof product[feature] === 'object'" class="flex capitalize items-center">
                       <span class="mr-2" v-html="product[feature].rate > 0 ? goldenStar : grayStar"></span>
                       {{ product[feature].rate || 0 }}/5 ({{ product[feature].count || 0 }} reviews)
                     </span>
                     <span v-else-if="feature === 'price'" class="flex">
-                      {{ appStore.currency }} {{ product.price.toFixed(2) }}
+                      {{ appStore.currency }} {{ parseFloat(product.price).toFixed(2) }}
                     </span>
                     <span v-else-if="feature === 'description'" class="h-full">
                       {{ product[feature].charAt(0).toUpperCase() + product[feature].slice(1) || 'N/A' }}
@@ -144,8 +144,8 @@ watch(compareList, async () => {
                   </td>
                 </tr>
                 <tr class="flex-wrap table-row">
-                  <td class="p-4 text-gray-600 font-medium w-full md:w-auto"></td>
-                  <td v-for="(product, index) in products" :key="index" class="p-4 text-gray-600 w-full md:w-auto">
+                  <td class="p-4 text-gray-700 font-medium w-full md:w-auto"></td>
+                  <td v-for="(product, index) in products" :key="index" class="p-4 text-gray-700 w-full md:w-auto">
                     <div class="flex gap-6">
                       <button
                         @click="(event) => removeCompareListItem(product, event.target)"

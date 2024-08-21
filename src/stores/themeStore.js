@@ -32,7 +32,7 @@ export const useThemeStore = defineStore('themeStore', {
 
     setSystemTheme() {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        console.log(prefersDark)
+        // console.log(prefersDark)
         this.setTheme(prefersDark ? 'dark' : 'light');
     }
   },

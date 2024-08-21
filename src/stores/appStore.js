@@ -500,9 +500,12 @@ export const useAppStore = defineStore('appStore', {
           layout.component = shallowRef(markRaw(PlainLayout));
           break;
         case path.startsWith('/cart'):  
+          layout.name = 'PlainLayout';
+          layout.component=  shallowRef(markRaw(PlainLayout));
+          break;
         case path.startsWith('/checkout'):
           layout.name = 'PlainLayout';
-          layout.component=  shallowRef(markRaw(defineAsyncComponent(() => import('../components/includes/PlainLayout.vue'))));
+          layout.component=  shallowRef(markRaw(PlainLayout));
           break;
         default:
           layout.name = 'MainLayout';
@@ -512,7 +515,7 @@ export const useAppStore = defineStore('appStore', {
 
       if (layout.name !== this.currentLayout.name) {
         this.currentLayout = layout;
-        console.log('NEW LAYOUT:', layout.name, layout.component, this.currentLayout)
+        // console.log('NEW LAYOUT:', layout.name, layout.component, this.currentLayout)
       }
 
       // console.log(path, path.startsWith('/auth/'), this.currentLayout.component['__name'])
@@ -1371,7 +1374,7 @@ export const useAppStore = defineStore('appStore', {
       const savedCart = state.carts[userId],
       currentCart = state.cart;
 
-      console.log(savedCart)
+      // console.log(savedCart)
 
       const bothCart = savedCart?.cartItems && currentCart?.cartItems
 
